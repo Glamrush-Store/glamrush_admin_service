@@ -15,8 +15,8 @@ use App\Models\User;
 readonly class ConfirmPasswordResetUsecase
 {
     public function __construct(
-        private  UpdateUserPasswordAction $updatePassword,
-        private  RevokeAllTokensAction $revokeTokens
+        private UpdateUserPasswordAction $updatePassword,
+        private RevokeAllTokensAction $revokeTokens
     ) {}
 
     public function execute(User $user, string $password): void
@@ -24,6 +24,4 @@ readonly class ConfirmPasswordResetUsecase
         $this->updatePassword->run($user, $password);
         $this->revokeTokens->run($user);
     }
-
-
 }

@@ -15,9 +15,9 @@ use App\Actions\Auth\SendResetCodeMailAction;
 readonly class RequestPasswordResetUsecase
 {
     public function __construct(
-        private  FindUserByEmailAction $findUser,
-        private  GenerateResetCodeAction $generateCode,
-        private  SendResetCodeMailAction $sendMail
+        private FindUserByEmailAction $findUser,
+        private GenerateResetCodeAction $generateCode,
+        private SendResetCodeMailAction $sendMail
     ) {}
 
     public function execute(array $data): void

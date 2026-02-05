@@ -1,9 +1,11 @@
 <?php
-use App\Usecases\Auth\LoginUsecase;
+
 use App\Actions\Auth\AuthenticateUserAction;
 use App\Actions\Auth\IssueDeviceTokenAction;
 use App\Models\User;
-//use Mockery;
+use App\Usecases\Auth\LoginUsecase;
+
+// use Mockery;
 
 it('authenticates user and issues device token', function () {
     // Arrange

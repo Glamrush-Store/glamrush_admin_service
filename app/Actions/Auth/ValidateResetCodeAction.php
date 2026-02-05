@@ -17,28 +17,28 @@ class ValidateResetCodeAction
 {
     public function run(string $email, string $code): User
     {
-                $user = User::where('email', $email)->first();
-                if (!$user) {
-                    throw new InvalidResetCodeException;
-                }
+        $user = User::where('email', $email)->first();
+        if (! $user) {
+            throw new InvalidResetCodeException;
+        }
 
-                $record = PasswordResetCode::where('user_id', $user->id)
-                    ->whereNull('verified_at')
-                    ->where('expires_at', '>', now())
-                    ->first();
+        $record = PasswordResetCode::where('user_id', $user->id)
+            ->whereNull('verified_at')
+            ->where('expires_at', '>', now())
+            ->first();
 
-                if (!$record) {
-                    throw new InvalidResetCodeException;
-                }
+        if (! $record) {
+            throw new InvalidResetCodeException;
+        }
 
-                if (! Hash::check($code, $record->code_hash)) {
-                    throw new InvalidResetCodeException;
-                }
+        if (! Hash::check($code, $record->code_hash)) {
+            throw new InvalidResetCodeException;
+        }
 
-                $record->update([
-                    'verified_at' => now(),
-                ]);
+        $record->update([
+            'verified_at' => now(),
+        ]);
 
-                return $user;
-            }
+        return $user;
+    }
 }

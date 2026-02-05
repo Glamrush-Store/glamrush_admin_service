@@ -9,7 +9,6 @@
 namespace App\Actions\Auth;
 
 use App\Models\User;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class FindUserByEmailAction
 {
@@ -22,7 +21,6 @@ class FindUserByEmailAction
         }
 
         return $user;
-
 
     }
 }

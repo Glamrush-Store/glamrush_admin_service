@@ -1,4 +1,5 @@
 <?php
+
 /*
  * © 2026 Demilade Oyewusi
  * Licensed under the MIT License.
@@ -27,7 +28,6 @@ it('logs out the user and invalidates the token', function () {
     $meResponse = $this
         ->withHeader('Authorization', "Bearer {$token}")
         ->getJson('/api/v1/whoami');
-
 
     $meResponse->assertStatus(401);
 });

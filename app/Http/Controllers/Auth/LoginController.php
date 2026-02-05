@@ -18,6 +18,7 @@ class LoginController
     {
         try {
             $response = $usecase->execute($request->validated());
+
             return ApiResponse::success($response);
         } catch (\Throwable $e) {
             return ApiResponse::error($e->getMessage(), [], 400);

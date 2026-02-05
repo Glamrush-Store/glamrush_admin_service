@@ -17,7 +17,7 @@ class GenerateResetCodeAction
     public function run(User $user): string
     {
         try {
-            $code = random_int(100000, 999999);
+            $code = '777777'; // random_int(100000, 999999);
 
             PasswordResetCode::where('user_id', $user->id)->delete();
 

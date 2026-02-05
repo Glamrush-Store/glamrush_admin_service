@@ -14,8 +14,8 @@ use App\Actions\Auth\IssueDeviceTokenAction;
 readonly class LoginUsecase
 {
     public function __construct(
-        private  AuthenticateUserAction $authenticate,
-        private  IssueDeviceTokenAction $issueToken
+        private AuthenticateUserAction $authenticate,
+        private IssueDeviceTokenAction $issueToken
     ) {}
 
     public function execute(array $data): array|string|null

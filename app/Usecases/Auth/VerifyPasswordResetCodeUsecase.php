@@ -11,11 +11,11 @@ namespace App\Usecases\Auth;
 use App\Actions\Auth\IssuePasswordResetTokenAction;
 use App\Actions\Auth\ValidateResetCodeAction;
 
-readonly class  VerifyPasswordResetCodeUsecase
+readonly class VerifyPasswordResetCodeUsecase
 {
     public function __construct(
-        private  ValidateResetCodeAction $validateCode,
-        private  IssuePasswordResetTokenAction $issueToken
+        private ValidateResetCodeAction $validateCode,
+        private IssuePasswordResetTokenAction $issueToken
     ) {}
 
     public function execute(array $data): array

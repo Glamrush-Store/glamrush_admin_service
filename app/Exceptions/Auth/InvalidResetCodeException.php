@@ -11,6 +11,7 @@ namespace App\Exceptions\Auth;
 use App\Const\Auth\AuthMessages;
 use RuntimeException;
 
-class InvalidResetCodeException extends RuntimeException {
+class InvalidResetCodeException extends RuntimeException
+{
     protected $message = AuthMessages::INVALID_RESET_CODE;
 }

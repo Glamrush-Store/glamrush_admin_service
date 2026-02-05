@@ -1,9 +1,10 @@
 <?php
-use App\Usecases\Auth\RequestPasswordResetUsecase;
+
 use App\Actions\Auth\FindUserByEmailAction;
 use App\Actions\Auth\GenerateResetCodeAction;
 use App\Actions\Auth\SendResetCodeMailAction;
 use App\Models\User;
+use App\Usecases\Auth\RequestPasswordResetUsecase;
 
 it('finds user, generates reset code, and sends reset email', function () {
     // Arrange

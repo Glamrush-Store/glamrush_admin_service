@@ -1,10 +1,10 @@
 <?php
+
 /*
  * © 2026 Demilade Oyewusi
  * Licensed under the MIT License.
  * See the LICENSE file for details.
  */
-
 
 use App\Actions\Auth\IssueDeviceTokenAction;
 use App\Models\User;
@@ -30,7 +30,6 @@ it('issues a device token with the correct device ability', function () {
     expect($storedToken->tokenable_id)->toBe($user->id);
     expect($storedToken->can('device:device-123'))->toBeTrue();
 });
-
 
 it('revokes existing tokens for the same device before issuing a new one', function () {
     $user = User::factory()->create();

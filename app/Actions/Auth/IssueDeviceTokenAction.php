@@ -14,8 +14,6 @@ class IssueDeviceTokenAction
 {
     public function run(User $user, string $deviceId, string $deviceName): string
     {
-        try {
-            // One token per device
             $user->tokens()
                 ->whereJsonContains('abilities', 'device:'.$deviceId)
                 ->delete();
@@ -24,9 +22,5 @@ class IssueDeviceTokenAction
                 $deviceName,
                 ['device:'.$deviceId]
             )->plainTextToken;
-        } catch (\throwable $e) {
-            throw new \RuntimeException('Failed to issue device token', 0, $e);
-        }
-
     }
 }

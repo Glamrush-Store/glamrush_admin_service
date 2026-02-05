@@ -15,7 +15,7 @@ class CreateUserAction
 {
     public function run(string $name, string $email, string $password, string $role): User
     {
-        try {
+
             $user = User::create([
                 'name' => $name,
                 'email' => $email,
@@ -23,9 +23,6 @@ class CreateUserAction
             ]);
 
             $user->assignRole($role);
-        } catch (\Throwable $e) {
-            throw new \RuntimeException('User creation failed', 0, $e);
-        }
 
         return $user;
     }

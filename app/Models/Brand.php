@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class Brand extends Model implements HasMedia
 {
@@ -17,6 +18,18 @@ class Brand extends Model implements HasMedia
     public $incrementing = false;
 
     protected $keyType = 'string';
+
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
+
+
+    protected static function booted(): void
+    {
+        static::saved(fn () => CatalogCache::flushBrands());
+        static::deleted(fn () => CatalogCache::flushBrands());
+    }
 
     protected $fillable = [
         'name',
@@ -30,15 +43,22 @@ class Brand extends Model implements HasMedia
         'logo',
     ];
 
-    protected static function booted(): void
-    {
-        static::saved(fn () => CatalogCache::flushBrands());
-        static::deleted(fn () => CatalogCache::flushBrands());
-    }
+
 
     public function registerMediaCollections(): void
     {
-        $this->addMediaCollection('images')
-            ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/webp']);
+        $this->addMediaCollection('brand_images')
+            ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml'])
+            ->singleFile();
     }
+
+    public function registerMediaConversions(?Media $media = null): void
+    {
+        $this->addMediaConversion('thumb')
+            ->width(300)
+            ->height(300)
+            ->sharpen(10);
+    }
+
+
 }

@@ -8,7 +8,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-
 Route::get('/test-gcs', function () {
     try {
         // Test 1: Check if config is loaded
@@ -23,7 +22,7 @@ Route::get('/test-gcs', function () {
         // Test 3: Check if key file is readable
         if (file_exists($keyFilePath)) {
             $keyContent = json_decode(file_get_contents($keyFilePath), true);
-            dump('Key file valid JSON:', !is_null($keyContent));
+            dump('Key file valid JSON:', ! is_null($keyContent));
             dump('Project ID in key file:', $keyContent['project_id'] ?? 'NOT FOUND');
         }
 
@@ -47,26 +46,26 @@ Route::get('/test-gcs', function () {
 
             // Test 7: Try using Laravel Storage
             $t = \Illuminate\Support\Facades\Storage::disk('gcs')->put('test.txt', 'Hello World');
-            dump('File uploaded successfully!>>>>>>>>>>' . $t);
+            dump('File uploaded successfully!>>>>>>>>>>'.$t);
 
             // Test 8: Check if file exists
             $exists = \Illuminate\Support\Facades\Storage::disk('gcs')->exists('test.txt');
             dump('File exists check:', $exists);
 
             // Test 9: Get the URL
-            $url = $url = "https://storage.googleapis.com/" . env('GCP_BUCKET') . "/" . 'test.txt';
+            $url = $url = 'https://storage.googleapis.com/'.env('GCP_BUCKET').'/'.'test.txt';
             dump('File URL:', $url);
 
             return response()->json([
                 'status' => 'success',
                 'message' => 'GCS is working correctly!',
-                'url' => $url
+                'url' => $url,
             ]);
         }
 
         return response()->json([
             'status' => 'error',
-            'message' => 'Bucket does not exist or is not accessible'
+            'message' => 'Bucket does not exist or is not accessible',
         ], 400);
     } catch (\Exception $e) {
         return response()->json([
@@ -74,7 +73,7 @@ Route::get('/test-gcs', function () {
             'message' => $e->getMessage(),
             'file' => $e->getFile(),
             'line' => $e->getLine(),
-            'trace' => $e->getTraceAsString()
+            'trace' => $e->getTraceAsString(),
         ], 500);
     }
 });

@@ -25,7 +25,7 @@ class ConfirmPasswordResetController
                 $request->validated()['password']
             );
         } catch (\Throwable $e) {
-           return ApiResponse::error(AuthMessages::FAILED_PASSWORD_RESET, [], 500);
+            return ApiResponse::error(AuthMessages::FAILED_PASSWORD_RESET, [], 500);
         }
 
         return ApiResponse::success([], AuthMessages::PASSWORD_RESET_SUCCESS, 200);

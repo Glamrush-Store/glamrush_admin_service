@@ -15,10 +15,10 @@ class SelfController
     public function __invoke()
     {
         try {
-           $result = auth()->userOrFail();
+            $result = auth()->userOrFail();
 
-           return ApiResponse::success($result, 'OK', 200);
-        }catch (\Exception $e) {
+            return ApiResponse::success($result, 'OK', 200);
+        } catch (\Exception $e) {
             return ApiResponse::error('Unauthorized', [], 401);
         }
 

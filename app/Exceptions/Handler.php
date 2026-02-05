@@ -8,10 +8,10 @@
 
 namespace App\Exceptions;
 
-use Illuminate\Auth\AuthenticationException;
+use App\Http\Responses\ApiResponse;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Illuminate\Validation\ValidationException;
-use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -24,8 +24,10 @@ class Handler extends ExceptionHandler
 
     public function register(): void
     {
-        $this->reportable(function (Throwable $e) {
-            //
+        $this->renderable(function (ModelNotFoundException $e, $request) {
+            if ($request->expectsJson()) {
+                return ApiResponse::error('', [], Response::HTTP_NOT_FOUND);
+            }
         });
     }
 
@@ -40,51 +42,5 @@ class Handler extends ExceptionHandler
         }
 
         return parent::render($request, $e);
-    }
-
-    /**
-     * Handle API exceptions
-     */
-    private function handleApiException($request, Throwable $e)
-    {
-        $status = 500;
-        $response = [
-            'message' => 'Server error',
-        ];
-
-        if ($e instanceof AuthenticationException) {
-            $status = 401;
-            $response['message'] = 'Unauthenticated.';
-        } elseif ($e instanceof ValidationException) {
-            $status = 422;
-            $response['message'] = 'Validation failed.';
-            $response['errors'] = $e->errors();
-        } elseif ($e instanceof HttpException) {
-            $status = $e->getStatusCode();
-            $response['message'] = $e->getMessage() ?: 'Server error';
-        } else {
-            $response['message'] = $e->getMessage();
-        }
-
-        // Add debug info in local environment
-        if (config('app.debug')) {
-            $response['exception'] = get_class($e);
-            $response['file'] = $e->getFile();
-            $response['line'] = $e->getLine();
-            $response['trace'] = collect($e->getTrace())->map(fn ($trace) => [
-                'file' => $trace['file'] ?? null,
-                'line' => $trace['line'] ?? null,
-            ])->take(10);
-        }
-
-        return response()->json($response, $status);
-    }
-
-    /**
-     * Convert authentication exception to JSON
-     */
-    protected function unauthenticated($request, AuthenticationException $exception)
-    {
-        return response()->json(['message' => 'Unauthenticated.'], 401);
     }
 }

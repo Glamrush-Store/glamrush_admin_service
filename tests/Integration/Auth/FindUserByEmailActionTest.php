@@ -6,7 +6,7 @@
  * See the LICENSE file for details.
  */
 
-use App\Actions\Auth\FindUserByEmailAction;
+use App\Domain\Auth\Actions\FindUserByEmailAction;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;

@@ -19,10 +19,6 @@ class Category extends Model implements HasMedia
 
     protected $keyType = 'string';
 
-    public function getRouteKeyName(): string
-    {
-        return 'slug';
-    }
 
     protected $fillable = [
         'name',

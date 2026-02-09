@@ -18,6 +18,7 @@ class Product extends Model implements hasMedia
 
     public $incrementing = false;
 
+
     protected $keyType = 'string';
 
     protected $fillable = [
@@ -25,6 +26,7 @@ class Product extends Model implements hasMedia
         'slug',
         'short_description',
         'description',
+        'sequence',
         'type',
         'status',
         'published_at',

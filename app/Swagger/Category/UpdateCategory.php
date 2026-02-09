@@ -1,15 +1,14 @@
 <?php
+
 /*
  * © 2026 Demilade Oyewusi
  * Licensed under the MIT License.
  * See the LICENSE file for details.
  */
 
-
 namespace App\Swagger\Category;
 
 use OpenApi\Attributes as OA;
-
 
 #[OA\Put(
     path: '/api/categories/{slug}',

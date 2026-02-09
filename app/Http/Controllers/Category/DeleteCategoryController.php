@@ -8,10 +8,10 @@
 
 namespace App\Http\Controllers\Category;
 
+use App\Domain\Category\UseCases\DeleteCategoryUseCase;
 use App\Http\Controllers\Controller;
 use App\Http\Responses\ApiResponse;
 use App\Models\Category;
-use App\UseCases\Category\DeleteCategoryUseCase;
 use Illuminate\Http\JsonResponse;
 
 class DeleteCategoryController extends Controller

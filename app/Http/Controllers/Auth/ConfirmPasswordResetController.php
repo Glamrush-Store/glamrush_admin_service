@@ -9,9 +9,9 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Const\Auth\AuthMessages;
+use App\Domain\Auth\UseCases\ConfirmPasswordResetUsecase;
 use App\Http\Requests\Auth\ConfirmPasswordResetRequest;
 use App\Http\Responses\ApiResponse;
-use App\Usecases\Auth\ConfirmPasswordResetUsecase;
 
 class ConfirmPasswordResetController
 {

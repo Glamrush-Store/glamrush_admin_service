@@ -23,6 +23,11 @@ use App\Http\Controllers\Category\DeleteCategoryController;
 use App\Http\Controllers\Category\ListCategoriesController;
 use App\Http\Controllers\Category\ShowCategoryController;
 use App\Http\Controllers\Category\UpdateCategoryController;
+use App\Http\Controllers\Product\CreateProductController;
+use App\Http\Controllers\Product\DeleteProductController;
+use App\Http\Controllers\Product\ListProductsController;
+use App\Http\Controllers\Product\ShowProductController;
+use App\Http\Controllers\Product\UpdateProductController;
 use Illuminate\Support\Facades\Route;
 
 // ========================================================
@@ -52,7 +57,6 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
     Route::delete('/categories/{category}', DeleteCategoryController::class)->middleware('permission:Delete_Category');
 });
 
-
 // ========================================================
 //  BRAND API ROUTES
 // ========================================================
@@ -63,4 +67,16 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
     Route::post('/brands', CreateBrandController::class)->middleware('permission:Create_Brand');
     Route::put('/brands/{brand}', UpdateBrandController::class)->middleware('permission:Update_Brand');
     Route::delete('/brands/{brand}', DeleteBrandController::class)->middleware('permission:Delete_Brand');
+});
+
+// ========================================================
+//  PRODUCTS API ROUTES
+// ========================================================
+
+Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
+    Route::get('/products', ListProductsController::class)->middleware('permission:View_Product');
+    Route::get('/products/{product}', ShowProductController::class)->middleware('permission:View_Product');
+    Route::post('/products', CreateProductController::class)->middleware('permission:Create_Product');
+    Route::put('/products/{product}', UpdateProductController::class)->middleware('permission:Update_Product');
+    Route::delete('/products/{product}', DeleteProductController::class)->middleware('permission:Delete_Product');
 });

@@ -8,10 +8,10 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Domain\Auth\UseCases\VerifyPasswordResetCodeUsecase;
 use App\Exceptions\Auth\InvalidResetCodeException;
 use App\Http\Requests\Auth\VerifyPasswordResetCodeRequest;
 use App\Http\Responses\ApiResponse;
-use App\Usecases\Auth\VerifyPasswordResetCodeUsecase;
 
 class VerifyPasswordResetCodeController
 {

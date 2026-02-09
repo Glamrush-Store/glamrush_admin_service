@@ -8,10 +8,10 @@
 
 namespace App\Http\Controllers\Category;
 
+use App\Domain\Category\UseCases\UpdateCategoryUseCase;
 use App\Http\Controllers\Controller;
 use App\Http\Responses\ApiResponse;
 use App\Models\Category;
-use App\UseCases\Category\UpdateCategoryUseCase;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 

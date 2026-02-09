@@ -929,6 +929,229 @@
                     }
                 ]
             }
+        },
+        "/api/products": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "List products",
+                "operationId": "7ba56a6614c6d19e0a204df18348ccfb",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Paginated product list",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Product"
+                                            }
+                                        },
+                                        "current_page": {
+                                            "type": "integer"
+                                        },
+                                        "last_page": {
+                                            "type": "integer"
+                                        },
+                                        "total": {
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Create product",
+                "operationId": "cbd95d7cdae20d8a54c14e2855fb73b1",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "slug",
+                                    "type",
+                                    "status"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "slug": {
+                                        "type": "string"
+                                    },
+                                    "type": {
+                                        "type": "string",
+                                        "example": "variable"
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "example": "published"
+                                    },
+                                    "variants": {
+                                        "type": "array",
+                                        "items": {
+                                            "$ref": "#/components/schemas/ProductVariant"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Product created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Product"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/products/{product}": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Get product",
+                "operationId": "2c7f23e8039b86aa51a7454a8739b274",
+                "parameters": [
+                    {
+                        "name": "product",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Product detail",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Product"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Update product",
+                "operationId": "1da5be9d7a21e3b74cd397ee53d8be41",
+                "parameters": [
+                    {
+                        "name": "product",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Product"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Product updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Product"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Delete product",
+                "operationId": "bfe7542b35b0381d8aa6d0595098965f",
+                "parameters": [
+                    {
+                        "name": "product",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Product deleted"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
         }
     },
     "components": {
@@ -1082,6 +1305,95 @@
                     }
                 },
                 "type": "object"
+            },
+            "Product": {
+                "required": [
+                    "id",
+                    "name",
+                    "slug",
+                    "type",
+                    "status"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "iPhone 15"
+                    },
+                    "slug": {
+                        "type": "string",
+                        "example": "iphone-15"
+                    },
+                    "type": {
+                        "description": "simple | variable | digital | service",
+                        "type": "string",
+                        "example": "variable"
+                    },
+                    "status": {
+                        "description": "published | draft | archived",
+                        "type": "string",
+                        "example": "published"
+                    },
+                    "price": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 1200,
+                        "nullable": true
+                    },
+                    "is_featured": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "sort_order": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "variants": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ProductVariant"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "ProductVariant": {
+                "required": [
+                    "id",
+                    "sku",
+                    "price",
+                    "is_default"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 10
+                    },
+                    "sku": {
+                        "type": "string",
+                        "example": "IP15-BLK-128"
+                    },
+                    "price": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 1200
+                    },
+                    "is_default": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "attributes": {
+                        "type": "object",
+                        "example": {
+                            "color": "black",
+                            "storage": "128GB"
+                        }
+                    }
+                },
+                "type": "object"
             }
         },
         "securitySchemes": {
@@ -1104,6 +1416,10 @@
         {
             "name": "Categories",
             "description": "Categories"
+        },
+        {
+            "name": "Products",
+            "description": "Products"
         }
     ]
 }

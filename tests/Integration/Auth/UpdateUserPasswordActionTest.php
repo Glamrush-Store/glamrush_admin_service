@@ -6,7 +6,7 @@
  * See the LICENSE file for details.
  */
 
-use App\Actions\Auth\UpdateUserPasswordAction;
+use App\Domain\Auth\Actions\UpdateUserPasswordAction;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;

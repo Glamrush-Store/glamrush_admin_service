@@ -8,9 +8,9 @@
 
 namespace App\Http\Controllers\Brand;
 
+use App\Domain\Brand\UseCases\CreateBrandUseCase;
 use App\Http\Requests\Brand\CreateBrandRequest;
 use App\Http\Responses\ApiResponse;
-use App\Usecases\Brand\CreateBrandUseCase;
 
 class CreateBrandController
 {
@@ -21,7 +21,7 @@ class CreateBrandController
         try {
             $brand = $useCase->run(
                 data: $request->validated(),
-                photo: $request->file('photo')
+                photo: $request->file('logo')
             );
 
             return ApiResponse::success($brand, 'OK', 201);

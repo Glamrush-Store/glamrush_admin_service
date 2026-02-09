@@ -8,8 +8,8 @@
 
 namespace App\Http\Controllers\Category;
 
+use App\Domain\Category\UseCases\ListCategoriesUseCase;
 use App\Http\Responses\ApiResponse;
-use App\Usecases\Category\ListCategoriesUseCase;
 use Illuminate\Http\Request;
 
 class ListCategoriesController

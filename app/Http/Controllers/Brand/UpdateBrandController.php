@@ -8,13 +8,12 @@
 
 namespace App\Http\Controllers\Brand;
 
+use App\Domain\Brand\UseCases\UpdateBrandUseCase;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Brand\UpdateBrandRequest;
 use App\Http\Responses\ApiResponse;
 use App\Models\Brand;
-use App\UseCases\Brand\UpdateBrandUseCase;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class UpdateBrandController extends Controller
 {

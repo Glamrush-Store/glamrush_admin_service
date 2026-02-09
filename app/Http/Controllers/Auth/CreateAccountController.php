@@ -8,10 +8,10 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Domain\Auth\UseCases\CreateAccountUsecase;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\CreateAccountRequest;
 use App\Http\Responses\ApiResponse;
-use App\Usecases\Auth\CreateAccountUsecase;
 
 class CreateAccountController extends Controller
 {

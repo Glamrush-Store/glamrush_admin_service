@@ -19,12 +19,6 @@ class Brand extends Model implements HasMedia
 
     protected $keyType = 'string';
 
-    public function getRouteKeyName(): string
-    {
-        return 'slug';
-    }
-
-
     protected static function booted(): void
     {
         static::saved(fn () => CatalogCache::flushBrands());
@@ -34,6 +28,7 @@ class Brand extends Model implements HasMedia
     protected $fillable = [
         'name',
         'slug',
+        'code',
         'is_active',
         'description',
         'meta_title',
@@ -43,11 +38,10 @@ class Brand extends Model implements HasMedia
         'logo',
     ];
 
-
-
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('brand_images')
+            ->useDisk('gcs')
             ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml'])
             ->singleFile();
     }
@@ -59,6 +53,4 @@ class Brand extends Model implements HasMedia
             ->height(300)
             ->sharpen(10);
     }
-
-
 }

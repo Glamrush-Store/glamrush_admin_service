@@ -1,9 +1,9 @@
 <?php
 
-use App\Actions\Auth\AuthenticateUserAction;
-use App\Actions\Auth\IssueDeviceTokenAction;
+use App\Domain\Auth\Actions\AuthenticateUserAction;
+use App\Domain\Auth\Actions\IssueDeviceTokenAction;
+use App\Domain\Auth\UseCases\LoginUsecase;
 use App\Models\User;
-use App\Usecases\Auth\LoginUsecase;
 
 // use Mockery;
 

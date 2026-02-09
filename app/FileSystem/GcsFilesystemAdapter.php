@@ -6,7 +6,7 @@
  * See the LICENSE file for details.
  */
 
-namespace App\Filesystem;
+namespace App\FileSystem;
 
 use Illuminate\Filesystem\FilesystemAdapter;
 

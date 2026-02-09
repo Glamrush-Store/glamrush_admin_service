@@ -6,7 +6,7 @@
  * See the LICENSE file for details.
  */
 
-use App\Actions\Auth\GenerateResetCodeAction;
+use App\Domain\Auth\Actions\GenerateResetCodeAction;
 use App\Models\PasswordResetCode;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;

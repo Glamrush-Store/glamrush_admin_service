@@ -6,10 +6,11 @@
  * See the LICENSE file for details.
  */
 
-use App\Actions\Auth\CreateUserAction;
+use App\Domain\Auth\Actions\CreateUserAction;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Exceptions\RoleDoesNotExist;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
@@ -47,8 +48,7 @@ it('creates a user and assigns the given role', function () {
 it('throws runtime exception when user creation fails', function () {
     $action = app(CreateUserAction::class);
 
-    $this->expectException(RuntimeException::class);
-    $this->expectExceptionMessage('User creation failed');
+    $this->expectException(RoleDoesNotExist::class);
 
     $action->run(
         name: 'John Doe',

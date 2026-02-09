@@ -6,7 +6,7 @@
  * See the LICENSE file for details.
  */
 
-use App\Actions\Auth\IssueDeviceTokenAction;
+use App\Domain\Auth\Actions\IssueDeviceTokenAction;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\PersonalAccessToken;

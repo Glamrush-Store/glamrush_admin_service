@@ -8,10 +8,10 @@
 
 namespace App\Http\Controllers\Brand;
 
+use App\Domain\Brand\UseCases\ShowBrandUseCase;
 use App\Http\Controllers\Controller;
 use App\Http\Responses\ApiResponse;
 use App\Models\Brand;
-use App\UseCases\Brand\ShowBrandUseCase;
 
 class ShowBrandController extends Controller
 {
@@ -29,4 +29,3 @@ class ShowBrandController extends Controller
 
     }
 }
-

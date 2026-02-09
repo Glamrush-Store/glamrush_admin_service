@@ -1,4 +1,5 @@
 <?php
+
 /*
  * © 2026 Demilade Oyewusi
  * Licensed under the MIT License.
@@ -44,7 +45,4 @@ use OpenApi\Attributes as OA;
     ]
 )]
 
-class Category
-{
-
-}
+class Category {}

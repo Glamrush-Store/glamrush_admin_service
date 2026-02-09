@@ -1,4 +1,5 @@
 <?php
+
 /*
  * © 2026 Demilade Oyewusi
  * Licensed under the MIT License.
@@ -8,7 +9,6 @@
 namespace App\Swagger\Brand;
 
 use OpenApi\Attributes as OA;
-
 
 #[OA\Delete(
     path: '/api/brands/{brand}',

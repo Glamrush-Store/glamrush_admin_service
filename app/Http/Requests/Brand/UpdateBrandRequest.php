@@ -1,22 +1,20 @@
 <?php
+
 /*
  * © 2026 Demilade Oyewusi
  * Licensed under the MIT License.
  * See the LICENSE file for details.
  */
 
-
 namespace App\Http\Requests\Brand;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class UpdateBrandRequest extends FormRequest
 {
-
     public function rules(): array
     {
-        //$brand = $this->route('brand');
+        // $brand = $this->route('brand');
 
         return [
             'name' => [
@@ -25,10 +23,9 @@ class UpdateBrandRequest extends FormRequest
                 'max:255',
             ],
 
-
             'is_active' => [
                 'sometimes',
-                'boolean',
+                'string',
             ],
 
             'description' => [

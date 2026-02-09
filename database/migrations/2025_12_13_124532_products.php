@@ -18,6 +18,7 @@ return new class extends Migration
              */
             $table->string('name');
             $table->string('sku')->unique()->nullable();
+            $table->string('sequence')->unique();
             $table->string('slug')->unique();
 
             /*

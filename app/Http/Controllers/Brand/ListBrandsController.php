@@ -8,8 +8,8 @@
 
 namespace App\Http\Controllers\Brand;
 
+use App\Domain\Brand\UseCases\ListBrandsUseCase;
 use App\Http\Responses\ApiResponse;
-use App\Usecases\Brand\ListBrandsUseCase;
 use Illuminate\Http\Request;
 
 class ListBrandsController

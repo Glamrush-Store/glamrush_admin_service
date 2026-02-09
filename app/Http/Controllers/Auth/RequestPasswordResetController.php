@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Domain\Auth\UseCases\RequestPasswordResetUsecase;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\RequestPasswordResetRequest;
-use App\Usecases\Auth\RequestPasswordResetUsecase;
 
 class RequestPasswordResetController extends Controller
 {

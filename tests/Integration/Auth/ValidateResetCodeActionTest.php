@@ -6,7 +6,7 @@
  * See the LICENSE file for details.
  */
 
-use App\Actions\Auth\ValidateResetCodeAction;
+use App\Domain\Auth\Actions\ValidateResetCodeAction;
 use App\Exceptions\Auth\InvalidResetCodeException;
 use App\Models\PasswordResetCode;
 use App\Models\User;

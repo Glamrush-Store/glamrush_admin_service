@@ -3,11 +3,9 @@
 namespace App\Http\Requests\Brand;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class CreateBrandRequest extends FormRequest
 {
-
     public function rules(): array
     {
         return [
@@ -17,16 +15,9 @@ class CreateBrandRequest extends FormRequest
                 'max:255',
             ],
 
-            'slug' => [
-                'nullable',
-                'string',
-                'max:255',
-                Rule::unique('brands', 'slug'),
-            ],
-
             'is_active' => [
                 'required',
-                'boolean',
+                'string',
             ],
 
             'description' => [

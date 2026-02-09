@@ -8,9 +8,9 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Domain\Auth\UseCases\LoginUsecase;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Responses\ApiResponse;
-use App\Usecases\Auth\LoginUsecase;
 
 class LoginController
 {

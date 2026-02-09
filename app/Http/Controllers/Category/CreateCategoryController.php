@@ -8,9 +8,9 @@
 
 namespace App\Http\Controllers\Category;
 
+use App\Domain\Category\UseCases\CreateCategoryUseCase;
 use App\Http\Requests\Category\CategoryRequest;
 use App\Http\Responses\ApiResponse;
-use App\Usecases\Category\CreateCategoryUseCase;
 
 class CreateCategoryController
 {

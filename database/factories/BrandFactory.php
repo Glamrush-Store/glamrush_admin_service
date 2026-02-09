@@ -23,6 +23,7 @@ class BrandFactory extends Factory
             'id' => (string) Str::ulid(),
             'name' => $name,
             'slug' => Str::slug($name).'-'.Str::random(2),
+            'code' => strtoupper(Str::random(4)),
             'description' => $this->faker->paragraphs(2, true),
             'meta_title' => $name,
             'meta_description' => $this->faker->paragraphs(4, true),

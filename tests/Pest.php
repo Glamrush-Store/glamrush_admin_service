@@ -11,6 +11,12 @@
 |
 */
 
+use Spatie\Permission\PermissionRegistrar;
+
+beforeEach(function () {
+    app(PermissionRegistrar::class)->forgetCachedPermissions();
+});
+
 pest()->extend(Tests\TestCase::class)
  // ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
     ->in('Feature');

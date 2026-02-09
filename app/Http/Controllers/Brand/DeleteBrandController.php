@@ -8,10 +8,10 @@
 
 namespace App\Http\Controllers\Brand;
 
+use App\Domain\Brand\UseCases\DeleteBrandUseCase;
 use App\Http\Controllers\Controller;
 use App\Http\Responses\ApiResponse;
 use App\Models\Brand;
-use App\UseCases\Brand\DeleteBrandUseCase;
 use Illuminate\Http\JsonResponse;
 
 class DeleteBrandController extends Controller

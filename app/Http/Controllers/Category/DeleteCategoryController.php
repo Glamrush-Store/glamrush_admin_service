@@ -16,16 +16,13 @@ use Illuminate\Http\JsonResponse;
 
 class DeleteCategoryController extends Controller
 {
+    public function __construct(private DeleteCategoryUseCase $useCase) {}
+
     public function __invoke(
         Category $category,
-        DeleteCategoryUseCase $useCase
     ): JsonResponse {
-        try {
-            $useCase->run($category);
+        $this->useCase->run($category);
 
-            return ApiResponse::success([], 'OK', 204);
-        } catch (\Throwable $e) {
-            return ApiResponse::error($e->getMessage(), [], 400);
-        }
+        return ApiResponse::success([], '', 204);
     }
 }

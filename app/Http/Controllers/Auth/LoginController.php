@@ -8,20 +8,20 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Domain\Auth\UseCases\LoginUsecase;
+use App\Domain\Auth\UseCases\LoginUseCase;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Responses\ApiResponse;
 
 class LoginController
 {
-    public function __invoke(LoginRequest $request, LoginUsecase $usecase)
-    {
-        try {
-            $response = $usecase->execute($request->validated());
+    public function __construct(private LoginUseCase $useCase) {}
 
-            return ApiResponse::success($response);
-        } catch (\Throwable $e) {
-            return ApiResponse::error($e->getMessage(), [], 400);
-        }
+    public function __invoke(LoginRequest $request)
+    {
+
+        $response = $this->useCase->execute($request->validated());
+
+        return ApiResponse::success($response);
+
     }
 }

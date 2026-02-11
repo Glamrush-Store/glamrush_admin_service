@@ -11,6 +11,7 @@ namespace App\Domain\Auth\Actions;
 use App\Const\Auth\AuthMessages;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+USE App\Exceptions\BusinessException;
 
 class AuthenticateUserAction
 {
@@ -18,8 +19,9 @@ class AuthenticateUserAction
     {
         $user = User::where('email', $email)->first();
 
-        if (! $user || ! Hash::check($password, $user->password)) {
-            throw new \RuntimeException(AuthMessages::LOGIN_FAIL);
+
+        if (!$user || ! Hash::check($password, $user->password)) {
+            throw new BusinessException(AuthMessages::LOGIN_FAIL);
         }
 
         return $user;

@@ -14,19 +14,17 @@ use Illuminate\Http\Request;
 
 class ListCategoriesController
 {
+    public function __construct(private ListCategoriesUseCase $useCase) {}
+
     public function __invoke(
         Request $request,
-        ListCategoriesUseCase $useCase
     ) {
-        try {
-            $result = $useCase->run(
-                filters: $request->all(),
-                perPage: $request->integer('per_page', 5)
-            );
 
-            return ApiResponse::success($result);
-        } catch (\Throwable $e) {
-            return ApiResponse::error($e->getMessage(), [], 400);
-        }
+        $categories = $this->useCase->run(
+            filters: $request->all(),
+            perPage: $request->integer('per_page', 5)
+        );
+
+        return ApiResponse::success($categories);
     }
 }

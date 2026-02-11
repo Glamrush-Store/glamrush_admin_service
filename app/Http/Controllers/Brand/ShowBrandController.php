@@ -15,17 +15,16 @@ use App\Models\Brand;
 
 class ShowBrandController extends Controller
 {
+    public function __construct(private ShowBrandUseCase $useCase) {}
+
     public function __invoke(
         Brand $brand,
         ShowBrandUseCase $useCase
     ) {
-        try {
-            $result = $useCase->run($brand);
 
-            return ApiResponse::success($result, 'OK', 200);
-        } catch (\Throwable $e) {
-            return ApiResponse::error($e->getMessage(), [], 400);
-        }
+        $result = $this->useCase->run($brand);
+
+        return ApiResponse::success($result, 'OK', 200);
 
     }
 }

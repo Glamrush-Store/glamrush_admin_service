@@ -10,8 +10,5 @@ namespace App\Http\Requests\Product;
 
 class UpdateProductRequest extends CreateProductRequest
 {
-    public function rules(): array
-    {
-
-    }
+    public function rules(): array {}
 }

@@ -9,6 +9,7 @@
 namespace App\Domain\Auth\Actions;
 
 use App\Exceptions\Auth\InvalidResetCodeException;
+use App\Exceptions\BusinessException;
 use App\Models\PasswordResetCode;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
@@ -28,11 +29,11 @@ class ValidateResetCodeAction
             ->first();
 
         if (! $record) {
-            throw new InvalidResetCodeException;
+            throw BusinessException::notFound('Reset code not found','');
         }
 
         if (! Hash::check($code, $record->code_hash)) {
-            throw new InvalidResetCodeException;
+            throw BusinessException::notFound('Reset code not found','');
         }
 
         $record->update([

@@ -6,6 +6,7 @@ use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\User;
+use App\Models\Vendor;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -31,6 +32,10 @@ class DatabaseSeeder extends Seeder
             ->create();
 
         Brand::factory()
+            ->count(5)
+            ->create();
+
+        Vendor::factory()
             ->count(5)
             ->create();
 

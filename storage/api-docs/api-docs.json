@@ -981,7 +981,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "post": {
                 "tags": [
@@ -1037,6 +1042,35 @@
                                 }
                             }
                         }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/products/{product}": {
+            "delete": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Delete product",
+                "operationId": "657a41390e1f90eb6cc4ee91f9134230",
+                "parameters": [
+                    {
+                        "name": "product",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Product deleted"
                     }
                 },
                 "security": [
@@ -1124,26 +1158,271 @@
                         "bearerAuth": []
                     }
                 ]
-            },
+            }
+        },
+        "api/v1/vendors/{vendor}": {
             "delete": {
                 "tags": [
-                    "Products"
+                    "Vendors"
                 ],
-                "summary": "Delete product",
-                "operationId": "bfe7542b35b0381d8aa6d0595098965f",
+                "summary": "Delete vendor",
+                "operationId": "fad8968ebb7076359f9c0e9d6c4476f0",
                 "parameters": [
                     {
-                        "name": "product",
+                        "name": "vendor",
                         "in": "path",
                         "required": true,
                         "schema": {
-                            "type": "integer"
+                            "type": "string"
                         }
                     }
                 ],
                 "responses": {
                     "204": {
-                        "description": "Product deleted"
+                        "description": "Vendor deleted"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/vendors": {
+            "get": {
+                "tags": [
+                    "Vendors"
+                ],
+                "summary": "List vendors",
+                "operationId": "442ecf947987809878a4f38fdd8bac37",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "country",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "is_active",
+                        "in": "query",
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Paginated vendor list",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Vendor"
+                                            }
+                                        },
+                                        "current_page": {
+                                            "type": "integer"
+                                        },
+                                        "last_page": {
+                                            "type": "integer"
+                                        },
+                                        "total": {
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/vendors/{vendor}": {
+            "get": {
+                "tags": [
+                    "Vendors"
+                ],
+                "summary": "Show vendor",
+                "operationId": "77965db55e3dd6e673d2a6d6bb6ef6a5",
+                "parameters": [
+                    {
+                        "name": "vendor",
+                        "in": "path",
+                        "description": "Vendor ULID",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Vendor details",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Vendor"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Vendor not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/vendors/{vendor}": {
+            "put": {
+                "tags": [
+                    "Vendors"
+                ],
+                "summary": "Update vendor",
+                "operationId": "2b2eaf2c5ece60eb2bfd808963204e68",
+                "parameters": [
+                    {
+                        "name": "vendor",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "business_name": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "is_active": {
+                                        "type": "boolean"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Vendor updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Vendor"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/vendors": {
+            "post": {
+                "tags": [
+                    "Vendors"
+                ],
+                "summary": "Create a vendor",
+                "operationId": "50dc32a2ff92e746cbf935888c9a3d2f",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "password",
+                                    "code"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "John Doe"
+                                    },
+                                    "business_name": {
+                                        "type": "string",
+                                        "example": "Glamrush Store"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "example": "vendor@glamrush.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "secret123"
+                                    },
+                                    "code": {
+                                        "type": "string",
+                                        "example": "GLAM1234"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Vendor created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Vendor"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -1316,8 +1595,8 @@
                 ],
                 "properties": {
                     "id": {
-                        "type": "integer",
-                        "example": 1
+                        "type": "string",
+                        "example": "01HV9Q8RZJ6E7Y3P6KX8D9N1A2"
                     },
                     "name": {
                         "type": "string",
@@ -1394,6 +1673,91 @@
                     }
                 },
                 "type": "object"
+            },
+            "PaginatedVendor": {
+                "required": [
+                    "data",
+                    "current_page",
+                    "per_page",
+                    "total",
+                    "last_page"
+                ],
+                "properties": {
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Vendor"
+                        }
+                    },
+                    "current_page": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "per_page": {
+                        "type": "integer",
+                        "example": 15
+                    },
+                    "total": {
+                        "type": "integer",
+                        "example": 120
+                    },
+                    "last_page": {
+                        "type": "integer",
+                        "example": 8
+                    }
+                },
+                "type": "object"
+            },
+            "Vendor": {
+                "required": [
+                    "id",
+                    "name",
+                    "email",
+                    "code",
+                    "is_active"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "example": "01HV9Q8RZJ6E7Y3P6KX8D9N1A2"
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "John Doe"
+                    },
+                    "business_name": {
+                        "type": "string",
+                        "example": "Glamrush Store",
+                        "nullable": true
+                    },
+                    "email": {
+                        "type": "string",
+                        "example": "vendor@glamrush.com"
+                    },
+                    "code": {
+                        "type": "string",
+                        "example": "GLAM1234"
+                    },
+                    "is_active": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "city": {
+                        "type": "string",
+                        "example": "Lagos",
+                        "nullable": true
+                    },
+                    "country": {
+                        "type": "string",
+                        "example": "NG",
+                        "nullable": true
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
             }
         },
         "securitySchemes": {
@@ -1420,6 +1784,10 @@
         {
             "name": "Products",
             "description": "Products"
+        },
+        {
+            "name": "Vendors",
+            "description": "Vendors"
         }
     ]
 }

@@ -14,13 +14,10 @@ class SelfController
 {
     public function __invoke()
     {
-        try {
-            $result = auth()->userOrFail();
 
-            return ApiResponse::success($result, 'OK', 200);
-        } catch (\Exception $e) {
-            return ApiResponse::error('Unauthorized', [], 401);
-        }
+        $user = auth()->user();
+
+        return ApiResponse::success($user, 'OK', 200);
 
     }
 }

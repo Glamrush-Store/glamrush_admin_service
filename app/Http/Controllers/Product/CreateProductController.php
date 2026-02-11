@@ -14,17 +14,13 @@ use App\Http\Responses\ApiResponse;
 
 class CreateProductController
 {
+    public function __construct(private CreateProductUseCase $useCase) {}
+
     public function __invoke(
         CreateProductRequest $request,
-        CreateProductUseCase $useCase
     ) {
-        try {
-            $result = $useCase->execute($request->validated());
+        $product = $this->useCase->execute($request->validated());
 
-            return ApiResponse::success($result, 'OK', 201);
-        } catch (\Throwable $e) {
-            return ApiResponse::error($e->getMessage(), [], 400);
-        }
-
+        return ApiResponse::success($product, 'OK', 201);
     }
 }

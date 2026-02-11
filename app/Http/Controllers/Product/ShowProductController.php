@@ -8,25 +8,21 @@
 
 namespace App\Http\Controllers\Product;
 
-use App\Domain\Category\UseCases\ShowCategoryUseCase;
 use App\Domain\Product\UseCases\ShowProductUseCase;
 use App\Http\Controllers\Controller;
 use App\Http\Responses\ApiResponse;
-use App\Models\Category;
 use App\Models\Product;
 
 class ShowProductController extends Controller
 {
+    public function __construct(private ShowProductUseCase $useCase) {}
+
     public function __invoke(
         Product $product,
-        ShowProductUseCase $useCase
     ) {
-        try {
-            $result = $useCase->run($product);
-            return ApiResponse::success($result, 'OK', 200);
-        } catch (\Throwable $e) {
-            return ApiResponse::error($e->getMessage(), [], 400);
-        }
 
+        $result = $this->useCase->run($product);
+
+        return ApiResponse::success($result);
     }
 }

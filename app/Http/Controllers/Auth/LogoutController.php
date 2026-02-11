@@ -15,6 +15,7 @@ class LogoutController
 {
     public function __invoke(Request $request)
     {
+
         $request->user()->currentAccessToken()->delete();
 
         ApiResponse::success([], ' User logged out');

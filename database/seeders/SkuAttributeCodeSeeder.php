@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\SkuAttributeCode;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class SkuAttributeCodeSeeder extends Seeder
@@ -15,15 +14,15 @@ class SkuAttributeCodeSeeder extends Seeder
     {
         $attributes = [
             'color' => [
-                'Red'   => 'RED',
-                'Blue'  => 'BLUE',
-                'Grey'  => 'GREY',
+                'Red' => 'RED',
+                'Blue' => 'BLUE',
+                'Grey' => 'GREY',
                 'Black' => 'BLACK',
             ],
             'size' => [
-                'Small'       => 'S',
-                'Medium'      => 'M',
-                'Large'       => 'L',
+                'Small' => 'S',
+                'Medium' => 'M',
+                'Large' => 'L',
                 'Extra Large' => 'XL',
             ],
         ];
@@ -42,5 +41,5 @@ class SkuAttributeCodeSeeder extends Seeder
                 );
             }
         }
-        }
+    }
 }

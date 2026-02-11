@@ -17,22 +17,20 @@ use Illuminate\Http\Request;
 
 class UpdateCategoryController extends Controller
 {
+    public function __construct(private UpdateCategoryUseCase $useCase) {}
+
     public function __invoke(
         Category $category,
         Request $request,
-        UpdateCategoryUseCase $useCase
     ): JsonResponse {
-        try {
-            $category = $useCase->run(
-                category: $category,
-                data: $request->all(),
-                photo: $request->file('image')
-            );
 
-            return ApiResponse::success($category, 'OK', 200);
-        } catch (\Throwable $e) {
-            return ApiResponse::error($e->getMessage(), [], 400);
-        }
+        $category = $this->useCase->run(
+            category: $category,
+            data: $request->all(),
+            photo: $request->file('image')
+        );
+
+        return ApiResponse::success($category, 'Category Updated', 200);
 
     }
 }

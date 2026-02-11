@@ -14,19 +14,18 @@ use App\Http\Responses\ApiResponse;
 
 class CreateBrandController
 {
+    public function __construct(private CreateBrandUseCase $useCase) {}
+
     public function __invoke(
         CreateBrandRequest $request,
-        CreateBrandUseCase $useCase
     ) {
-        try {
-            $brand = $useCase->run(
-                data: $request->validated(),
-                photo: $request->file('logo')
-            );
 
-            return ApiResponse::success($brand, 'OK', 201);
-        } catch (\Throwable $e) {
-            return ApiResponse::error($e->getMessage(), [], 400);
-        }
+        $brand = $this->useCase->run(
+            data: $request->validated(),
+            photo: $request->file('logo')
+        );
+
+        return ApiResponse::success($brand, 'OK', 201);
+
     }
 }

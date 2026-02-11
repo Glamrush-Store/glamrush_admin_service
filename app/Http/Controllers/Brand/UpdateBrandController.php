@@ -17,22 +17,19 @@ use Illuminate\Http\JsonResponse;
 
 class UpdateBrandController extends Controller
 {
+    public function __construct(private UpdateBrandUseCase $useCase) {}
+
     public function __invoke(
         Brand $brand,
         UpdateBrandRequest $request,
-        UpdateBrandUseCase $useCase
     ): JsonResponse {
-        try {
-            $brand = $useCase->run(
-                brand: $brand,
-                data: $request->validated(),
-                photo: $request->file('image')
-            );
 
-            return ApiResponse::success($brand, 'OK', 200);
-        } catch (\Throwable $e) {
-            return ApiResponse::error($e->getMessage(), [], 400);
-        }
+        $brand = $this->useCase->run(
+            brand: $brand,
+            data: $request->validated(),
+            photo: $request->file('image')
+        );
 
+        return ApiResponse::success($brand, 'OK', 200);
     }
 }

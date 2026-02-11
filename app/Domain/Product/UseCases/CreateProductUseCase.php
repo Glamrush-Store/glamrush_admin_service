@@ -69,7 +69,7 @@ class CreateProductUseCase
 
                         $variant = $this->createVariants->run($product, $variantData);
 
-                        if (!empty($variantData['photos'])) {
+                        if (! empty($variantData['photos'])) {
                             $this->uploadVariantPhotos->run(
                                 $variant,
                                 $variantData['photos']
@@ -98,7 +98,7 @@ class CreateProductUseCase
                 actor: auth()->user()
             );
 
-            //throw new \RuntimeException('failed to create Product', 0, $e);
+            // throw new \RuntimeException('failed to create Product', 0, $e);
             throw new \RuntimeException($e->getMessage(), 0, $e);
         }
 

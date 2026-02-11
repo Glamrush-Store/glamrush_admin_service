@@ -15,15 +15,14 @@ use App\Http\Responses\ApiResponse;
 
 class CreateAccountController extends Controller
 {
-    public function __invoke(CreateAccountRequest $request, CreateAccountUsecase $usecase)
-    {
-        try {
-            $result = $usecase->execute($request->validated());
-        } catch (\Throwable $e) {
-            return ApiResponse::error($e->getMessage(), [], 400);
-        }
+    public function __construct(private CreateAccountUsecase $usecase) {}
 
-        return ApiResponse::success($result, 'OK', 201);
+    public function __invoke(CreateAccountRequest $request)
+    {
+
+        $result = $this->usecase->execute($request->validated());
+
+        return ApiResponse::success($result, 'Account Created', 201);
 
     }
 }

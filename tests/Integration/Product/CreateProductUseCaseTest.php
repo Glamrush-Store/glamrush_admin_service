@@ -6,33 +6,25 @@
  * See the LICENSE file for details.
  */
 
-use App\Domain\Product\ProductVariant\Actions\CreateProductVariantsAction;
-use App\Domain\Product\ProductVariant\Actions\UploadVariantPhotosAction;
 use App\Domain\Product\UseCases\CreateProductUseCase;
-use App\Domain\Shared\Actions\CreateAppLogAction;
 use App\Models\Brand;
 use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Models\SkuAttributeCode;
-use App\Models\User;
-use Database\Factories\SkuAttributeCodeFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 uses(TestCase::class);
 uses(RefreshDatabase::class);
 
-
 it('creates a simple product without variants', function () {
 
     $brand = Brand::factory()->create([
-        'id' => "01KGWBRMZTEKQMKAQ4YYJ79GR8",
+        'id' => '01KGWBRMZTEKQMKAQ4YYJ79GR8',
     ]);
 
     $category = Brand::factory()->create([
-        'id' => "01KGWBRMZTEKQMKAQ4zzJ79GR8",
+        'id' => '01KGWBRMZTEKQMKAQ4zzJ79GR8',
     ]);
 
     $productData = Product::factory()->make([
@@ -41,7 +33,6 @@ it('creates a simple product without variants', function () {
         'type' => 'simple',
         'status' => 'published',
     ])->toArray();
-
 
     $createProduct = app(CreateProductUseCase::class);
 
@@ -56,13 +47,12 @@ it('creates a simple product without variants', function () {
 
 it('creates variable product with multiple variants', function () {
 
-
     $brand = Brand::factory()->create([
-        'id' => "01KGWBRMZTEKQMKAQ4YYJ79GR8",
+        'id' => '01KGWBRMZTEKQMKAQ4YYJ79GR8',
     ]);
 
     $category = Brand::factory()->create([
-        'id' => "01KGWBRMZTEKQMKAQ4zzJ79GR8",
+        'id' => '01KGWBRMZTEKQMKAQ4zzJ79GR8',
     ]);
 
     SkuAttributeCode::factory()->count(12)->create()->toArray();
@@ -72,15 +62,14 @@ it('creates variable product with multiple variants', function () {
         ->sequence(fn ($sequence) => [
             'attributes' => [
                 'color' => ['Red', 'Blue'][$sequence->index],
-                'size'  => ['Small', 'Medium'][$sequence->index],
+                'size' => ['Small', 'Medium'][$sequence->index],
             ],
         ])
         ->make([
             'sale_starts_at' => now(),
-            'sale_ends_at'   => now()->addDays(5),
+            'sale_ends_at' => now()->addDays(5),
         ])
         ->toArray();
-
 
     $productData = Product::factory()->make([
         'brand_id' => $brand->id,
@@ -90,18 +79,14 @@ it('creates variable product with multiple variants', function () {
         'variants' => $productVariantData,
     ])->toArray();
 
-
-
     $createProduct = app(CreateProductUseCase::class);
 
     $result = $createProduct->execute($productData);
-
 
     expect($result)
         ->toBeInstanceOf(Product::class)
         ->and($result->type)->toBe('variable')
         ->and($result->variants)->toHaveCount(2);
 });
-
 
 afterEach(fn () => Mockery::close());

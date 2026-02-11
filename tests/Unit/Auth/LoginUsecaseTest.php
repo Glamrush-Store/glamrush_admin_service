@@ -2,7 +2,7 @@
 
 use App\Domain\Auth\Actions\AuthenticateUserAction;
 use App\Domain\Auth\Actions\IssueDeviceTokenAction;
-use App\Domain\Auth\UseCases\LoginUsecase;
+use App\Domain\Auth\UseCases\LoginUseCase;
 use App\Models\User;
 
 // use Mockery;
@@ -25,7 +25,7 @@ it('authenticates user and issues device token', function () {
         ->with($user, 'device-id-123', 'iphone')
         ->andReturn('token-abc');
 
-    $usecase = new LoginUsecase($authenticate, $issueToken);
+    $usecase = new LoginUseCase($authenticate, $issueToken);
 
     // Act
     $result = $usecase->execute([
@@ -58,7 +58,7 @@ it('uses default device name when none is provided', function () {
         ->with($user, 'device-id-123', 'unknown-device')
         ->andReturn('token-abc');
 
-    $usecase = new LoginUsecase($authenticate, $issueToken);
+    $usecase = new LoginUseCase($authenticate, $issueToken);
 
     $result = $usecase->execute([
         'email' => 'john@example.com',

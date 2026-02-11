@@ -11,7 +11,7 @@ namespace App\Swagger\Product;
 use OpenApi\Attributes as OA;
 
 #[OA\Delete(
-    path: '/api/products/{product}',
+    path: '/api/v1/products/{product}',
     summary: 'Delete product',
     security: [['bearerAuth' => []]],
     tags: ['Products'],
@@ -20,7 +20,7 @@ use OpenApi\Attributes as OA;
             name: 'product',
             in: 'path',
             required: true,
-            schema: new OA\Schema(type: 'integer')
+            schema: new OA\Schema(type: 'string')
         ),
     ],
     responses: [

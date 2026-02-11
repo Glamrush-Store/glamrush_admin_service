@@ -11,7 +11,7 @@ namespace App\Domain\Auth\UseCases;
 use App\Domain\Auth\Actions\AuthenticateUserAction;
 use App\Domain\Auth\Actions\IssueDeviceTokenAction;
 
-readonly class LoginUsecase
+readonly class LoginUseCase
 {
     public function __construct(
         private AuthenticateUserAction $authenticate,

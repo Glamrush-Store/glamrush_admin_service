@@ -29,13 +29,15 @@ class UpdateProductUseCase
             return DB::transaction(function () use ($product, $data) {
                 $this->updateProduct->run($product, $data);
 
-                //required if you want to change a product from simple to variant
+                // required if you want to change a product from simple to variant
                 if ($product->type !== 'simple') {
                     $this->syncVariants->run($product, $data['variants']);
+
                     return $product->load('variants');
                 }
 
                 event(new ProductSavedEvent($product));
+
                 return $product;
             });
 

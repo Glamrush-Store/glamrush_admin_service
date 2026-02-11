@@ -16,16 +16,15 @@ use Illuminate\Http\JsonResponse;
 
 class DeleteBrandController extends Controller
 {
+    public function __construct(private DeleteBrandUseCase $useCase) {}
+
     public function __invoke(
         Brand $brand,
-        DeleteBrandUseCase $useCase
     ): JsonResponse {
-        try {
-            $useCase->run($brand);
 
-            return ApiResponse::success([], 'OK', 204);
-        } catch (\Throwable $e) {
-            return ApiResponse::error($e->getMessage(), [], 400);
-        }
+        $this->useCase->run($brand);
+
+        return ApiResponse::success([], '', 204);
+
     }
 }

@@ -12,7 +12,7 @@ use App\Models\Product;
 
 class UpdateProductAction
 {
-    public function run(Product $product,array $data): bool
+    public function run(Product $product, array $data): bool
     {
         return $product->update($data);
     }

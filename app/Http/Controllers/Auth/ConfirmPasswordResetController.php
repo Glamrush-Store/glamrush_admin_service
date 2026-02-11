@@ -15,18 +15,15 @@ use App\Http\Responses\ApiResponse;
 
 class ConfirmPasswordResetController
 {
+    public function __construct(private ConfirmPasswordResetUsecase $usecase) {}
+
     public function __invoke(
         ConfirmPasswordResetRequest $request,
-        ConfirmPasswordResetUsecase $usecase
     ) {
-        try {
-            $usecase->execute(
-                $request->user(),
-                $request->validated()['password']
-            );
-        } catch (\Throwable $e) {
-            return ApiResponse::error(AuthMessages::FAILED_PASSWORD_RESET, [], 500);
-        }
+        $this->usecase->execute(
+            $request->user(),
+            $request->validated()['password']
+        );
 
         return ApiResponse::success([], AuthMessages::PASSWORD_RESET_SUCCESS, 200);
     }

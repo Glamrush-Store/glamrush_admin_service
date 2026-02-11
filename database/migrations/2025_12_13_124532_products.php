@@ -93,6 +93,13 @@ return new class extends Migration
                 ->constrained()
                 ->nullOnDelete();
 
+            $table->ulid('vendor_id')->nullable()->index();
+
+            $table->foreign('vendor_id')
+                ->references('id')
+                ->on('vendors')
+                ->nullOnDelete();
+
             /*
              |--------------------------------------------------------------------------
              | Analytics

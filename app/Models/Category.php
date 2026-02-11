@@ -19,7 +19,6 @@ class Category extends Model implements HasMedia
 
     protected $keyType = 'string';
 
-
     protected $fillable = [
         'name',
         'slug',

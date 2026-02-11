@@ -17,8 +17,8 @@ use OpenApi\Attributes as OA;
 )]
 class Product
 {
-    #[OA\Property(example: 1)]
-    public int $id;
+    #[OA\Property(example: '01HV9Q8RZJ6E7Y3P6KX8D9N1A2')]
+    public string $id;
 
     #[OA\Property(example: 'iPhone 15')]
     public string $name;

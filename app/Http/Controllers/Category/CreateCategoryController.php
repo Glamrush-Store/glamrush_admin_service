@@ -14,19 +14,18 @@ use App\Http\Responses\ApiResponse;
 
 class CreateCategoryController
 {
+    public function __construct(private CreateCategoryUseCase $useCase) {}
+
     public function __invoke(
         CategoryRequest $request,
-        CreateCategoryUseCase $useCase
     ) {
-        try {
-            $category = $useCase->run(
-                data: $request->validated(),
-                photo: $request->file('photo')
-            );
 
-            return ApiResponse::success($category, 'OK', 201);
-        } catch (\Throwable $e) {
-            return ApiResponse::error($e->getMessage(), [], 400);
-        }
+        $category = $this->useCase->run(
+            data: $request->validated(),
+            photo: $request->file('photo')
+        );
+
+        return ApiResponse::success($category, 'OK', 201);
+
     }
 }

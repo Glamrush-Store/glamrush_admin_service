@@ -14,8 +14,6 @@ class SkuAttributeCodeFactory extends Factory
      *
      * @return array<string, mixed>
      */
-
-
     protected static array $pool = [];
 
     public function definition(): array
@@ -41,7 +39,7 @@ class SkuAttributeCodeFactory extends Factory
                     'Citrus' => 'CTRS',
                 ],
             ])
-                ->flatMap(fn($values, $type) => collect($values)->map(fn($code, $value) => [
+                ->flatMap(fn ($values, $type) => collect($values)->map(fn ($code, $value) => [
                     'type' => $type,
                     'value' => $value,
                     'code' => $code,
@@ -56,5 +54,4 @@ class SkuAttributeCodeFactory extends Factory
             'is_active' => true,
         ]);
     }
-
 }

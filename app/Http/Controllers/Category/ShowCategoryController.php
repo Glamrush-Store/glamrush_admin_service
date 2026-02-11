@@ -15,17 +15,15 @@ use App\Models\Category;
 
 class ShowCategoryController extends Controller
 {
+    public function __construct(private ShowCategoryUseCase $useCase) {}
+
     public function __invoke(
         Category $category,
-        ShowCategoryUseCase $useCase
     ) {
-        try {
-            $category = $useCase->run($category);
 
-            return ApiResponse::success($category, 'OK', 200);
-        } catch (\Throwable $e) {
-            return ApiResponse::error($e->getMessage(), [], 400);
-        }
+        $category = $this->useCase->run($category);
+
+        return ApiResponse::success($category);
 
     }
 }

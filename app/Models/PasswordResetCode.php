@@ -10,7 +10,8 @@ class PasswordResetCode extends Model
 {
     /** @use HasFactory<\Database\Factories\CategoryFactory> */
     use HasFactory;
-    protected $fillable = ['user_id', 'code_hash', 'expires_at','verified_at'];
+
+    protected $fillable = ['user_id', 'code_hash', 'expires_at', 'verified_at'];
 
     public function user(): BelongsTo
     {

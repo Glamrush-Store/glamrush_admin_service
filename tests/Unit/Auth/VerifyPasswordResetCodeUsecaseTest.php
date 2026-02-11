@@ -1,7 +1,8 @@
 <?php
-use App\Usecases\Auth\VerifyPasswordResetCodeUsecase;
-use App\Actions\Auth\ValidateResetCodeAction;
-use App\Actions\Auth\IssuePasswordResetTokenAction;
+
+use App\Domain\Auth\Actions\IssuePasswordResetTokenAction;
+use App\Domain\Auth\Actions\ValidateResetCodeAction;
+use App\Domain\Auth\UseCases\VerifyPasswordResetCodeUsecase;
 use App\Models\User;
 
 it('validates reset code and issues a password reset token', function () {

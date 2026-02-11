@@ -18,6 +18,7 @@ return new class extends Migration
              */
             $table->string('name');
             $table->string('sku')->unique()->nullable();
+            $table->string('sequence')->unique();
             $table->string('slug')->unique();
 
             /*
@@ -90,6 +91,13 @@ return new class extends Migration
             $table->ulid('brand_id')
                 ->nullable()
                 ->constrained()
+                ->nullOnDelete();
+
+            $table->ulid('vendor_id')->nullable()->index();
+
+            $table->foreign('vendor_id')
+                ->references('id')
+                ->on('vendors')
                 ->nullOnDelete();
 
             /*

@@ -36,18 +36,18 @@ class ProductVariant extends Model implements HasMedia
         'attributes' => 'array',
     ];
 
-    protected static function booted()
-    {
-        static::saving(function ($model) {
-            if (is_array($model->attributes['attributes'])) {
-                $model->attributes = collect($model->attributes['attributes'])
-                    ->mapWithKeys(fn ($item) => [
-                        $item['key'] => $item['value'],
-                    ])
-                    ->toArray();
-            }
-        });
-    }
+    //    protected static function booted()
+    //    {
+    //        static::saving(function ($model) {
+    //            if (is_array($model->attributes['attributes'])) {
+    //                $model->attributes = collect($model->attributes['attributes'])
+    //                    ->mapWithKeys(fn ($item) => [
+    //                        $item['key'] => $item['value'],
+    //                    ])
+    //                    ->toArray();
+    //            }
+    //        });
+    //    }
 
     public function registerMediaCollections(): void
     {

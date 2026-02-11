@@ -6,6 +6,7 @@ use App\Infrastructure\Cache\CatalogCache;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -23,8 +24,10 @@ class Product extends Model implements hasMedia
     protected $fillable = [
         'name',
         'slug',
+        'vendor_id',
         'short_description',
         'description',
+        'sequence',
         'type',
         'status',
         'published_at',
@@ -131,5 +134,10 @@ class Product extends Model implements hasMedia
     {
         return $this->defaultVariant
             ?? $this->variants()->first();
+    }
+
+    public function vendor(): BelongsTo
+    {
+        return $this->belongsTo(Vendor::class);
     }
 }

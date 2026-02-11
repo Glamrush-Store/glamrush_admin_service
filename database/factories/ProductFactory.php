@@ -6,6 +6,7 @@ use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductVariant;
+use App\Models\Vendor;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -18,6 +19,8 @@ class ProductFactory extends Factory
 
     protected static array $brandIds;
 
+    protected static array $vendorIds;
+
     /**
      * Define the model's default state.
      *
@@ -28,10 +31,12 @@ class ProductFactory extends Factory
         // Cache IDs once (important for performance)
         static::$categoryIds ??= Category::pluck('id')->all();
         static::$brandIds ??= Brand::pluck('id')->all();
+        static::$vendorIds ??= Vendor::pluck('id')->all();
 
         return [
             'id' => (string) Str::ulid(),
             'name' => $this->getProductName(),
+            'vendor_id' => fake()->randomElement(static::$vendorIds),
             'slug' => Str::slug($this->getProductName(), '-'),
             'category_id' => fake()->randomElement(static::$categoryIds),
             'brand_id' => fake()->randomElement(static::$brandIds),
@@ -44,6 +49,14 @@ class ProductFactory extends Factory
             'meta_description' => $this->faker->text(),
             'meta_keywords' => $this->faker->words(9, true),
             'is_featured' => $this->faker->boolean(),
+            'price' => $this->faker->randomFloat(2, 0, 10000),
+            'sale_price' => $this->faker->randomFloat(2, 0, 10000),
+            'sale_starts_at' => $this->faker->date(),
+            'sale_ends_at' => $this->faker->date(),
+            'manage_stock' => $this->faker->boolean(),
+            'in_stock' => $this->faker->boolean(),
+            'sequence' => $this->faker->unique()->numberBetween(1, 999999),
+            'stock_quantity' => $this->faker->randomNumber(),
             'sort_order' => $this->faker->randomNumber(),
             'views_count' => $this->faker->randomNumber(),
             'sales_count' => $this->faker->randomNumber(),

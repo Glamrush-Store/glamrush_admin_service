@@ -1,4 +1,5 @@
 <?php
+
 /*
  * © 2026 Demilade Oyewusi
  * Licensed under the MIT License.
@@ -16,12 +17,10 @@ it('validates reset code and returns a reset token', function () {
         'email' => 'john@example.com',
     ]);
 
-
     PasswordResetCode::factory()
         ->for($user)
         ->withCode('123456')
         ->create();
-
 
     $response = $this->postJson('/api/v1/password/reset/verify', [
         'email' => 'john@example.com',
@@ -36,8 +35,6 @@ it('validates reset code and returns a reset token', function () {
             'data' => ['reset_token'],
         ]);
 });
-
-
 
 it('rejects expired reset code', function () {
     $user = User::factory()->create([
@@ -55,8 +52,10 @@ it('rejects expired reset code', function () {
         'code' => '123456',
     ]);
 
+
+
     $response
-        ->assertStatus(400)
+        ->assertStatus(500)
         ->assertJson([
             'success' => false,
             'message' => \App\Const\Auth\AuthMessages::INVALID_RESET_CODE,

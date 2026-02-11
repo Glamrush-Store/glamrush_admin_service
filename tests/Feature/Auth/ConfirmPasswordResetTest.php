@@ -1,14 +1,12 @@
 <?php
 
 use App\Const\Auth\AuthMessages;
+use App\Models\PasswordResetCode;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use App\Models\PasswordResetCode;
 use Illuminate\Support\Facades\Hash;
 
 uses(RefreshDatabase::class);
-
-
 
 it('allows password change using a valid reset token', function () {
     // 1️⃣ Arrange: user + reset code

@@ -8,7 +8,6 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Responses\ApiResponse;
 use Illuminate\Http\Request;
 
@@ -16,6 +15,7 @@ class LogoutController
 {
     public function __invoke(Request $request)
     {
+
         $request->user()->currentAccessToken()->delete();
 
         ApiResponse::success([], ' User logged out');

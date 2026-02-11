@@ -8,24 +8,19 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Exceptions\Auth\InvalidResetCodeException;
+use App\Domain\Auth\UseCases\VerifyPasswordResetCodeUsecase;
 use App\Http\Requests\Auth\VerifyPasswordResetCodeRequest;
 use App\Http\Responses\ApiResponse;
-use App\Usecases\Auth\VerifyPasswordResetCodeUsecase;
 
 class VerifyPasswordResetCodeController
 {
+    public function __construct(private VerifyPasswordResetCodeUsecase $usecase) {}
+
     public function __invoke(
-        VerifyPasswordResetCodeRequest $request,
-        VerifyPasswordResetCodeUsecase $usecase
+        VerifyPasswordResetCodeRequest $request
     ) {
-        try {
-            $result = $usecase->execute($request->validated());
+        $result = $this->usecase->execute($request->validated());
 
-            return ApiResponse::success($result, 'OK', 200);
-
-        } catch (InvalidResetCodeException $e) {
-            return ApiResponse::error($e->getMessage(), [], 400);
-        }
+        return ApiResponse::success($result, 'OK', 200);
     }
 }

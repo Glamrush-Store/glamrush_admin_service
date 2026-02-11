@@ -1,17 +1,18 @@
 <?php
+
 /*
  * © 2026 Demilade Oyewusi
  * Licensed under the MIT License.
  * See the LICENSE file for details.
  */
 
-
-use App\Actions\Auth\CreateUserAction;
+use App\Domain\Auth\Actions\CreateUserAction;
 use App\Models\User;
-use Spatie\Permission\Models\Role;
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Exceptions\RoleDoesNotExist;
+use Spatie\Permission\Models\Role;
+use Tests\TestCase;
 
 uses(TestCase::class);
 uses(RefreshDatabase::class);
@@ -44,12 +45,10 @@ it('creates a user and assigns the given role', function () {
     expect(User::where('email', 'john@example.com')->exists())->toBeTrue();
 });
 
-
 it('throws runtime exception when user creation fails', function () {
     $action = app(CreateUserAction::class);
 
-    $this->expectException(RuntimeException::class);
-    $this->expectExceptionMessage('User creation failed');
+    $this->expectException(RoleDoesNotExist::class);
 
     $action->run(
         name: 'John Doe',

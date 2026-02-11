@@ -1,10 +1,10 @@
 <?php
+
 /*
  * © 2026 Demilade Oyewusi
  * Licensed under the MIT License.
  * See the LICENSE file for details.
  */
-
 
 namespace App\Providers;
 
@@ -49,6 +49,7 @@ class GoogleCloudStorageServiceProvider extends ServiceProvider
                     $client = new \GuzzleHttp\Client([
                         'verify' => false, // Disable SSL verification for local dev
                     ]);
+
                     return $client->send($request, $options);
                 };
             }
@@ -57,7 +58,7 @@ class GoogleCloudStorageServiceProvider extends ServiceProvider
             $bucket = $storageClient->bucket($config['bucket']);
 
             // Verify bucket is accessible
-            if (!$bucket->exists()) {
+            if (! $bucket->exists()) {
                 throw new \Exception("Bucket {$config['bucket']} does not exist or is not accessible");
             }
 
@@ -77,7 +78,7 @@ class GoogleCloudStorageServiceProvider extends ServiceProvider
             // Add throw option to ensure errors are visible
             $config['throw'] = $config['throw'] ?? false;
 
-            //return new FilesystemAdapter($filesystem, $adapter, $config);
+            // return new FilesystemAdapter($filesystem, $adapter, $config);
             return new GcsFilesystemAdapter(
                 $filesystem,
                 $adapter,

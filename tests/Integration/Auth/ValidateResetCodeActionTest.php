@@ -1,11 +1,12 @@
 <?php
+
 /*
  * © 2026 Demilade Oyewusi
  * Licensed under the MIT License.
  * See the LICENSE file for details.
  */
 
-use App\Actions\Auth\ValidateResetCodeAction;
+use App\Domain\Auth\Actions\ValidateResetCodeAction;
 use App\Exceptions\Auth\InvalidResetCodeException;
 use App\Models\PasswordResetCode;
 use App\Models\User;
@@ -36,7 +37,6 @@ it('returns user and marks code as verified when code is valid', function () {
     expect($code->verified_at)->not->toBeNull();
 });
 
-
 it('throws when reset code is invalid', function () {
     $user = User::factory()->create();
 
@@ -50,7 +50,6 @@ it('throws when reset code is invalid', function () {
     expect(fn () => $action->run($user->email, '000000'))
         ->toThrow(InvalidResetCodeException::class);
 });
-
 
 it('throws when reset code is expired', function () {
     $user = User::factory()->create();

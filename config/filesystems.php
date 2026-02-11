@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'default' => env('FILESYSTEM_DISK', 'local'),
+    'default' => env('FILESYSTEM_DISK', 'gcs'),
 
     /*
     |--------------------------------------------------------------------------
@@ -64,10 +64,10 @@ return [
             'driver' => 'gcs',
             'project_id' => env('GCP_PROJECT_ID'),
             'bucket' => env('GCP_BUCKET'),
-            'path_prefix' => env('GCP_PATH_PREFIX', ""),
+            'path_prefix' => env('GCP_PATH_PREFIX', ''),
             'key_file' => env('GOOGLE_APPLICATION_CREDENTIALS', null),
             'throw' => true,
-            'url' => 'https://storage.googleapis.com/' . env('GCP_BUCKET'),
+            'url' => 'https://storage.googleapis.com/'.env('GCP_BUCKET'),
         ],
 
     ],

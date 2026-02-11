@@ -1,52 +1,47 @@
 <?php
 
-use App\Usecases\Auth\CreateAccountUsecase;
-use App\Actions\Auth\CreateUserAction;
-use App\Actions\Auth\IssueDeviceTokenAction;
+use App\Domain\Auth\Actions\CreateUserAction;
+use App\Domain\Auth\Actions\IssueDeviceTokenAction;
+use App\Domain\Auth\UseCases\CreateAccountUsecase;
 use App\Models\User;
-//use Mockery;
 
+// use Mockery;
+it('creates an account and returns user with token', function () {
 
-    it('creates a user and issues a device token', function () {
-        // Arrange
-        $user = Mockery::mock(User::class);
+    $user = Mockery::mock(User::class);
+    $token = 'test-access-token';
 
-        $createUser = Mockery::mock(CreateUserAction::class);
-        $createUser
-            ->shouldReceive('run')
-            ->once()
-            ->with(
-                'John Doe',
-                'john@example.com',
-                'password',
-                'admin'
-            )
-            ->andReturn($user);
+    $createUser = Mockery::mock(CreateUserAction::class);
+    $createUser
+        ->shouldReceive('run')
+        ->once()
+        ->with('John', 'john@example.com', 'secret', 'user')
+        ->andReturn($user);
 
-        $issueToken = Mockery::mock(IssueDeviceTokenAction::class);
+    $issueToken = Mockery::mock(IssueDeviceTokenAction::class);
+    $issueToken
+        ->shouldReceive('run')
+        ->once()
+        ->with($user, 'device-123', 'iPhone')
+        ->andReturn($token);
+
+    $usecase = new CreateAccountUsecase(
+        $createUser,
         $issueToken
-            ->shouldReceive('run')
-            ->once()
-            ->with($user, 'device-id-123', 'iphone')
-            ->andReturn('token-abc');
+    );
 
-        $usecase = new CreateAccountUsecase($createUser, $issueToken);
+    $result = $usecase->execute([
+        'name' => 'John',
+        'email' => 'john@example.com',
+        'password' => 'secret',
+        'role' => 'user',
+        'device_id' => 'device-123',
+        'device_name' => 'iPhone',
+    ]);
 
-        // Act
-        $result = $usecase->execute([
-            'name' => 'John Doe',
-            'email' => 'john@example.com',
-            'password' => 'password',
-            'role' => 'admin',
-            'device_id' => 'device-id-123',
-            'device_name' => 'iphone',
-        ]);
-
-        // Assert
-        expect($result)->toBe([
-            'user' => $user,
-            'access_token' => 'token-abc',
-            'token_type' => 'Bearer',
-        ]);
-
+    expect($result)->toBe([
+        'user' => $user,
+        'access_token' => $token,
+        'token_type' => 'Bearer',
+    ]);
 });

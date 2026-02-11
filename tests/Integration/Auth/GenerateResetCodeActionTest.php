@@ -1,12 +1,12 @@
 <?php
+
 /*
  * © 2026 Demilade Oyewusi
  * Licensed under the MIT License.
  * See the LICENSE file for details.
  */
 
-
-use App\Actions\Auth\GenerateResetCodeAction;
+use App\Domain\Auth\Actions\GenerateResetCodeAction;
 use App\Models\PasswordResetCode;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -40,7 +40,6 @@ it('generates a reset code and stores its hash', function () {
 
 });
 
-
 it('deletes existing reset codes before creating a new one', function () {
     $user = User::factory()->create();
 
@@ -58,7 +57,6 @@ it('deletes existing reset codes before creating a new one', function () {
     // only one reset code should exist
     expect($codes)->toHaveCount(1);
 });
-
 
 it('throws runtime exception when generation fails', function () {
     $user = User::factory()->create();

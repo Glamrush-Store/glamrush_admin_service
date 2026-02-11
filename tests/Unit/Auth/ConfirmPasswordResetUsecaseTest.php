@@ -1,10 +1,9 @@
 <?php
 
-use App\Usecases\Auth\ConfirmPasswordResetUsecase;
-use App\Actions\Auth\UpdateUserPasswordAction;
-use App\Actions\Auth\RevokeAllTokensAction;
+use App\Domain\Auth\Actions\RevokeAllTokensAction;
+use App\Domain\Auth\Actions\UpdateUserPasswordAction;
+use App\Domain\Auth\UseCases\ConfirmPasswordResetUsecase;
 use App\Models\User;
-
 
 it('updates user password', function () {
 

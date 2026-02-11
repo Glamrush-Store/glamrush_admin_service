@@ -1,12 +1,12 @@
 <?php
+
 /*
  * © 2026 Demilade Oyewusi
  * Licensed under the MIT License.
  * See the LICENSE file for details.
  */
 
-
-namespace App\Filesystem;
+namespace App\FileSystem;
 
 use Illuminate\Filesystem\FilesystemAdapter;
 
@@ -24,7 +24,6 @@ class GcsFilesystemAdapter extends FilesystemAdapter
     {
         $baseUrl = rtrim($this->config['url'], '/');
 
-        return $baseUrl . '/' . ltrim($path, '/');
+        return $baseUrl.'/'.ltrim($path, '/');
     }
 }
-

@@ -9,24 +9,21 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Const\Auth\AuthMessages;
+use App\Domain\Auth\UseCases\ConfirmPasswordResetUsecase;
 use App\Http\Requests\Auth\ConfirmPasswordResetRequest;
 use App\Http\Responses\ApiResponse;
-use App\Usecases\Auth\ConfirmPasswordResetUsecase;
 
 class ConfirmPasswordResetController
 {
+    public function __construct(private ConfirmPasswordResetUsecase $usecase) {}
+
     public function __invoke(
         ConfirmPasswordResetRequest $request,
-        ConfirmPasswordResetUsecase $usecase
     ) {
-        try {
-            $usecase->execute(
-                $request->user(),
-                $request->validated()['password']
-            );
-        } catch (\Throwable $e) {
-           return ApiResponse::error(AuthMessages::FAILED_PASSWORD_RESET, [], 500);
-        }
+        $this->usecase->execute(
+            $request->user(),
+            $request->validated()['password']
+        );
 
         return ApiResponse::success([], AuthMessages::PASSWORD_RESET_SUCCESS, 200);
     }

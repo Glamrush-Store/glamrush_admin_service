@@ -10,6 +10,7 @@ namespace App\Http\Controllers\Vendor;
 
 use App\Domain\Vendor\UseCases\ListVendorsUseCase;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Vendor\VendorResource;
 use App\Http\Responses\ApiResponse;
 use Illuminate\Http\Request;
 
@@ -26,6 +27,6 @@ class ListVendorController extends Controller
             perPage: (int) $request->query('per_page', 15)
         );
 
-        return ApiResponse::success($vendors);
+        return ApiResponse::success(VendorResource::collection($vendors));
     }
 }

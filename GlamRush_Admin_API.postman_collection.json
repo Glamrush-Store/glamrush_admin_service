@@ -1,0 +1,3332 @@
+{
+	"info": {
+		"_postman_id": "glamrush-admin-service-collection",
+		"name": "GlamRush Admin API",
+		"description": "API collection for GlamRush Admin Service — Laravel 12 e-commerce admin backend.\n\nSetup:\n1. Set the `base_url` variable (e.g. http://localhost:8000)\n2. Use the Login endpoint first — the token is auto-saved to `{{token}}`\n3. All authenticated endpoints use Bearer token from `{{token}}`",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "",
+			"type": "string"
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/health",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "health"]
+						},
+						"description": "Returns API health status. No authentication required."
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/v1/health",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "health"]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\"status\":\"ok\"}"
+						}
+					]
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.data && jsonData.data.token) {",
+									"    pm.collectionVariables.set('token', jsonData.data.token);",
+									"    console.log('Token saved to collection variable.');",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"admin@glamrush.com\",\n    \"password\": \"password123\",\n    \"device_id\": \"postman-device-001\",\n    \"device_name\": \"Postman Client\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/account/login",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "account", "login"]
+						},
+						"description": "Authenticate a user and receive a Sanctum token. The token is automatically saved to the `{{token}}` collection variable."
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"admin@glamrush.com\",\n    \"password\": \"password123\",\n    \"device_id\": \"postman-device-001\",\n    \"device_name\": \"Postman Client\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/account/login",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "account", "login"]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\"success\":true,\"message\":\"OK\",\"data\":{\"access_token\":\"1|abc123def456ghi789jkl012mno345pqr678stu901vwx234yz\",\"token_type\":\"Bearer\"},\"errors\":null}"
+						},
+						{
+							"name": "Invalid Credentials",
+							"originalRequest": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"admin@glamrush.com\",\n    \"password\": \"wrongpassword\",\n    \"device_id\": \"postman-device-001\",\n    \"device_name\": \"Postman Client\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/account/login",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "account", "login"]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\"success\":false,\"message\":\"invalid username or password\",\"data\":null,\"errors\":[]}"
+						}
+					]
+				},
+				{
+					"name": "Create Account",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"John Doe\",\n    \"email\": \"john@glamrush.com\",\n    \"password\": \"Password1\",\n    \"password_confirmation\": \"Password1\",\n    \"device_id\": \"postman-device-001\",\n    \"device_name\": \"Postman Client\",\n    \"role\": \"super_admin\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/account/create",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "account", "create"]
+						},
+						"description": "Create a new admin user account. Requires `Create_User` permission."
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"John Doe\",\n    \"email\": \"john@glamrush.com\",\n    \"password\": \"Password1\",\n    \"password_confirmation\": \"Password1\",\n    \"device_id\": \"postman-device-001\",\n    \"device_name\": \"Postman Client\",\n    \"role\": \"super_admin\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/account/create",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "account", "create"]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\"success\":true,\"message\":\"Account Created\",\"data\":{\"user\":{\"id\":1,\"name\":\"John Doe\",\"email\":\"john@glamrush.com\",\"email_verified_at\":null,\"created_at\":\"2026-02-12T10:00:00.000000Z\",\"updated_at\":\"2026-02-12T10:00:00.000000Z\"},\"access_token\":\"2|xyz789abc123def456ghi789jkl012mno345pqr678stu901vwx\",\"token_type\":\"Bearer\"},\"errors\":null}"
+						},
+						{
+							"name": "Validation Error",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"\",\n    \"email\": \"invalid\",\n    \"password\": \"short\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/account/create",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "account", "create"]
+								}
+							},
+							"status": "Unprocessable Entity",
+							"code": 422,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\"success\":false,\"message\":\"Validation failed\",\"data\":null,\"errors\":{\"name\":[\"The name field is required.\"],\"email\":[\"The email field must be a valid email address.\"],\"password\":[\"The password field must be at least 8 characters.\",\"The password field confirmation does not match.\"],\"device_id\":[\"The device id field is required.\"],\"role\":[\"The role field is required.\"]}}"
+						},
+						{
+							"name": "Unauthorized (No Token)",
+							"originalRequest": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"John Doe\",\n    \"email\": \"john@glamrush.com\",\n    \"password\": \"Password1\",\n    \"password_confirmation\": \"Password1\",\n    \"device_id\": \"postman-device-001\",\n    \"device_name\": \"Postman Client\",\n    \"role\": \"super_admin\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/account/create",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "account", "create"]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\"message\":\"Unauthenticated.\"}"
+						}
+					]
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/account/logout",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "account", "logout"]
+						},
+						"description": "Revoke the current authentication token."
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/account/logout",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "account", "logout"]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\"success\":true,\"message\":\" User logged out\",\"data\":[],\"errors\":null}"
+						}
+					]
+				},
+				{
+					"name": "Who Am I",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/whoami",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "whoami"]
+						},
+						"description": "Get the currently authenticated user's details."
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/whoami",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "whoami"]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\"success\":true,\"message\":\"OK\",\"data\":{\"id\":1,\"name\":\"Admin User\",\"email\":\"admin@glamrush.com\",\"email_verified_at\":null,\"created_at\":\"2026-02-12T10:00:00.000000Z\",\"updated_at\":\"2026-02-12T10:00:00.000000Z\"},\"errors\":null}"
+						}
+					]
+				},
+				{
+					"name": "Request Password Reset",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"admin@glamrush.com\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/password/reset/request",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "password", "reset", "request"]
+						},
+						"description": "Request a 6-digit password reset code sent to the user's email."
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"admin@glamrush.com\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/password/reset/request",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "password", "reset", "request"]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\"success\":true,\"message\":\"Reset code sent\",\"data\":[],\"errors\":null}"
+						}
+					]
+				},
+				{
+					"name": "Verify Password Reset Code",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.data && jsonData.data.token) {",
+									"    pm.collectionVariables.set('token', jsonData.data.token);",
+									"    console.log('Password reset token saved.');",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"admin@glamrush.com\",\n    \"code\": \"777777\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/password/reset/verify",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "password", "reset", "verify"]
+						},
+						"description": "Verify the 6-digit reset code. Returns a temporary token with `password:reset` ability."
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"admin@glamrush.com\",\n    \"code\": \"777777\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/password/reset/verify",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "password", "reset", "verify"]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\"success\":true,\"message\":\"OK\",\"data\":{\"reset_token\":\"3|resettoken123abc456def789ghi012jkl345mno678pqr901st\"},\"errors\":null}"
+						}
+					]
+				},
+				{
+					"name": "Confirm Password Reset",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"password\": \"NewPassword1\",\n    \"password_confirmation\": \"NewPassword1\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/password/reset/confirm",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "password", "reset", "confirm"]
+						},
+						"description": "Set a new password. Requires a token with `password:reset` ability (obtained from Verify step).\n\nPassword requirements: min 8 chars, at least 1 uppercase, 1 lowercase, 1 digit."
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"password\": \"NewPassword1\",\n    \"password_confirmation\": \"NewPassword1\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/password/reset/confirm",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "password", "reset", "confirm"]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\"success\":true,\"message\":\"Password updated successfully\",\"data\":[],\"errors\":null}"
+						}
+					]
+				}
+			],
+			"description": "Authentication, account management, and password reset endpoints."
+		},
+		{
+			"name": "Categories",
+			"item": [
+				{
+					"name": "List Categories",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/categories?page=1&per_page=15",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "categories"],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "per_page",
+									"value": "15"
+								},
+								{
+									"key": "search",
+									"value": "",
+									"disabled": true
+								}
+							]
+						},
+						"description": "List all categories with pagination. Requires `View_Category` permission."
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/categories?page=1&per_page=15",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "categories"],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "per_page",
+											"value": "15"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\"success\":true,\"message\":\"OK\",\"data\":{\"current_page\":1,\"data\":[{\"id\":\"01JKXYZ123ABC456DEF789GHI\",\"name\":\"Electronics\",\"slug\":\"electronics\",\"parent_id\":null,\"is_active\":true,\"description\":\"Electronic devices and accessories\",\"meta_title\":null,\"meta_description\":null,\"meta_keywords\":null,\"sort_order\":0,\"image\":null,\"created_at\":\"2026-02-12T10:00:00.000000Z\",\"updated_at\":\"2026-02-12T10:00:00.000000Z\",\"deleted_at\":null},{\"id\":\"01JKXYZ456DEF789GHI012JKL\",\"name\":\"Clothing\",\"slug\":\"clothing\",\"parent_id\":null,\"is_active\":true,\"description\":\"Fashion and apparel\",\"meta_title\":null,\"meta_description\":null,\"meta_keywords\":null,\"sort_order\":1,\"image\":null,\"created_at\":\"2026-02-12T10:05:00.000000Z\",\"updated_at\":\"2026-02-12T10:05:00.000000Z\",\"deleted_at\":null}],\"first_page_url\":\"http://localhost:8000/api/v1/categories?page=1\",\"from\":1,\"last_page\":1,\"last_page_url\":\"http://localhost:8000/api/v1/categories?page=1\",\"links\":[{\"url\":null,\"label\":\"&laquo; Previous\",\"active\":false},{\"url\":\"http://localhost:8000/api/v1/categories?page=1\",\"label\":\"1\",\"active\":true},{\"url\":null,\"label\":\"Next &raquo;\",\"active\":false}],\"next_page_url\":null,\"path\":\"http://localhost:8000/api/v1/categories\",\"per_page\":15,\"prev_page_url\":null,\"to\":2,\"total\":2},\"errors\":null}"
+						}
+					]
+				},
+				{
+					"name": "Show Category",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/categories/:category_id",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "categories", ":category_id"],
+							"variable": [
+								{
+									"key": "category_id",
+									"value": "",
+									"description": "Category ULID"
+								}
+							]
+						},
+						"description": "Get a single category by ID. Requires `View_Category` permission."
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/categories/:category_id",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "categories", ":category_id"],
+									"variable": [
+										{
+											"key": "category_id",
+											"value": "01JKXYZ123ABC456DEF789GHI"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\"success\":true,\"message\":\"OK\",\"data\":{\"id\":\"01JKXYZ123ABC456DEF789GHI\",\"name\":\"Electronics\",\"slug\":\"electronics\",\"parent_id\":null,\"is_active\":true,\"description\":\"Electronic devices and accessories\",\"meta_title\":null,\"meta_description\":null,\"meta_keywords\":null,\"sort_order\":0,\"image\":null,\"created_at\":\"2026-02-12T10:00:00.000000Z\",\"updated_at\":\"2026-02-12T10:00:00.000000Z\",\"deleted_at\":null},\"errors\":null}"
+						},
+						{
+							"name": "Not Found",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/categories/:category_id",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "categories", ":category_id"],
+									"variable": [
+										{
+											"key": "category_id",
+											"value": "nonexistent-id"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\"success\":false,\"message\":\"Resource not found\",\"data\":null,\"errors\":null}"
+						}
+					]
+				},
+				{
+					"name": "Create Category",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Electronics",
+									"type": "text"
+								},
+								{
+									"key": "is_active",
+									"value": "true",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "Electronic devices and accessories",
+									"type": "text"
+								},
+								{
+									"key": "parent_id",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "meta_title",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "meta_description",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "meta_keywords",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "sort_order",
+									"value": "0",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "image",
+									"type": "file",
+									"src": "",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/categories",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "categories"]
+						},
+						"description": "Create a new category. Requires `Create_Category` permission.\n\nUses form-data to support image upload (max 2MB)."
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "name",
+											"value": "Electronics",
+											"type": "text"
+										},
+										{
+											"key": "is_active",
+											"value": "true",
+											"type": "text"
+										},
+										{
+											"key": "description",
+											"value": "Electronic devices and accessories",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/categories",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "categories"]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\"success\":true,\"message\":\"OK\",\"data\":{\"id\":\"01JKXYZ123ABC456DEF789GHI\",\"name\":\"Electronics\",\"slug\":\"electronics\",\"parent_id\":null,\"is_active\":true,\"description\":\"Electronic devices and accessories\",\"meta_title\":null,\"meta_description\":null,\"meta_keywords\":null,\"sort_order\":0,\"image\":null,\"created_at\":\"2026-02-12T10:00:00.000000Z\",\"updated_at\":\"2026-02-12T10:00:00.000000Z\",\"deleted_at\":null},\"errors\":null}"
+						},
+						{
+							"name": "Validation Error",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "name",
+											"value": "",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/categories",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "categories"]
+								}
+							},
+							"status": "Unprocessable Entity",
+							"code": 422,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\"success\":false,\"message\":\"Validation failed\",\"data\":null,\"errors\":{\"name\":[\"The name field is required.\"],\"is_active\":[\"The is active field is required.\"]}}"
+						}
+					]
+				},
+				{
+					"name": "Update Category",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Electronics Updated\",\n    \"is_active\": true,\n    \"description\": \"Updated description\",\n    \"parent_id\": null,\n    \"meta_title\": null,\n    \"meta_description\": null,\n    \"meta_keywords\": null,\n    \"sort_order\": 1\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/categories/:category_id",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "categories", ":category_id"],
+							"variable": [
+								{
+									"key": "category_id",
+									"value": "",
+									"description": "Category ULID"
+								}
+							]
+						},
+						"description": "Update an existing category. Requires `Update_Category` permission."
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Electronics Updated\",\n    \"is_active\": true,\n    \"description\": \"Updated description\",\n    \"parent_id\": null,\n    \"meta_title\": null,\n    \"meta_description\": null,\n    \"meta_keywords\": null,\n    \"sort_order\": 1\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/categories/:category_id",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "categories", ":category_id"],
+									"variable": [
+										{
+											"key": "category_id",
+											"value": "01JKXYZ123ABC456DEF789GHI"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\"success\":true,\"message\":\"OK\",\"data\":{\"id\":\"01JKXYZ123ABC456DEF789GHI\",\"name\":\"Electronics Updated\",\"slug\":\"electronics-updated\",\"parent_id\":null,\"is_active\":true,\"description\":\"Updated description\",\"meta_title\":null,\"meta_description\":null,\"meta_keywords\":null,\"sort_order\":1,\"image\":null,\"created_at\":\"2026-02-12T10:00:00.000000Z\",\"updated_at\":\"2026-02-12T10:15:00.000000Z\",\"deleted_at\":null},\"errors\":null}"
+						}
+					]
+				},
+				{
+					"name": "Delete Category",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/categories/:category_id",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "categories", ":category_id"],
+							"variable": [
+								{
+									"key": "category_id",
+									"value": "",
+									"description": "Category ULID"
+								}
+							]
+						},
+						"description": "Soft-delete a category. Requires `Delete_Category` permission."
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/categories/:category_id",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "categories", ":category_id"],
+									"variable": [
+										{
+											"key": "category_id",
+											"value": "01JKXYZ123ABC456DEF789GHI"
+										}
+									]
+								}
+							},
+							"status": "No Content",
+							"code": 204,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\"success\":true,\"message\":\"\",\"data\":[],\"errors\":null}"
+						}
+					]
+				}
+			],
+			"description": "Category management endpoints. Supports hierarchical parent-child categories with SEO metadata."
+		},
+		{
+			"name": "Brands",
+			"item": [
+				{
+					"name": "List Brands",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/brands?page=1&per_page=15",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "brands"],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "per_page",
+									"value": "15"
+								},
+								{
+									"key": "search",
+									"value": "",
+									"disabled": true
+								}
+							]
+						},
+						"description": "List all brands with pagination. Requires `View_Brand` permission."
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/brands?page=1&per_page=15",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "brands"],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "per_page",
+											"value": "15"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\"success\":true,\"message\":\"OK\",\"data\":{\"current_page\":1,\"data\":[{\"id\":\"01JKBRAND1ABC456DEF789GH\",\"name\":\"Nike\",\"slug\":\"nike\",\"code\":\"NIK\",\"is_active\":true,\"description\":\"Global sportswear brand\",\"logo\":null,\"meta_title\":null,\"meta_description\":null,\"meta_keywords\":null,\"sort_order\":0,\"created_at\":\"2026-02-12T10:00:00.000000Z\",\"updated_at\":\"2026-02-12T10:00:00.000000Z\",\"deleted_at\":null},{\"id\":\"01JKBRAND2DEF789GHI012JK\",\"name\":\"Adidas\",\"slug\":\"adidas\",\"code\":\"ADI\",\"is_active\":true,\"description\":\"German multinational corporation\",\"logo\":null,\"meta_title\":null,\"meta_description\":null,\"meta_keywords\":null,\"sort_order\":1,\"created_at\":\"2026-02-12T10:05:00.000000Z\",\"updated_at\":\"2026-02-12T10:05:00.000000Z\",\"deleted_at\":null}],\"first_page_url\":\"http://localhost:8000/api/v1/brands?page=1\",\"from\":1,\"last_page\":1,\"last_page_url\":\"http://localhost:8000/api/v1/brands?page=1\",\"links\":[{\"url\":null,\"label\":\"&laquo; Previous\",\"active\":false},{\"url\":\"http://localhost:8000/api/v1/brands?page=1\",\"label\":\"1\",\"active\":true},{\"url\":null,\"label\":\"Next &raquo;\",\"active\":false}],\"next_page_url\":null,\"path\":\"http://localhost:8000/api/v1/brands\",\"per_page\":15,\"prev_page_url\":null,\"to\":2,\"total\":2},\"errors\":null}"
+						}
+					]
+				},
+				{
+					"name": "Show Brand",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/brands/:brand_id",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "brands", ":brand_id"],
+							"variable": [
+								{
+									"key": "brand_id",
+									"value": "",
+									"description": "Brand ULID"
+								}
+							]
+						},
+						"description": "Get a single brand by ID. Requires `View_Brand` permission."
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/brands/:brand_id",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "brands", ":brand_id"],
+									"variable": [
+										{
+											"key": "brand_id",
+											"value": "01JKBRAND1ABC456DEF789GH"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\"success\":true,\"message\":\"OK\",\"data\":{\"id\":\"01JKBRAND1ABC456DEF789GH\",\"name\":\"Nike\",\"slug\":\"nike\",\"code\":\"NIK\",\"is_active\":true,\"description\":\"Global sportswear brand\",\"logo\":null,\"meta_title\":null,\"meta_description\":null,\"meta_keywords\":null,\"sort_order\":0,\"created_at\":\"2026-02-12T10:00:00.000000Z\",\"updated_at\":\"2026-02-12T10:00:00.000000Z\",\"deleted_at\":null},\"errors\":null}"
+						}
+					]
+				},
+				{
+					"name": "Create Brand",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Nike",
+									"type": "text"
+								},
+								{
+									"key": "code",
+									"value": "NIK",
+									"type": "text"
+								},
+								{
+									"key": "is_active",
+									"value": "true",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "Global sportswear brand",
+									"type": "text"
+								},
+								{
+									"key": "meta_title",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "meta_description",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "meta_keywords",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "sort_order",
+									"value": "0",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "logo",
+									"type": "file",
+									"src": "",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/brands",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "brands"]
+						},
+						"description": "Create a new brand. Requires `Create_Brand` permission.\n\nUses form-data to support logo upload (max 2MB)."
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "name",
+											"value": "Nike",
+											"type": "text"
+										},
+										{
+											"key": "code",
+											"value": "NIK",
+											"type": "text"
+										},
+										{
+											"key": "is_active",
+											"value": "true",
+											"type": "text"
+										},
+										{
+											"key": "description",
+											"value": "Global sportswear brand",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/brands",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "brands"]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\"success\":true,\"message\":\"OK\",\"data\":{\"id\":\"01JKBRAND1ABC456DEF789GH\",\"name\":\"Nike\",\"slug\":\"nike\",\"code\":\"NIK\",\"is_active\":true,\"description\":\"Global sportswear brand\",\"logo\":null,\"meta_title\":null,\"meta_description\":null,\"meta_keywords\":null,\"sort_order\":0,\"created_at\":\"2026-02-12T10:00:00.000000Z\",\"updated_at\":\"2026-02-12T10:00:00.000000Z\",\"deleted_at\":null},\"errors\":null}"
+						},
+						{
+							"name": "Validation Error",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "name",
+											"value": "",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/brands",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "brands"]
+								}
+							},
+							"status": "Unprocessable Entity",
+							"code": 422,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\"success\":false,\"message\":\"Validation failed\",\"data\":null,\"errors\":{\"name\":[\"The name field is required.\"],\"code\":[\"The code field is required.\"]}}"
+						}
+					]
+				},
+				{
+					"name": "Update Brand",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Nike Updated",
+									"type": "text"
+								},
+								{
+									"key": "is_active",
+									"value": "true",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "Updated description",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "meta_title",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "meta_description",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "meta_keywords",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "sort_order",
+									"value": "0",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "logo",
+									"type": "file",
+									"src": "",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/brands/:brand_id",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "brands", ":brand_id"],
+							"variable": [
+								{
+									"key": "brand_id",
+									"value": "",
+									"description": "Brand ULID"
+								}
+							]
+						},
+						"description": "Update an existing brand. Requires `Update_Brand` permission. All fields are optional."
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "name",
+											"value": "Nike Updated",
+											"type": "text"
+										},
+										{
+											"key": "is_active",
+											"value": "true",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/brands/:brand_id",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "brands", ":brand_id"],
+									"variable": [
+										{
+											"key": "brand_id",
+											"value": "01JKBRAND1ABC456DEF789GH"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\"success\":true,\"message\":\"OK\",\"data\":{\"id\":\"01JKBRAND1ABC456DEF789GH\",\"name\":\"Nike Updated\",\"slug\":\"nike-updated\",\"code\":\"NIK\",\"is_active\":true,\"description\":\"Global sportswear brand\",\"logo\":null,\"meta_title\":null,\"meta_description\":null,\"meta_keywords\":null,\"sort_order\":0,\"created_at\":\"2026-02-12T10:00:00.000000Z\",\"updated_at\":\"2026-02-12T10:15:00.000000Z\",\"deleted_at\":null},\"errors\":null}"
+						}
+					]
+				},
+				{
+					"name": "Delete Brand",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/brands/:brand_id",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "brands", ":brand_id"],
+							"variable": [
+								{
+									"key": "brand_id",
+									"value": "",
+									"description": "Brand ULID"
+								}
+							]
+						},
+						"description": "Soft-delete a brand. Requires `Delete_Brand` permission."
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/brands/:brand_id",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "brands", ":brand_id"],
+									"variable": [
+										{
+											"key": "brand_id",
+											"value": "01JKBRAND1ABC456DEF789GH"
+										}
+									]
+								}
+							},
+							"status": "No Content",
+							"code": 204,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\"success\":true,\"message\":\"\",\"data\":[],\"errors\":null}"
+						}
+					]
+				}
+			],
+			"description": "Brand management endpoints with logo upload support (stored on Google Cloud Storage)."
+		},
+		{
+			"name": "Products",
+			"item": [
+				{
+					"name": "List Products",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/products?page=1&per_page=15",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "products"],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "per_page",
+									"value": "15"
+								},
+								{
+									"key": "search",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "category_id",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "is_active",
+									"value": "",
+									"disabled": true
+								}
+							]
+						},
+						"description": "List all products with pagination and filters. Requires `View_Product` permission.\n\nFilters: search, category_id, is_active."
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/products?page=1&per_page=15",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "products"],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "per_page",
+											"value": "15"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\"success\":true,\"message\":\"OK\",\"data\":{\"current_page\":1,\"data\":[{\"id\":\"01JKPROD1ABC456DEF789GHI\",\"name\":\"Basic T-Shirt\",\"slug\":\"basic-t-shirt\",\"sku\":\"SKU-00001\",\"sequence\":\"00001\",\"vendor_id\":null,\"short_description\":null,\"description\":\"A simple basic t-shirt\",\"type\":\"simple\",\"status\":\"published\",\"published_at\":\"2026-02-12T10:00:00.000000Z\",\"meta_title\":null,\"meta_description\":null,\"meta_keywords\":null,\"price\":\"29.99\",\"sale_price\":null,\"sale_starts_at\":null,\"sale_ends_at\":null,\"manage_stock\":true,\"stock_quantity\":100,\"in_stock\":true,\"is_featured\":false,\"sort_order\":0,\"category_id\":\"01JKXYZ123ABC456DEF789GHI\",\"brand_id\":\"01JKBRAND1ABC456DEF789GH\",\"views_count\":0,\"sales_count\":0,\"created_at\":\"2026-02-12T10:00:00.000000Z\",\"updated_at\":\"2026-02-12T10:00:00.000000Z\",\"deleted_at\":null},{\"id\":\"01JKPROD2DEF789GHI012JKL\",\"name\":\"Running Shoes\",\"slug\":\"running-shoes\",\"sku\":\"SKU-00002\",\"sequence\":\"00002\",\"vendor_id\":null,\"short_description\":null,\"description\":\"Premium running shoes\",\"type\":\"variable\",\"status\":\"published\",\"published_at\":\"2026-02-12T10:05:00.000000Z\",\"meta_title\":null,\"meta_description\":null,\"meta_keywords\":null,\"price\":\"89.99\",\"sale_price\":null,\"sale_starts_at\":null,\"sale_ends_at\":null,\"manage_stock\":true,\"stock_quantity\":50,\"in_stock\":true,\"is_featured\":true,\"sort_order\":1,\"category_id\":\"01JKXYZ456DEF789GHI012JKL\",\"brand_id\":\"01JKBRAND1ABC456DEF789GH\",\"views_count\":42,\"sales_count\":15,\"created_at\":\"2026-02-12T10:05:00.000000Z\",\"updated_at\":\"2026-02-12T10:05:00.000000Z\",\"deleted_at\":null}],\"first_page_url\":\"http://localhost:8000/api/v1/products?page=1\",\"from\":1,\"last_page\":1,\"last_page_url\":\"http://localhost:8000/api/v1/products?page=1\",\"links\":[{\"url\":null,\"label\":\"&laquo; Previous\",\"active\":false},{\"url\":\"http://localhost:8000/api/v1/products?page=1\",\"label\":\"1\",\"active\":true},{\"url\":null,\"label\":\"Next &raquo;\",\"active\":false}],\"next_page_url\":null,\"path\":\"http://localhost:8000/api/v1/products\",\"per_page\":15,\"prev_page_url\":null,\"to\":2,\"total\":2},\"errors\":null}"
+						}
+					]
+				},
+				{
+					"name": "Show Product",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/products/:product_id",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "products", ":product_id"],
+							"variable": [
+								{
+									"key": "product_id",
+									"value": "",
+									"description": "Product ULID"
+								}
+							]
+						},
+						"description": "Get a single product with its variants. Requires `View_Product` permission."
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/products/:product_id",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "products", ":product_id"],
+									"variable": [
+										{
+											"key": "product_id",
+											"value": "01JKPROD2DEF789GHI012JKL"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\"success\":true,\"message\":\"OK\",\"data\":{\"id\":\"01JKPROD2DEF789GHI012JKL\",\"name\":\"Running Shoes\",\"slug\":\"running-shoes\",\"sku\":\"SKU-00002\",\"sequence\":\"00002\",\"vendor_id\":null,\"short_description\":null,\"description\":\"Premium running shoes\",\"type\":\"variable\",\"status\":\"published\",\"published_at\":\"2026-02-12T10:05:00.000000Z\",\"meta_title\":null,\"meta_description\":null,\"meta_keywords\":null,\"price\":\"89.99\",\"sale_price\":null,\"sale_starts_at\":null,\"sale_ends_at\":null,\"manage_stock\":true,\"stock_quantity\":50,\"in_stock\":true,\"is_featured\":true,\"sort_order\":1,\"category_id\":\"01JKXYZ456DEF789GHI012JKL\",\"brand_id\":\"01JKBRAND1ABC456DEF789GH\",\"views_count\":42,\"sales_count\":15,\"created_at\":\"2026-02-12T10:05:00.000000Z\",\"updated_at\":\"2026-02-12T10:05:00.000000Z\",\"deleted_at\":null,\"variants\":[{\"id\":\"01JKVAR01ABC456DEF789GHI\",\"product_id\":\"01JKPROD2DEF789GHI012JKL\",\"sku\":\"SKU-00002-RED-M\",\"is_default\":true,\"price\":\"89.99\",\"sale_price\":null,\"sale_starts_at\":null,\"sale_ends_at\":null,\"manage_stock\":true,\"stock_quantity\":25,\"in_stock\":true,\"attributes\":{\"color\":\"Red\",\"size\":\"M\"},\"sort_order\":0,\"status\":\"active\",\"created_at\":\"2026-02-12T10:05:00.000000Z\",\"updated_at\":\"2026-02-12T10:05:00.000000Z\"},{\"id\":\"01JKVAR02DEF789GHI012JKL\",\"product_id\":\"01JKPROD2DEF789GHI012JKL\",\"sku\":\"SKU-00002-BLU-L\",\"is_default\":false,\"price\":\"89.99\",\"sale_price\":null,\"sale_starts_at\":null,\"sale_ends_at\":null,\"manage_stock\":true,\"stock_quantity\":25,\"in_stock\":true,\"attributes\":{\"color\":\"Blue\",\"size\":\"L\"},\"sort_order\":1,\"status\":\"active\",\"created_at\":\"2026-02-12T10:05:00.000000Z\",\"updated_at\":\"2026-02-12T10:05:00.000000Z\"}],\"default_variant\":{\"id\":\"01JKVAR01ABC456DEF789GHI\",\"product_id\":\"01JKPROD2DEF789GHI012JKL\",\"sku\":\"SKU-00002-RED-M\",\"is_default\":true,\"price\":\"89.99\",\"sale_price\":null,\"sale_starts_at\":null,\"sale_ends_at\":null,\"manage_stock\":true,\"stock_quantity\":25,\"in_stock\":true,\"attributes\":{\"color\":\"Red\",\"size\":\"M\"},\"sort_order\":0,\"status\":\"active\",\"created_at\":\"2026-02-12T10:05:00.000000Z\",\"updated_at\":\"2026-02-12T10:05:00.000000Z\"}},\"errors\":null}"
+						}
+					]
+				},
+				{
+					"name": "Create Simple Product",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Basic T-Shirt",
+									"type": "text"
+								},
+								{
+									"key": "type",
+									"value": "simple",
+									"type": "text"
+								},
+								{
+									"key": "status",
+									"value": "published",
+									"type": "text"
+								},
+								{
+									"key": "category_id",
+									"value": "",
+									"type": "text",
+									"description": "Category ULID"
+								},
+								{
+									"key": "brand_id",
+									"value": "",
+									"type": "text",
+									"description": "Brand ULID"
+								},
+								{
+									"key": "description",
+									"value": "A simple basic t-shirt",
+									"type": "text"
+								},
+								{
+									"key": "price",
+									"value": "29.99",
+									"type": "text"
+								},
+								{
+									"key": "sale_price",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "sale_starts_at",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "sale_ends_at",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "manage_stock",
+									"value": "true",
+									"type": "text"
+								},
+								{
+									"key": "stock_quantity",
+									"value": "100",
+									"type": "text"
+								},
+								{
+									"key": "in_stock",
+									"value": "true",
+									"type": "text"
+								},
+								{
+									"key": "product_image",
+									"type": "file",
+									"src": "",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/products",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "products"]
+						},
+						"description": "Create a simple product (no variants). Requires `Create_Product` permission.\n\nType options: simple, variable, digital, service.\nStatus options: published, draft, archived."
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "name",
+											"value": "Basic T-Shirt",
+											"type": "text"
+										},
+										{
+											"key": "type",
+											"value": "simple",
+											"type": "text"
+										},
+										{
+											"key": "status",
+											"value": "published",
+											"type": "text"
+										},
+										{
+											"key": "category_id",
+											"value": "01JKXYZ123ABC456DEF789GHI",
+											"type": "text"
+										},
+										{
+											"key": "brand_id",
+											"value": "01JKBRAND1ABC456DEF789GH",
+											"type": "text"
+										},
+										{
+											"key": "description",
+											"value": "A simple basic t-shirt",
+											"type": "text"
+										},
+										{
+											"key": "price",
+											"value": "29.99",
+											"type": "text"
+										},
+										{
+											"key": "manage_stock",
+											"value": "true",
+											"type": "text"
+										},
+										{
+											"key": "stock_quantity",
+											"value": "100",
+											"type": "text"
+										},
+										{
+											"key": "in_stock",
+											"value": "true",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/products",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "products"]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\"success\":true,\"message\":\"OK\",\"data\":{\"id\":\"01JKPROD1ABC456DEF789GHI\",\"name\":\"Basic T-Shirt\",\"slug\":\"basic-t-shirt\",\"sku\":\"SKU-00001\",\"sequence\":\"00001\",\"vendor_id\":null,\"short_description\":null,\"description\":\"A simple basic t-shirt\",\"type\":\"simple\",\"status\":\"published\",\"published_at\":\"2026-02-12T10:00:00.000000Z\",\"meta_title\":null,\"meta_description\":null,\"meta_keywords\":null,\"price\":\"29.99\",\"sale_price\":null,\"sale_starts_at\":null,\"sale_ends_at\":null,\"manage_stock\":true,\"stock_quantity\":100,\"in_stock\":true,\"is_featured\":false,\"sort_order\":0,\"category_id\":\"01JKXYZ123ABC456DEF789GHI\",\"brand_id\":\"01JKBRAND1ABC456DEF789GH\",\"views_count\":0,\"sales_count\":0,\"created_at\":\"2026-02-12T10:00:00.000000Z\",\"updated_at\":\"2026-02-12T10:00:00.000000Z\",\"deleted_at\":null},\"errors\":null}"
+						},
+						{
+							"name": "Validation Error",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "name",
+											"value": "",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/products",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "products"]
+								}
+							},
+							"status": "Unprocessable Entity",
+							"code": 422,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\"success\":false,\"message\":\"Validation failed\",\"data\":null,\"errors\":{\"name\":[\"The name field is required.\"],\"type\":[\"The type field is required.\"],\"status\":[\"The status field is required.\"],\"category_id\":[\"The category id field is required.\"],\"brand_id\":[\"The brand id field is required.\"]}}"
+						}
+					]
+				},
+				{
+					"name": "Create Variable Product",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Running Shoes",
+									"type": "text"
+								},
+								{
+									"key": "type",
+									"value": "variable",
+									"type": "text"
+								},
+								{
+									"key": "status",
+									"value": "published",
+									"type": "text"
+								},
+								{
+									"key": "category_id",
+									"value": "",
+									"type": "text",
+									"description": "Category ULID"
+								},
+								{
+									"key": "brand_id",
+									"value": "",
+									"type": "text",
+									"description": "Brand ULID"
+								},
+								{
+									"key": "description",
+									"value": "Premium running shoes with multiple color options",
+									"type": "text"
+								},
+								{
+									"key": "variants[0][price]",
+									"value": "89.99",
+									"type": "text"
+								},
+								{
+									"key": "variants[0][is_default]",
+									"value": "true",
+									"type": "text"
+								},
+								{
+									"key": "variants[0][attributes][color]",
+									"value": "Red",
+									"type": "text"
+								},
+								{
+									"key": "variants[0][attributes][size]",
+									"value": "M",
+									"type": "text"
+								},
+								{
+									"key": "variants[1][price]",
+									"value": "89.99",
+									"type": "text"
+								},
+								{
+									"key": "variants[1][is_default]",
+									"value": "false",
+									"type": "text"
+								},
+								{
+									"key": "variants[1][attributes][color]",
+									"value": "Blue",
+									"type": "text"
+								},
+								{
+									"key": "variants[1][attributes][size]",
+									"value": "L",
+									"type": "text"
+								},
+								{
+									"key": "product_image",
+									"type": "file",
+									"src": "",
+									"disabled": true
+								},
+								{
+									"key": "variants[0][photos][]",
+									"type": "file",
+									"src": "",
+									"disabled": true
+								},
+								{
+									"key": "variants[1][photos][]",
+									"type": "file",
+									"src": "",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/products",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "products"]
+						},
+						"description": "Create a variable product with multiple variants. Requires `Create_Product` permission.\n\nAt least one variant must have `is_default: true`.\nVariant photos: max 2 images per variant (jpg, jpeg, png, webp; max 5MB each)."
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "name",
+											"value": "Running Shoes",
+											"type": "text"
+										},
+										{
+											"key": "type",
+											"value": "variable",
+											"type": "text"
+										},
+										{
+											"key": "status",
+											"value": "published",
+											"type": "text"
+										},
+										{
+											"key": "category_id",
+											"value": "01JKXYZ456DEF789GHI012JKL",
+											"type": "text"
+										},
+										{
+											"key": "brand_id",
+											"value": "01JKBRAND1ABC456DEF789GH",
+											"type": "text"
+										},
+										{
+											"key": "description",
+											"value": "Premium running shoes with multiple color options",
+											"type": "text"
+										},
+										{
+											"key": "variants[0][price]",
+											"value": "89.99",
+											"type": "text"
+										},
+										{
+											"key": "variants[0][is_default]",
+											"value": "true",
+											"type": "text"
+										},
+										{
+											"key": "variants[0][attributes][color]",
+											"value": "Red",
+											"type": "text"
+										},
+										{
+											"key": "variants[0][attributes][size]",
+											"value": "M",
+											"type": "text"
+										},
+										{
+											"key": "variants[1][price]",
+											"value": "89.99",
+											"type": "text"
+										},
+										{
+											"key": "variants[1][is_default]",
+											"value": "false",
+											"type": "text"
+										},
+										{
+											"key": "variants[1][attributes][color]",
+											"value": "Blue",
+											"type": "text"
+										},
+										{
+											"key": "variants[1][attributes][size]",
+											"value": "L",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/products",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "products"]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\"success\":true,\"message\":\"OK\",\"data\":{\"id\":\"01JKPROD2DEF789GHI012JKL\",\"name\":\"Running Shoes\",\"slug\":\"running-shoes\",\"sku\":\"SKU-00002\",\"sequence\":\"00002\",\"vendor_id\":null,\"short_description\":null,\"description\":\"Premium running shoes with multiple color options\",\"type\":\"variable\",\"status\":\"published\",\"published_at\":\"2026-02-12T10:05:00.000000Z\",\"meta_title\":null,\"meta_description\":null,\"meta_keywords\":null,\"price\":\"89.99\",\"sale_price\":null,\"sale_starts_at\":null,\"sale_ends_at\":null,\"manage_stock\":true,\"stock_quantity\":50,\"in_stock\":true,\"is_featured\":false,\"sort_order\":0,\"category_id\":\"01JKXYZ456DEF789GHI012JKL\",\"brand_id\":\"01JKBRAND1ABC456DEF789GH\",\"views_count\":0,\"sales_count\":0,\"created_at\":\"2026-02-12T10:05:00.000000Z\",\"updated_at\":\"2026-02-12T10:05:00.000000Z\",\"deleted_at\":null,\"variants\":[{\"id\":\"01JKVAR01ABC456DEF789GHI\",\"product_id\":\"01JKPROD2DEF789GHI012JKL\",\"sku\":\"SKU-00002-RED-M\",\"is_default\":true,\"price\":\"89.99\",\"sale_price\":null,\"sale_starts_at\":null,\"sale_ends_at\":null,\"manage_stock\":true,\"stock_quantity\":25,\"in_stock\":true,\"attributes\":{\"color\":\"Red\",\"size\":\"M\"},\"sort_order\":0,\"status\":\"active\",\"created_at\":\"2026-02-12T10:05:00.000000Z\",\"updated_at\":\"2026-02-12T10:05:00.000000Z\"},{\"id\":\"01JKVAR02DEF789GHI012JKL\",\"product_id\":\"01JKPROD2DEF789GHI012JKL\",\"sku\":\"SKU-00002-BLU-L\",\"is_default\":false,\"price\":\"89.99\",\"sale_price\":null,\"sale_starts_at\":null,\"sale_ends_at\":null,\"manage_stock\":true,\"stock_quantity\":25,\"in_stock\":true,\"attributes\":{\"color\":\"Blue\",\"size\":\"L\"},\"sort_order\":1,\"status\":\"active\",\"created_at\":\"2026-02-12T10:05:00.000000Z\",\"updated_at\":\"2026-02-12T10:05:00.000000Z\"}]},\"errors\":null}"
+						}
+					]
+				},
+				{
+					"name": "Update Product",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Updated Product Name\",\n    \"type\": \"simple\",\n    \"status\": \"published\",\n    \"category_id\": \"\",\n    \"brand_id\": \"\",\n    \"description\": \"Updated description\",\n    \"price\": 39.99,\n    \"manage_stock\": true,\n    \"stock_quantity\": 50,\n    \"in_stock\": true\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/products/:product_id",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "products", ":product_id"],
+							"variable": [
+								{
+									"key": "product_id",
+									"value": "",
+									"description": "Product ULID"
+								}
+							]
+						},
+						"description": "Update an existing product. Requires `Update_Product` permission."
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Updated Product Name\",\n    \"type\": \"simple\",\n    \"status\": \"published\",\n    \"category_id\": \"01JKXYZ123ABC456DEF789GHI\",\n    \"brand_id\": \"01JKBRAND1ABC456DEF789GH\",\n    \"description\": \"Updated description\",\n    \"price\": 39.99,\n    \"manage_stock\": true,\n    \"stock_quantity\": 50,\n    \"in_stock\": true\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/products/:product_id",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "products", ":product_id"],
+									"variable": [
+										{
+											"key": "product_id",
+											"value": "01JKPROD1ABC456DEF789GHI"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\"success\":true,\"message\":\"OK\",\"data\":{\"id\":\"01JKPROD1ABC456DEF789GHI\",\"name\":\"Updated Product Name\",\"slug\":\"updated-product-name\",\"sku\":\"SKU-00001\",\"sequence\":\"00001\",\"vendor_id\":null,\"short_description\":null,\"description\":\"Updated description\",\"type\":\"simple\",\"status\":\"published\",\"published_at\":\"2026-02-12T10:00:00.000000Z\",\"meta_title\":null,\"meta_description\":null,\"meta_keywords\":null,\"price\":\"39.99\",\"sale_price\":null,\"sale_starts_at\":null,\"sale_ends_at\":null,\"manage_stock\":true,\"stock_quantity\":50,\"in_stock\":true,\"is_featured\":false,\"sort_order\":0,\"category_id\":\"01JKXYZ123ABC456DEF789GHI\",\"brand_id\":\"01JKBRAND1ABC456DEF789GH\",\"views_count\":0,\"sales_count\":0,\"created_at\":\"2026-02-12T10:00:00.000000Z\",\"updated_at\":\"2026-02-12T10:20:00.000000Z\",\"deleted_at\":null},\"errors\":null}"
+						}
+					]
+				},
+				{
+					"name": "Delete Product",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/products/:product_id",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "products", ":product_id"],
+							"variable": [
+								{
+									"key": "product_id",
+									"value": "",
+									"description": "Product ULID"
+								}
+							]
+						},
+						"description": "Soft-delete a product. Requires `Delete_Product` permission."
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/products/:product_id",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "products", ":product_id"],
+									"variable": [
+										{
+											"key": "product_id",
+											"value": "01JKPROD1ABC456DEF789GHI"
+										}
+									]
+								}
+							},
+							"status": "No Content",
+							"code": 204,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\"success\":true,\"message\":\"\",\"data\":[],\"errors\":null}"
+						}
+					]
+				}
+			],
+			"description": "Product management endpoints. Supports simple and variable product types with variants, SKU generation, and media uploads."
+		},
+		{
+			"name": "Product Variants",
+			"item": [
+				{
+					"name": "Update Product Variant",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "price",
+									"value": "99.99",
+									"type": "text"
+								},
+								{
+									"key": "sale_price",
+									"value": "79.99",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "sale_starts_at",
+									"value": "2026-03-01",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "sale_ends_at",
+									"value": "2026-03-31",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "manage_stock",
+									"value": "true",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "stock_quantity",
+									"value": "50",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "in_stock",
+									"value": "true",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "attributes[color]",
+									"value": "Green",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "attributes[size]",
+									"value": "XL",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "status",
+									"value": "published",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "is_default",
+									"value": "false",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "sort_order",
+									"value": "1",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "photos[]",
+									"type": "file",
+									"src": "",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/products/:product_id/variants/:variant_id",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "products", ":product_id", "variants", ":variant_id"],
+							"variable": [
+								{
+									"key": "product_id",
+									"value": "",
+									"description": "Product ULID"
+								},
+								{
+									"key": "variant_id",
+									"value": "",
+									"description": "Variant ULID"
+								}
+							]
+						},
+						"description": "Update a specific product variant. Requires `Update_Product` permission.\n\nNote: `product_id` and `slug` fields are prohibited (cannot be changed).\nOnly one variant per product can be `is_default: true`.\nPhotos: max 2 images (jpg, jpeg, png, webp; max 5MB each)."
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "price",
+											"value": "99.99",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/products/:product_id/variants/:variant_id",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "products", ":product_id", "variants", ":variant_id"],
+									"variable": [
+										{
+											"key": "product_id",
+											"value": "01JKPROD2DEF789GHI012JKL"
+										},
+										{
+											"key": "variant_id",
+											"value": "01JKVAR01ABC456DEF789GHI"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\"success\":true,\"message\":\"OK\",\"data\":{\"id\":\"01JKVAR01ABC456DEF789GHI\",\"product_id\":\"01JKPROD2DEF789GHI012JKL\",\"sku\":\"SKU-00002-RED-M\",\"is_default\":true,\"price\":\"99.99\",\"sale_price\":null,\"sale_starts_at\":null,\"sale_ends_at\":null,\"manage_stock\":true,\"stock_quantity\":25,\"in_stock\":true,\"attributes\":{\"color\":\"Red\",\"size\":\"M\"},\"sort_order\":0,\"status\":\"active\",\"created_at\":\"2026-02-12T10:05:00.000000Z\",\"updated_at\":\"2026-02-12T10:25:00.000000Z\"},\"errors\":null}"
+						}
+					]
+				},
+				{
+					"name": "Delete Product Variant",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/products/:product_id/variants/:variant_id",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "products", ":product_id", "variants", ":variant_id"],
+							"variable": [
+								{
+									"key": "product_id",
+									"value": "",
+									"description": "Product ULID"
+								},
+								{
+									"key": "variant_id",
+									"value": "",
+									"description": "Variant ULID"
+								}
+							]
+						},
+						"description": "Delete a product variant. Requires `Delete_Product` permission.\n\nNote: Cannot delete the only default variant of a product."
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/products/:product_id/variants/:variant_id",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "products", ":product_id", "variants", ":variant_id"],
+									"variable": [
+										{
+											"key": "product_id",
+											"value": "01JKPROD2DEF789GHI012JKL"
+										},
+										{
+											"key": "variant_id",
+											"value": "01JKVAR02DEF789GHI012JKL"
+										}
+									]
+								}
+							},
+							"status": "No Content",
+							"code": 204,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\"success\":true,\"message\":\"\",\"data\":[],\"errors\":null}"
+						}
+					]
+				}
+			],
+			"description": "Product variant sub-resource endpoints for updating and deleting individual variants."
+		},
+		{
+			"name": "Vendors",
+			"item": [
+				{
+					"name": "List Vendors",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/vendors?page=1&per_page=15",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "vendors"],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "per_page",
+									"value": "15"
+								},
+								{
+									"key": "search",
+									"value": "",
+									"disabled": true
+								}
+							]
+						},
+						"description": "List all vendors with pagination. Requires `View_Vendor` permission."
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/vendors?page=1&per_page=15",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "vendors"],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "per_page",
+											"value": "15"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\"success\":true,\"message\":\"OK\",\"data\":{\"current_page\":1,\"data\":[{\"id\":\"01JKVEND1ABC456DEF789GHI\",\"name\":\"John's Store\",\"business_name\":\"John's Fashion Outlet\",\"email\":\"john@vendorstore.com\",\"phone\":\"+1234567890\",\"code\":\"JOHN-001\",\"is_active\":true,\"address_line_1\":\"123 Main Street\",\"address_line_2\":\"Suite 100\",\"city\":\"New York\",\"state\":\"NY\",\"postal_code\":\"10001\",\"country\":\"US\",\"email_verified_at\":null,\"last_stock_sync_at\":null,\"created_at\":\"2026-02-12T10:00:00.000000Z\",\"updated_at\":\"2026-02-12T10:00:00.000000Z\"},{\"id\":\"01JKVEND2DEF789GHI012JKL\",\"name\":\"Sarah's Boutique\",\"business_name\":\"Sarah's Premium Boutique\",\"email\":\"sarah@boutique.com\",\"phone\":\"+0987654321\",\"code\":\"SARAH-002\",\"is_active\":true,\"address_line_1\":\"456 Fashion Ave\",\"address_line_2\":null,\"city\":\"Los Angeles\",\"state\":\"CA\",\"postal_code\":\"90001\",\"country\":\"US\",\"email_verified_at\":null,\"last_stock_sync_at\":null,\"created_at\":\"2026-02-12T10:05:00.000000Z\",\"updated_at\":\"2026-02-12T10:05:00.000000Z\"}],\"first_page_url\":\"http://localhost:8000/api/v1/vendors?page=1\",\"from\":1,\"last_page\":1,\"last_page_url\":\"http://localhost:8000/api/v1/vendors?page=1\",\"links\":[{\"url\":null,\"label\":\"&laquo; Previous\",\"active\":false},{\"url\":\"http://localhost:8000/api/v1/vendors?page=1\",\"label\":\"1\",\"active\":true},{\"url\":null,\"label\":\"Next &raquo;\",\"active\":false}],\"next_page_url\":null,\"path\":\"http://localhost:8000/api/v1/vendors\",\"per_page\":15,\"prev_page_url\":null,\"to\":2,\"total\":2},\"errors\":null}"
+						}
+					]
+				},
+				{
+					"name": "Show Vendor",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/vendors/:vendor_id",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "vendors", ":vendor_id"],
+							"variable": [
+								{
+									"key": "vendor_id",
+									"value": "",
+									"description": "Vendor ULID"
+								}
+							]
+						},
+						"description": "Get a single vendor by ID. Requires `View_Vendor` permission."
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/vendors/:vendor_id",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "vendors", ":vendor_id"],
+									"variable": [
+										{
+											"key": "vendor_id",
+											"value": "01JKVEND1ABC456DEF789GHI"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\"success\":true,\"message\":\"OK\",\"data\":{\"id\":\"01JKVEND1ABC456DEF789GHI\",\"name\":\"John's Store\",\"business_name\":\"John's Fashion Outlet\",\"email\":\"john@vendorstore.com\",\"phone\":\"+1234567890\",\"code\":\"JOHN-001\",\"is_active\":true,\"address_line_1\":\"123 Main Street\",\"address_line_2\":\"Suite 100\",\"city\":\"New York\",\"state\":\"NY\",\"postal_code\":\"10001\",\"country\":\"US\",\"email_verified_at\":null,\"last_stock_sync_at\":null,\"created_at\":\"2026-02-12T10:00:00.000000Z\",\"updated_at\":\"2026-02-12T10:00:00.000000Z\"},\"errors\":null}"
+						}
+					]
+				},
+				{
+					"name": "Create Vendor",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"John's Store\",\n    \"business_name\": \"John's Fashion Outlet\",\n    \"email\": \"john@vendorstore.com\",\n    \"phone\": \"+1234567890\",\n    \"password\": \"Password1\",\n    \"code\": \"JOHN-001\",\n    \"is_active\": true,\n    \"address_line_1\": \"123 Main Street\",\n    \"address_line_2\": \"Suite 100\",\n    \"city\": \"New York\",\n    \"state\": \"NY\",\n    \"postal_code\": \"10001\",\n    \"country\": \"US\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/vendors",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "vendors"]
+						},
+						"description": "Create a new vendor. Requires `Create_Vendor` permission.\n\nRequired: name, email, password, code.\nOptional: business_name, phone, is_active, address fields."
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"John's Store\",\n    \"business_name\": \"John's Fashion Outlet\",\n    \"email\": \"john@vendorstore.com\",\n    \"phone\": \"+1234567890\",\n    \"password\": \"Password1\",\n    \"code\": \"JOHN-001\",\n    \"is_active\": true,\n    \"address_line_1\": \"123 Main Street\",\n    \"address_line_2\": \"Suite 100\",\n    \"city\": \"New York\",\n    \"state\": \"NY\",\n    \"postal_code\": \"10001\",\n    \"country\": \"US\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/vendors",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "vendors"]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\"success\":true,\"message\":\"Vendor created successfully\",\"data\":{\"id\":\"01JKVEND1ABC456DEF789GHI\",\"name\":\"John's Store\",\"business_name\":\"John's Fashion Outlet\",\"email\":\"john@vendorstore.com\",\"phone\":\"+1234567890\",\"code\":\"JOHN-001\",\"is_active\":true,\"address_line_1\":\"123 Main Street\",\"address_line_2\":\"Suite 100\",\"city\":\"New York\",\"state\":\"NY\",\"postal_code\":\"10001\",\"country\":\"US\",\"email_verified_at\":null,\"last_stock_sync_at\":null,\"created_at\":\"2026-02-12T10:00:00.000000Z\",\"updated_at\":\"2026-02-12T10:00:00.000000Z\"},\"errors\":null}"
+						},
+						{
+							"name": "Validation Error",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"\",\n    \"email\": \"invalid\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/vendors",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "vendors"]
+								}
+							},
+							"status": "Unprocessable Entity",
+							"code": 422,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\"success\":false,\"message\":\"Validation failed\",\"data\":null,\"errors\":{\"name\":[\"The name field is required.\"],\"email\":[\"The email field must be a valid email address.\"],\"code\":[\"The code field is required.\"]}}"
+						}
+					]
+				},
+				{
+					"name": "Update Vendor",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"John's Updated Store\",\n    \"business_name\": \"John's Premium Fashion\",\n    \"phone\": \"+0987654321\",\n    \"is_active\": true,\n    \"city\": \"Los Angeles\",\n    \"state\": \"CA\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/vendors/:vendor_id",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "vendors", ":vendor_id"],
+							"variable": [
+								{
+									"key": "vendor_id",
+									"value": "",
+									"description": "Vendor ULID"
+								}
+							]
+						},
+						"description": "Update an existing vendor. Requires `Update_Vendor` permission. All fields are optional."
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"John's Updated Store\",\n    \"business_name\": \"John's Premium Fashion\",\n    \"phone\": \"+0987654321\",\n    \"is_active\": true,\n    \"city\": \"Los Angeles\",\n    \"state\": \"CA\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/vendors/:vendor_id",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "vendors", ":vendor_id"],
+									"variable": [
+										{
+											"key": "vendor_id",
+											"value": "01JKVEND1ABC456DEF789GHI"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\"success\":true,\"message\":\"OK\",\"data\":{\"id\":\"01JKVEND1ABC456DEF789GHI\",\"name\":\"John's Updated Store\",\"business_name\":\"John's Premium Fashion\",\"email\":\"john@vendorstore.com\",\"phone\":\"+0987654321\",\"code\":\"JOHN-001\",\"is_active\":true,\"address_line_1\":\"123 Main Street\",\"address_line_2\":\"Suite 100\",\"city\":\"Los Angeles\",\"state\":\"CA\",\"postal_code\":\"10001\",\"country\":\"US\",\"email_verified_at\":null,\"last_stock_sync_at\":null,\"created_at\":\"2026-02-12T10:00:00.000000Z\",\"updated_at\":\"2026-02-12T10:30:00.000000Z\"},\"errors\":null}"
+						}
+					]
+				},
+				{
+					"name": "Delete Vendor",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/vendors/:vendor_id",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "vendors", ":vendor_id"],
+							"variable": [
+								{
+									"key": "vendor_id",
+									"value": "",
+									"description": "Vendor ULID"
+								}
+							]
+						},
+						"description": "Delete a vendor. Requires `Delete_Vendor` permission."
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/vendors/:vendor_id",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "vendors", ":vendor_id"],
+									"variable": [
+										{
+											"key": "vendor_id",
+											"value": "01JKVEND1ABC456DEF789GHI"
+										}
+									]
+								}
+							},
+							"status": "No Content",
+							"code": 204,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\"success\":true,\"message\":\"\",\"data\":[],\"errors\":null}"
+						}
+					]
+				}
+			],
+			"description": "Vendor management endpoints for managing marketplace sellers."
+		},
+		{
+			"name": "SKU Attribute Codes",
+			"item": [
+				{
+					"name": "List SKU Attribute Codes",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/sku-attribute-code?page=1&per_page=15",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "sku-attribute-code"],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "per_page",
+									"value": "15"
+								},
+								{
+									"key": "search",
+									"value": "",
+									"disabled": true
+								}
+							]
+						},
+						"description": "List all SKU attribute codes with pagination. Requires `View_Vendor` permission.\n\nSearch filters by value or code."
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/sku-attribute-code?page=1&per_page=15",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "sku-attribute-code"],
+									"query": [
+										{
+											"key": "page",
+											"value": "1"
+										},
+										{
+											"key": "per_page",
+											"value": "15"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\"success\":true,\"message\":\"Success\",\"data\":{\"current_page\":1,\"data\":[{\"id\":1,\"type\":\"color\",\"value\":\"Black\",\"code\":\"BLK\",\"is_active\":true,\"created_at\":\"2026-02-12T10:00:00.000000Z\",\"updated_at\":\"2026-02-12T10:00:00.000000Z\"},{\"id\":2,\"type\":\"color\",\"value\":\"Red\",\"code\":\"RED\",\"is_active\":true,\"created_at\":\"2026-02-12T10:01:00.000000Z\",\"updated_at\":\"2026-02-12T10:01:00.000000Z\"},{\"id\":3,\"type\":\"size\",\"value\":\"Large\",\"code\":\"L\",\"is_active\":true,\"created_at\":\"2026-02-12T10:02:00.000000Z\",\"updated_at\":\"2026-02-12T10:02:00.000000Z\"}],\"first_page_url\":\"http://localhost:8000/api/v1/sku-attribute-code?page=1\",\"from\":1,\"last_page\":1,\"last_page_url\":\"http://localhost:8000/api/v1/sku-attribute-code?page=1\",\"links\":[{\"url\":null,\"label\":\"&laquo; Previous\",\"active\":false},{\"url\":\"http://localhost:8000/api/v1/sku-attribute-code?page=1\",\"label\":\"1\",\"active\":true},{\"url\":null,\"label\":\"Next &raquo;\",\"active\":false}],\"next_page_url\":null,\"path\":\"http://localhost:8000/api/v1/sku-attribute-code\",\"per_page\":15,\"prev_page_url\":null,\"to\":3,\"total\":3},\"errors\":null}"
+						}
+					]
+				},
+				{
+					"name": "Show SKU Attribute Code",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/sku-attribute-code/:id",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "sku-attribute-code", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "",
+									"description": "SKU Attribute Code ID"
+								}
+							]
+						},
+						"description": "Get a single SKU attribute code by ID. Requires `View_Vendor` permission."
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/sku-attribute-code/:id",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "sku-attribute-code", ":id"],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\"success\":true,\"message\":\"OK\",\"data\":{\"id\":1,\"type\":\"color\",\"value\":\"Black\",\"code\":\"BLK\",\"is_active\":true,\"created_at\":\"2026-02-12T10:00:00.000000Z\",\"updated_at\":\"2026-02-12T10:00:00.000000Z\"},\"errors\":null}"
+						},
+						{
+							"name": "Not Found",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/sku-attribute-code/:id",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "sku-attribute-code", ":id"],
+									"variable": [
+										{
+											"key": "id",
+											"value": "9999"
+										}
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\"success\":false,\"message\":\"Resource not found\",\"data\":null,\"errors\":null}"
+						}
+					]
+				},
+				{
+					"name": "Create SKU Attribute Code",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"type\": \"color\",\n    \"value\": \"Black\",\n    \"code\": \"BLK\",\n    \"is_active\": true\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/sku-attribute-code",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "sku-attribute-code"]
+						},
+						"description": "Create a new SKU attribute code. Requires `Create_Vendor` permission.\n\nCommon types: color, size, storage, material.\nUnique constraints: [type, value] and [type, code] must be unique together."
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"type\": \"color\",\n    \"value\": \"Black\",\n    \"code\": \"BLK\",\n    \"is_active\": true\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/sku-attribute-code",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "sku-attribute-code"]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\"success\":true,\"message\":\"OK\",\"data\":{\"id\":1,\"type\":\"color\",\"value\":\"Black\",\"code\":\"BLK\",\"is_active\":true,\"created_at\":\"2026-02-12T10:00:00.000000Z\",\"updated_at\":\"2026-02-12T10:00:00.000000Z\"},\"errors\":null}"
+						},
+						{
+							"name": "Validation Error",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"type\": \"\",\n    \"value\": \"\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/sku-attribute-code",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "sku-attribute-code"]
+								}
+							},
+							"status": "Unprocessable Entity",
+							"code": 422,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\"success\":false,\"message\":\"Validation failed\",\"data\":null,\"errors\":{\"type\":[\"The type field is required.\"],\"value\":[\"The value field is required.\"],\"code\":[\"The code field is required.\"]}}"
+						}
+					]
+				},
+				{
+					"name": "Update SKU Attribute Code",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"value\": \"Midnight Black\",\n    \"code\": \"MBLK\",\n    \"is_active\": true\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/sku-attribute-code/:id",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "sku-attribute-code", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "",
+									"description": "SKU Attribute Code ID"
+								}
+							]
+						},
+						"description": "Update an existing SKU attribute code. Requires `Update_Vendor` permission. All fields are optional."
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"value\": \"Midnight Black\",\n    \"code\": \"MBLK\",\n    \"is_active\": true\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/sku-attribute-code/:id",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "sku-attribute-code", ":id"],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\"success\":true,\"message\":\"OK\",\"data\":{\"id\":1,\"type\":\"color\",\"value\":\"Midnight Black\",\"code\":\"MBLK\",\"is_active\":true,\"created_at\":\"2026-02-12T10:00:00.000000Z\",\"updated_at\":\"2026-02-12T10:30:00.000000Z\"},\"errors\":null}"
+						}
+					]
+				},
+				{
+					"name": "Delete SKU Attribute Code",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/sku-attribute-code/:id",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "sku-attribute-code", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": "",
+									"description": "SKU Attribute Code ID"
+								}
+							]
+						},
+						"description": "Delete a SKU attribute code. Requires `Delete_Vendor` permission."
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/sku-attribute-code/:id",
+									"host": ["{{base_url}}"],
+									"path": ["api", "v1", "sku-attribute-code", ":id"],
+									"variable": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"status": "No Content",
+							"code": 204,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"body": "{\"success\":true,\"message\":\"\",\"data\":[],\"errors\":null}"
+						}
+					]
+				}
+			],
+			"description": "SKU Attribute Code management endpoints. Used to define variant attributes (color, size, storage, material) with short codes for SKU generation."
+		}
+	]
+}

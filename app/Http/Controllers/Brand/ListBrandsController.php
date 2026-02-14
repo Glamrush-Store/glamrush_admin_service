@@ -9,6 +9,7 @@
 namespace App\Http\Controllers\Brand;
 
 use App\Domain\Brand\UseCases\ListBrandsUseCase;
+use App\Http\Resources\Brand\BrandResource;
 use App\Http\Responses\ApiResponse;
 use Illuminate\Http\Request;
 
@@ -25,7 +26,7 @@ class ListBrandsController
             perPage: $request->integer('per_page', 5)
         );
 
-        return ApiResponse::success($result);
+        return ApiResponse::success(BrandResource::collection($result));
 
     }
 }

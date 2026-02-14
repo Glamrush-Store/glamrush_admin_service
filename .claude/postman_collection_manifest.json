@@ -1,0 +1,456 @@
+{
+	"_description": "Tracks which API endpoints are documented in the Postman collection. Update this file whenever routes, controllers, or request validations change. This lets Claude update the collection without re-scanning the entire project.",
+	"_last_updated": "2026-02-13",
+	"_collection_file": "GlamRush_Admin_API.postman_collection.json",
+	"base_url_prefix": "/api/v1",
+	"endpoints": {
+		"auth": {
+			"folder_name": "Auth",
+			"routes_file": "routes/api.php",
+			"endpoints": [
+				{
+					"name": "Health Check",
+					"method": "GET",
+					"path": "/health",
+					"controller": null,
+					"request_class": null,
+					"auth": false,
+					"permission": null,
+					"in_collection": true
+				},
+				{
+					"name": "Login",
+					"method": "POST",
+					"path": "/account/login",
+					"controller": "App\\Http\\Controllers\\Auth\\LoginController",
+					"request_class": "App\\Http\\Requests\\Auth\\LoginRequest",
+					"auth": false,
+					"permission": null,
+					"in_collection": true,
+					"notes": "Auto-saves token to {{token}} variable via test script"
+				},
+				{
+					"name": "Create Account",
+					"method": "POST",
+					"path": "/account/create",
+					"controller": "App\\Http\\Controllers\\Auth\\CreateAccountController",
+					"request_class": "App\\Http\\Requests\\Auth\\CreateAccountRequest",
+					"auth": true,
+					"permission": "Create_User",
+					"in_collection": true
+				},
+				{
+					"name": "Logout",
+					"method": "POST",
+					"path": "/account/logout",
+					"controller": "App\\Http\\Controllers\\Auth\\LogoutController",
+					"request_class": null,
+					"auth": true,
+					"permission": null,
+					"in_collection": true
+				},
+				{
+					"name": "Who Am I",
+					"method": "GET",
+					"path": "/whoami",
+					"controller": "App\\Http\\Controllers\\Auth\\SelfController",
+					"request_class": null,
+					"auth": true,
+					"permission": null,
+					"in_collection": true
+				},
+				{
+					"name": "Request Password Reset",
+					"method": "POST",
+					"path": "/password/reset/request",
+					"controller": "App\\Http\\Controllers\\Auth\\RequestPasswordResetController",
+					"request_class": null,
+					"auth": false,
+					"permission": null,
+					"in_collection": true
+				},
+				{
+					"name": "Verify Password Reset Code",
+					"method": "POST",
+					"path": "/password/reset/verify",
+					"controller": "App\\Http\\Controllers\\Auth\\VerifyPasswordResetCodeController",
+					"request_class": null,
+					"auth": false,
+					"permission": null,
+					"in_collection": true,
+					"notes": "Auto-saves reset token to {{token}} variable via test script"
+				},
+				{
+					"name": "Confirm Password Reset",
+					"method": "POST",
+					"path": "/password/reset/confirm",
+					"controller": "App\\Http\\Controllers\\Auth\\ConfirmPasswordResetController",
+					"request_class": "App\\Http\\Requests\\Auth\\ConfirmPasswordResetRequest",
+					"auth": true,
+					"permission": "ability:password:reset",
+					"in_collection": true
+				}
+			]
+		},
+		"categories": {
+			"folder_name": "Categories",
+			"routes_file": "routes/api.php",
+			"endpoints": [
+				{
+					"name": "List Categories",
+					"method": "GET",
+					"path": "/categories",
+					"controller": "App\\Http\\Controllers\\Category\\ListCategoriesController",
+					"request_class": null,
+					"auth": true,
+					"permission": "View_Category",
+					"in_collection": true,
+					"query_params": ["page", "per_page", "search"]
+				},
+				{
+					"name": "Show Category",
+					"method": "GET",
+					"path": "/categories/{category}",
+					"controller": "App\\Http\\Controllers\\Category\\ShowCategoryController",
+					"request_class": null,
+					"auth": true,
+					"permission": "View_Category",
+					"in_collection": true
+				},
+				{
+					"name": "Create Category",
+					"method": "POST",
+					"path": "/categories",
+					"controller": "App\\Http\\Controllers\\Category\\CreateCategoryController",
+					"request_class": "App\\Http\\Requests\\Category\\CategoryRequest",
+					"auth": true,
+					"permission": "Create_Category",
+					"in_collection": true,
+					"body_mode": "formdata",
+					"fields": ["name", "is_active", "parent_id", "slug", "description", "meta_title", "meta_description", "meta_keywords", "sort_order", "photo"]
+				},
+				{
+					"name": "Update Category",
+					"method": "PUT",
+					"path": "/categories/{category}",
+					"controller": "App\\Http\\Controllers\\Category\\UpdateCategoryController",
+					"request_class": "App\\Http\\Requests\\Category\\CategoryRequest",
+					"auth": true,
+					"permission": "Update_Category",
+					"in_collection": true
+				},
+				{
+					"name": "Delete Category",
+					"method": "DELETE",
+					"path": "/categories/{category}",
+					"controller": "App\\Http\\Controllers\\Category\\DeleteCategoryController",
+					"request_class": null,
+					"auth": true,
+					"permission": "Delete_Category",
+					"in_collection": true
+				}
+			]
+		},
+		"brands": {
+			"folder_name": "Brands",
+			"routes_file": "routes/api.php",
+			"endpoints": [
+				{
+					"name": "List Brands",
+					"method": "GET",
+					"path": "/brands",
+					"controller": "App\\Http\\Controllers\\Brand\\ListBrandsController",
+					"request_class": null,
+					"auth": true,
+					"permission": "View_Brand",
+					"in_collection": true,
+					"query_params": ["page", "per_page", "search"]
+				},
+				{
+					"name": "Show Brand",
+					"method": "GET",
+					"path": "/brands/{brand}",
+					"controller": "App\\Http\\Controllers\\Brand\\ShowBrandController",
+					"request_class": null,
+					"auth": true,
+					"permission": "View_Brand",
+					"in_collection": true
+				},
+				{
+					"name": "Create Brand",
+					"method": "POST",
+					"path": "/brands",
+					"controller": "App\\Http\\Controllers\\Brand\\CreateBrandController",
+					"request_class": "App\\Http\\Requests\\Brand\\CreateBrandRequest",
+					"auth": true,
+					"permission": "Create_Brand",
+					"in_collection": true,
+					"body_mode": "formdata",
+					"fields": ["name", "code", "is_active", "description", "meta_title", "meta_description", "meta_keywords", "sort_order", "photo"]
+				},
+				{
+					"name": "Update Brand",
+					"method": "PUT",
+					"path": "/brands/{brand}",
+					"controller": "App\\Http\\Controllers\\Brand\\UpdateBrandController",
+					"request_class": "App\\Http\\Requests\\Brand\\UpdateBrandRequest",
+					"auth": true,
+					"permission": "Update_Brand",
+					"in_collection": true
+				},
+				{
+					"name": "Delete Brand",
+					"method": "DELETE",
+					"path": "/brands/{brand}",
+					"controller": "App\\Http\\Controllers\\Brand\\DeleteBrandController",
+					"request_class": null,
+					"auth": true,
+					"permission": "Delete_Brand",
+					"in_collection": true
+				}
+			]
+		},
+		"products": {
+			"folder_name": "Products",
+			"routes_file": "routes/api.php",
+			"endpoints": [
+				{
+					"name": "List Products",
+					"method": "GET",
+					"path": "/products",
+					"controller": "App\\Http\\Controllers\\Product\\ListProductsController",
+					"request_class": null,
+					"auth": true,
+					"permission": "View_Product",
+					"in_collection": true,
+					"query_params": ["page", "per_page", "search", "category_id", "is_active"]
+				},
+				{
+					"name": "Show Product",
+					"method": "GET",
+					"path": "/products/{product}",
+					"controller": "App\\Http\\Controllers\\Product\\ShowProductController",
+					"request_class": null,
+					"auth": true,
+					"permission": "View_Product",
+					"in_collection": true
+				},
+				{
+					"name": "Create Simple Product",
+					"method": "POST",
+					"path": "/products",
+					"controller": "App\\Http\\Controllers\\Product\\CreateProductController",
+					"request_class": "App\\Http\\Requests\\Product\\CreateProductRequest",
+					"auth": true,
+					"permission": "Create_Product",
+					"in_collection": true,
+					"body_mode": "formdata",
+					"fields": ["name", "type", "status", "category_id", "brand_id", "description", "price", "sale_price", "sale_starts_at", "sale_ends_at", "manage_stock", "stock_quantity", "in_stock", "product_image"]
+				},
+				{
+					"name": "Create Variable Product",
+					"method": "POST",
+					"path": "/products",
+					"controller": "App\\Http\\Controllers\\Product\\CreateProductController",
+					"request_class": "App\\Http\\Requests\\Product\\CreateProductRequest",
+					"auth": true,
+					"permission": "Create_Product",
+					"in_collection": true,
+					"body_mode": "formdata",
+					"fields": ["name", "type", "status", "category_id", "brand_id", "description", "variants[*][price]", "variants[*][is_default]", "variants[*][attributes]", "variants[*][photos][]", "product_image"]
+				},
+				{
+					"name": "Update Product",
+					"method": "PUT",
+					"path": "/products/{product}",
+					"controller": "App\\Http\\Controllers\\Product\\UpdateProductController",
+					"request_class": "App\\Http\\Requests\\Product\\UpdateProductRequest",
+					"auth": true,
+					"permission": "Update_Product",
+					"in_collection": true
+				},
+				{
+					"name": "Delete Product",
+					"method": "DELETE",
+					"path": "/products/{product}",
+					"controller": "App\\Http\\Controllers\\Product\\DeleteProductController",
+					"request_class": null,
+					"auth": true,
+					"permission": "Delete_Product",
+					"in_collection": true
+				}
+			]
+		},
+		"product_variants": {
+			"folder_name": "Product Variants",
+			"routes_file": "routes/api.php",
+			"endpoints": [
+				{
+					"name": "Update Product Variant",
+					"method": "PUT",
+					"path": "/products/{product}/variants/{variant}",
+					"controller": "App\\Http\\Controllers\\Product\\ProductVariant\\UpdateProductVariantController",
+					"request_class": "App\\Http\\Requests\\Product\\ProductVariant\\UpdateProductVariantRequest",
+					"auth": true,
+					"permission": "Update_Product",
+					"in_collection": true,
+					"body_mode": "formdata",
+					"fields": ["price", "sale_price", "sale_starts_at", "sale_ends_at", "manage_stock", "stock_quantity", "in_stock", "attributes", "status", "is_default", "sort_order", "photos[]"]
+				},
+				{
+					"name": "Delete Product Variant",
+					"method": "DELETE",
+					"path": "/products/{product}/variants/{variant}",
+					"controller": "App\\Http\\Controllers\\Product\\ProductVariant\\DeleteProductVariantController",
+					"request_class": null,
+					"auth": true,
+					"permission": "Delete_Product",
+					"in_collection": true
+				}
+			]
+		},
+		"vendors": {
+			"folder_name": "Vendors",
+			"routes_file": "routes/api.php",
+			"endpoints": [
+				{
+					"name": "List Vendors",
+					"method": "GET",
+					"path": "/vendors",
+					"controller": "App\\Http\\Controllers\\Vendor\\ListVendorController",
+					"request_class": null,
+					"auth": true,
+					"permission": "View_Vendor",
+					"in_collection": true,
+					"query_params": ["page", "per_page", "search"]
+				},
+				{
+					"name": "Show Vendor",
+					"method": "GET",
+					"path": "/vendors/{vendor}",
+					"controller": "App\\Http\\Controllers\\Vendor\\ShowVendorController",
+					"request_class": null,
+					"auth": true,
+					"permission": "View_Vendor",
+					"in_collection": true
+				},
+				{
+					"name": "Create Vendor",
+					"method": "POST",
+					"path": "/vendors",
+					"controller": "App\\Http\\Controllers\\Vendor\\CreateVendorController",
+					"request_class": "App\\Http\\Requests\\Vendor\\CreateVendorRequest",
+					"auth": true,
+					"permission": "Create_Vendor",
+					"in_collection": true,
+					"body_mode": "raw_json",
+					"fields": ["name", "business_name", "email", "phone", "password", "code", "is_active", "address_line_1", "address_line_2", "city", "state", "postal_code", "country"]
+				},
+				{
+					"name": "Update Vendor",
+					"method": "PUT",
+					"path": "/vendors/{vendor}",
+					"controller": "App\\Http\\Controllers\\Vendor\\UpdateVendorController",
+					"request_class": "App\\Http\\Requests\\Vendor\\UpdateVendorRequest",
+					"auth": true,
+					"permission": "Update_Vendor",
+					"in_collection": true
+				},
+				{
+					"name": "Delete Vendor",
+					"method": "DELETE",
+					"path": "/vendors/{vendor}",
+					"controller": "App\\Http\\Controllers\\Vendor\\DeleteVendorController",
+					"request_class": null,
+					"auth": true,
+					"permission": "Delete_Vendor",
+					"in_collection": true
+				}
+			]
+		},
+		"sku_attribute_codes": {
+			"folder_name": "SKU Attribute Codes",
+			"routes_file": "routes/api.php",
+			"endpoints": [
+				{
+					"name": "List SKU Attribute Codes",
+					"method": "GET",
+					"path": "/sku-attribute-code",
+					"controller": "App\\Http\\Controllers\\SkuAttributeCode\\SkuAttributeCodeController@index",
+					"request_class": null,
+					"auth": true,
+					"permission": "View_Vendor",
+					"in_collection": true,
+					"query_params": ["page", "per_page", "search"]
+				},
+				{
+					"name": "Show SKU Attribute Code",
+					"method": "GET",
+					"path": "/sku-attribute-code/{sku-attribute-code}",
+					"controller": "App\\Http\\Controllers\\SkuAttributeCode\\SkuAttributeCodeController@show",
+					"request_class": null,
+					"auth": true,
+					"permission": "View_Vendor",
+					"in_collection": true
+				},
+				{
+					"name": "Create SKU Attribute Code",
+					"method": "POST",
+					"path": "/sku-attribute-code",
+					"controller": "App\\Http\\Controllers\\SkuAttributeCode\\SkuAttributeCodeController@store",
+					"request_class": "App\\Http\\Requests\\SkuAttributeCode\\StoreSkuAttributeCodeRequest",
+					"auth": true,
+					"permission": "Create_Vendor",
+					"in_collection": true,
+					"body_mode": "raw_json",
+					"fields": ["type", "value", "code", "is_active"]
+				},
+				{
+					"name": "Update SKU Attribute Code",
+					"method": "PUT",
+					"path": "/sku-attribute-code/{sku-attribute-code}",
+					"controller": "App\\Http\\Controllers\\SkuAttributeCode\\SkuAttributeCodeController@update",
+					"request_class": "App\\Http\\Requests\\SkuAttributeCode\\UpdateSkuAttributeCodeRequest",
+					"auth": true,
+					"permission": "Update_Vendor",
+					"in_collection": true
+				},
+				{
+					"name": "Delete SKU Attribute Code",
+					"method": "DELETE",
+					"path": "/sku-attribute-code/{sku-attribute-code}",
+					"controller": "App\\Http\\Controllers\\SkuAttributeCode\\SkuAttributeCodeController@delete",
+					"request_class": null,
+					"auth": true,
+					"permission": "Delete_Vendor",
+					"in_collection": true
+				}
+			]
+		}
+	},
+	"response_format": {
+		"success": {
+			"success": true,
+			"message": "string",
+			"data": "object|array|null",
+			"errors": null
+		},
+		"error": {
+			"success": false,
+			"message": "string",
+			"data": null,
+			"errors": "object|array|null"
+		}
+	},
+	"status_codes": {
+		"200": "OK",
+		"201": "Created",
+		"204": "No Content (delete operations)",
+		"400": "Bad Request",
+		"401": "Unauthorized",
+		"403": "Forbidden (insufficient permissions)",
+		"404": "Not Found",
+		"422": "Validation Failed",
+		"500": "Server Error"
+	}
+}

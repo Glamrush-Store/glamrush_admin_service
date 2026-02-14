@@ -17,6 +17,6 @@ class AttachImageAction
     {
         $model
             ->addMedia($file)
-            ->toMediaCollection('image');
+            ->toMediaCollection('catalog-photos');
     }
 }

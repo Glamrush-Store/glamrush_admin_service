@@ -9,6 +9,7 @@
 namespace App\Http\Controllers\Category;
 
 use App\Domain\Category\UseCases\ListCategoriesUseCase;
+use App\Http\Resources\Category\CategoryResource;
 use App\Http\Responses\ApiResponse;
 use Illuminate\Http\Request;
 
@@ -21,10 +22,10 @@ class ListCategoriesController
     ) {
 
         $categories = $this->useCase->run(
-            filters: $request->all(),
+            filters: $request->input(),
             perPage: $request->integer('per_page', 5)
         );
 
-        return ApiResponse::success($categories);
+        return ApiResponse::success(CategoryResource::collection($categories));
     }
 }

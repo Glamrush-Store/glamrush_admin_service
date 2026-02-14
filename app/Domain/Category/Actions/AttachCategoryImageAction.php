@@ -19,6 +19,6 @@ class AttachCategoryImageAction
     {
         $category
             ->addMedia($file)
-            ->toMediaCollection('image');
+            ->toMediaCollection('catalog-photos');
     }
 }

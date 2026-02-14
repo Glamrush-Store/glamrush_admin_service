@@ -19,7 +19,7 @@ class CreateProductController
     public function __invoke(
         CreateProductRequest $request,
     ) {
-        $product = $this->useCase->execute($request->validated());
+        $product = $this->useCase->execute($request->all());
 
         return ApiResponse::success($product, 'OK', 201);
     }

@@ -9,6 +9,7 @@
 namespace App\Http\Controllers\Product;
 
 use App\Domain\Product\UseCases\ListProductsUseCase;
+use App\Http\Resources\Product\ProductListResource;
 use App\Http\Responses\ApiResponse;
 use Illuminate\Http\Request;
 
@@ -20,12 +21,12 @@ class ListProductsController
         Request $request,
     ) {
 
-        $result = $this->useCase->run(
+        $products = $this->useCase->run(
             filters: $request->all(),
             perPage: $request->integer('per_page', 5)
         );
 
-        return ApiResponse::success($result);
+        return ApiResponse::success(ProductListResource::collection($products));
 
     }
 }

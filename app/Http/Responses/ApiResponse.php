@@ -6,17 +6,25 @@ use Illuminate\Http\JsonResponse;
 
 final class ApiResponse
 {
-    public static function success(
-        mixed $data = null,
-        string $message = 'OK',
-        int $status = 200
-    ): JsonResponse {
-        return response()->json([
-            'success' => true,
-            'message' => $message,
-            'data' => $data,
-            'errors' => null,
-        ], $status);
+    public static function success($data, string $message = 'Success', int $code = 200)
+    {
+        if ($data instanceof \Illuminate\Http\Resources\Json\AnonymousResourceCollection) {
+            $response = $data->response()->getData(true);
+
+            return response()->json([
+                'success' => true,
+                'message' => $message,
+                'data' => $response['data'],
+                'meta' => $response['meta'] ?? null,
+                'links' => $response['links'] ?? null,
+            ], $code);
+        } else {
+            return response()->json([
+                'success' => true,
+                'message' => $message,
+                'data' => $data,
+            ], $code);
+        }
     }
 
     public static function error(

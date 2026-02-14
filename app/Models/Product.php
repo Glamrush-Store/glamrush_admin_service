@@ -6,10 +6,10 @@ use App\Infrastructure\Cache\CatalogCache;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\Image\Enums\Fit;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
@@ -82,8 +82,26 @@ class Product extends Model implements hasMedia
 
     public function registerMediaCollections(): void
     {
-        $this->addMediaCollection('images')
+        $this->addMediaCollection('catalog-photos')
             ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/webp']);
+    }
+
+
+    public function registerMediaConversions(
+        \Spatie\MediaLibrary\MediaCollections\Models\Media $media = null
+    ): void {
+        $this->addMediaConversion('thumb')
+            ->fit(Fit::Crop, 400, 400)
+            ->sharpen(10)
+            ->nonQueued();
+
+        $this->addMediaConversion('medium')
+            ->fit(Fit::Max, 800, 800)
+            ->nonQueued();
+
+        $this->addMediaConversion('large')
+            ->fit(Fit::Max, 1600, 1600)
+            ->nonQueued();
     }
 
     public function category()
@@ -94,6 +112,11 @@ class Product extends Model implements hasMedia
     public function brand()
     {
         return $this->belongsTo(Brand::class);
+    }
+
+    public function vendor()
+    {
+        return $this->belongsTo(Vendor::class);
     }
 
     /**
@@ -134,10 +157,5 @@ class Product extends Model implements hasMedia
     {
         return $this->defaultVariant
             ?? $this->variants()->first();
-    }
-
-    public function vendor(): BelongsTo
-    {
-        return $this->belongsTo(Vendor::class);
     }
 }

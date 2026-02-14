@@ -14,6 +14,9 @@ class CreateProductAction
 {
     public function run(array $data): Product
     {
-        return Product::create($data);
+
+       return Product::create(
+            collect($data)->except('photos')->toArray()
+        );
     }
 }

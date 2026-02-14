@@ -8,6 +8,7 @@
 
 namespace App\Domain\Vendor\UseCases;
 
+use App\Domain\Vendor\Actions\CreateVendorAction;
 use App\Models\Vendor;
 
 class CreateVendorUseCase

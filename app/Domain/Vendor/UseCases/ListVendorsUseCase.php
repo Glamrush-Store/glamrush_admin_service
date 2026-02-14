@@ -8,6 +8,8 @@
 
 namespace App\Domain\Vendor\UseCases;
 
+use App\Domain\Vendor\Actions\ListVendorsAction;
+
 class ListVendorsUseCase
 {
     public function __construct(

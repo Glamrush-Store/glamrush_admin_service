@@ -11,6 +11,7 @@ namespace App\Domain\Product\UseCases;
 use App\Domain\Brand\Actions\GetBrandByIdAction;
 use App\Domain\Product\Actions\CreateProductAction;
 use App\Domain\Product\Actions\GenerateProductSkuAction;
+use App\Domain\Product\Actions\UploadProductPhotosAction;
 use App\Domain\Product\Events\ProductSavedEvent;
 use App\Domain\Product\ProductVariant\Actions\CreateProductVariantsAction;
 use App\Domain\Product\ProductVariant\Actions\GenerateVariantSkuAction;
@@ -19,6 +20,7 @@ use App\Domain\Shared\Actions\CreateAppLogAction;
 use App\Domain\Shared\Actions\GenerateUniqueSlugAction;
 use App\Models\Product;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class CreateProductUseCase
 {
@@ -30,11 +32,13 @@ class CreateProductUseCase
         private CreateAppLogAction $log,
         private GetBrandByIdAction $getBrand,
         private GenerateVariantSkuAction $generateVariantSku,
-        private GenerateUniqueSlugAction $generateSlug
+        private GenerateUniqueSlugAction $generateSlug,
+        private UploadProductPhotosAction $uploadProductPhotos,
     ) {}
 
     public function execute(array $data): Product
     {
+
         try {
             return DB::transaction(function () use ($data) {
 
@@ -56,6 +60,10 @@ class CreateProductUseCase
                     'sequence' => $sequence ?? 1,
                     'slug' => $slug ?? $data['name'],
                 ]);
+
+                if (!empty($data['photos'])) {
+                    $this->uploadProductPhotos->run($product, $data['photos']);
+                }
 
                 if ($data['type'] == 'variable') {
                     foreach ($data['variants'] as $variantData) {
@@ -80,9 +88,7 @@ class CreateProductUseCase
                     event(new ProductSavedEvent($product));
 
                     return $product->load('variants');
-
                 }
-
                 return $product;
 
             });

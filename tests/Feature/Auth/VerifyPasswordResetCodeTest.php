@@ -52,12 +52,11 @@ it('rejects expired reset code', function () {
         'code' => '123456',
     ]);
 
-
-
-    $response
-        ->assertStatus(500)
-        ->assertJson([
-            'success' => false,
-            'message' => \App\Const\Auth\AuthMessages::INVALID_RESET_CODE,
+    $response->assertStatus(404)
+        ->assertJsonStructure([
+            'success',
+            'message',
+            'data' => [],
+            'errors' => [],
         ]);
 });

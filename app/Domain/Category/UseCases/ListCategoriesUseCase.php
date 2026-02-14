@@ -18,6 +18,7 @@ class ListCategoriesUseCase
 
     public function run(array $filters, int $perPage)
     {
+
         return $this->buildQuery
             ->run($filters)
             ->paginate($perPage);

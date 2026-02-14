@@ -31,13 +31,13 @@ class CreateBrandUseCase
             return DB::transaction(function () use ($data, $photo) {
                 $data['slug'] = $this->generateSlug->run($data['name']);
 
-                $category = $this->createBrand->run($data);
+                $brand = $this->createBrand->run($data);
 
                 if ($photo) {
-                    $this->attachImage->run($category, $photo);
+                    $this->attachImage->run($brand, $photo);
                 }
 
-                return $category;
+                return $brand;
             });
         } catch (\Throwable $e) {
             $this->log->run(

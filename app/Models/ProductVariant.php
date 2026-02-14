@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Image\Enums\Fit;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
@@ -36,23 +37,27 @@ class ProductVariant extends Model implements HasMedia
         'attributes' => 'array',
     ];
 
-    //    protected static function booted()
-    //    {
-    //        static::saving(function ($model) {
-    //            if (is_array($model->attributes['attributes'])) {
-    //                $model->attributes = collect($model->attributes['attributes'])
-    //                    ->mapWithKeys(fn ($item) => [
-    //                        $item['key'] => $item['value'],
-    //                    ])
-    //                    ->toArray();
-    //            }
-    //        });
-    //    }
-
     public function registerMediaCollections(): void
     {
-        $this->addMediaCollection('images')
+        $this->addMediaCollection('catalog-photos')
             ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/webp']);
+    }
+
+    public function registerMediaConversions(
+        \Spatie\MediaLibrary\MediaCollections\Models\Media $media = null
+    ): void {
+        $this->addMediaConversion('thumb')
+            ->fit(Fit::Crop, 400, 400)
+            ->sharpen(10)
+            ->nonQueued();
+
+        $this->addMediaConversion('medium')
+            ->fit(Fit::Max, 800, 800)
+            ->nonQueued();
+
+        $this->addMediaConversion('large')
+            ->fit(Fit::Max, 1600, 1600)
+            ->nonQueued();
     }
 
     public function product()

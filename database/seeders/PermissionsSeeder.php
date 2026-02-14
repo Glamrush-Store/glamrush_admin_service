@@ -23,6 +23,8 @@ class PermissionsSeeder extends Seeder
             'ProductVariant',
             'Category',
             'Brand',
+            'Vendor',
+            'SkuAttributeCode'
             // Add more models here...
         ];
 

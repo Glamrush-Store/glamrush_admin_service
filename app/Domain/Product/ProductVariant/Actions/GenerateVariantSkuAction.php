@@ -9,6 +9,7 @@
 namespace App\Domain\Product\ProductVariant\Actions;
 
 use App\Domain\Shared\Actions\ResolveSkuAttributeCodeAction;
+use Illuminate\Support\Facades\Log;
 
 class GenerateVariantSkuAction
 {
@@ -18,10 +19,13 @@ class GenerateVariantSkuAction
 
     public function run(string $productSku, array $attributes): string
     {
+
+
         $codes = [];
 
-        foreach ($attributes as $type => $value) {
-            $codes[] = $this->resolve->run($type, $value);
+        foreach ($attributes as $attribute) {
+
+            $codes[] = $this->resolve->run($attribute['type'], $attribute['value']);
         }
 
         return $productSku.'-'.implode('-', $codes);

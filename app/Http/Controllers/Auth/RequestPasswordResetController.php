@@ -17,6 +17,7 @@ class RequestPasswordResetController extends Controller
     ) {
 
         $this->usecase->execute($request->validated());
+
         return ApiResponse::success([], AuthMessages::RESET_CODE_SENT);
     }
 }

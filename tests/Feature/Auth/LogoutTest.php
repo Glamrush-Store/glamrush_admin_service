@@ -7,7 +7,6 @@
  */
 
 use App\Models\User;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
@@ -18,13 +17,13 @@ it('logs out the user and invalidates the token', function () {
     // issue token
     $token = $user->createToken('test')->plainTextToken;
 
-//    $token =  $this->postJson('/api/v1/account/login',[
-//        "email" => $user->email,
-//        "password" => 'password',
-//        "device_id" => "device-id-123",
-//        "device_name" => "iphone"
-//
-//    ])->json()["data"]["access_token"];
+    //    $token =  $this->postJson('/api/v1/account/login',[
+    //        "email" => $user->email,
+    //        "password" => 'password',
+    //        "device_id" => "device-id-123",
+    //        "device_name" => "iphone"
+    //
+    //    ])->json()["data"]["access_token"];
 
     // logout
     $logoutResponse = $this
@@ -34,16 +33,15 @@ it('logs out the user and invalidates the token', function () {
     $logoutResponse->assertOk();
 
     // Refresh the application to clear any cached authentication
-    //$this->refreshApplication();
-
+    // $this->refreshApplication();
 
     // try to access protected route again
 
-    //TODO: This keeps returing the auth user with 200, not sure why
-//    $meResponse = $this
-//        ->withHeader('Authorization', "Bearer {$token}")
-//        ->getJson('/api/v1/whoami');
-//
-//
-//    $meResponse->assertStatus(401);
+    // TODO: This keeps returing the auth user with 200, not sure why
+    //    $meResponse = $this
+    //        ->withHeader('Authorization', "Bearer {$token}")
+    //        ->getJson('/api/v1/whoami');
+    //
+    //
+    //    $meResponse->assertStatus(401);
 });

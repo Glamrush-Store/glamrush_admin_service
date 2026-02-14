@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep:*)",
+      "Bash(python:*)",
+      "Bash(php -r:*)",
+      "Bash(php -r \"json_decode\\(file_get_contents\\(''.claude/postman_collection_manifest.json''\\)\\); echo json_last_error\\(\\) === 0 ? ''Manifest JSON: VALID'' : ''Manifest JSON: INVALID - '' . json_last_error_msg\\(\\); echo PHP_EOL;\")"
+    ]
+  }
+}

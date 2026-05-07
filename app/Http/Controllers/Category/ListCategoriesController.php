@@ -9,7 +9,7 @@
 namespace App\Http\Controllers\Category;
 
 use App\Domain\Category\UseCases\ListCategoriesUseCase;
-use App\Http\Resources\Category\CategoryListResource;
+use App\Http\Resources\Category\CategoryResource;
 use App\Http\Responses\ApiResponse;
 use Illuminate\Http\Request;
 

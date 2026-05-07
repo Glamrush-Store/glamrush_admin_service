@@ -20,6 +20,10 @@
 /storage/glamrush_test_catalog_images
 /storage/glamrush_test_catalog_images.zip
 /storage/media-library
+/storage/app/private
+/storage/app/public
+/storage/logs
+/storage/api-docs
 /storage/*.key
 /storage/pail
 /vendor

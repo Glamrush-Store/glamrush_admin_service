@@ -1,14 +1,15 @@
 <?php
+
 /*
  * © 2026 Demilade Oyewusi
  * Licensed under the MIT License.
  * See the LICENSE file for details.
  */
 
-
 namespace App\Exceptions;
 
 // app/Exceptions/BusinessException.php
+
 namespace App\Exceptions;
 
 use Exception;
@@ -34,10 +35,10 @@ class BusinessException extends Exception
     }
 
     // Generic factory methods
-    public static function unauthorized(string $message = "Unauthorized"): self
+    public static function unauthorized(string $message = 'Unauthorized'): self
     {
         return new self(
-             $message,
+            $message,
             [],
             401
         );
@@ -74,5 +75,4 @@ class BusinessException extends Exception
     {
         return new self($message, $data, 400);
     }
-
 }

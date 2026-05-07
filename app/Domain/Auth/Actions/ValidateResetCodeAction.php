@@ -29,11 +29,11 @@ class ValidateResetCodeAction
             ->first();
 
         if (! $record) {
-            throw BusinessException::notFound('Reset code not found','');
+            throw BusinessException::notFound('Reset code not found', '');
         }
 
         if (! Hash::check($code, $record->code_hash)) {
-            throw BusinessException::notFound('Reset code not found','');
+            throw BusinessException::notFound('Reset code not found', '');
         }
 
         $record->update([

@@ -64,8 +64,8 @@ class ProductVariantFactory extends Factory
         return $this->state(function () {
             return [
                 'attributes' => [
-                    'color' => fake()->randomElement(['red', 'blue', 'black']),
-                    'size' => fake()->randomElement(['S', 'M', 'L']),
+                    ['color' => fake()->randomElement(['red', 'blue', 'black'])],
+                    ['size' => fake()->randomElement(['S', 'M', 'L'])],
                 ],
             ];
         });

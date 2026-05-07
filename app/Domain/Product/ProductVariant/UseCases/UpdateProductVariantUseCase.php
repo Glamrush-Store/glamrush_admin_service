@@ -57,6 +57,5 @@ class UpdateProductVariantUseCase
 
             throw new \RuntimeException('failed to update Product Variant', 0, $e);
         }
-
     }
 }

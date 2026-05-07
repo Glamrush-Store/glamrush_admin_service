@@ -3,7 +3,6 @@
 use App\Exceptions\BusinessException;
 use App\Http\Responses\ApiResponse;
 use Illuminate\Auth\AuthenticationException;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -11,8 +10,6 @@ use Illuminate\Http\Request;
 use Laravel\Sanctum\Http\Middleware\CheckAbilities;
 use Laravel\Sanctum\Http\Middleware\CheckForAnyAbility;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
-use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -35,8 +32,6 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })->withExceptions(function (Exceptions $exceptions): void {
 
-
-
         // Handle 404 model not found
         $exceptions->render(function (NotFoundHttpException $e, Request $request) {
             if ($request->expectsJson()) {
@@ -46,6 +41,7 @@ return Application::configure(basePath: dirname(__DIR__))
                     404
                 );
             }
+
             return 'Resource not found';
         });
 
@@ -60,7 +56,6 @@ return Application::configure(basePath: dirname(__DIR__))
             }
         });
 
-
         // Handle business exceptions
         $exceptions->render(function (AuthenticationException $e, Request $request) {
             if ($request->expectsJson()) {
@@ -71,8 +66,6 @@ return Application::configure(basePath: dirname(__DIR__))
                 );
             }
         });
-
-
 
         // Catch-all for unexpected errors (500s)
         $exceptions->render(function (Throwable $e, Request $request) {
@@ -92,8 +85,8 @@ return Application::configure(basePath: dirname(__DIR__))
                     500
                 );
             }
+
             return 'An unexpected error occurred';
         });
-
 
     })->create();

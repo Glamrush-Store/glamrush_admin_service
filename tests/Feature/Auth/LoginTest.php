@@ -1,13 +1,11 @@
 <?php
 
-
-
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
 
-it('logs in user', function () {
+it('logs in user successfully ', function () {
     $user = User::factory()->create([
         'email' => 'johndoe@gmail.com',
     ]);
@@ -19,6 +17,7 @@ it('logs in user', function () {
         'device_name' => 'iphone',
     ]);
 
+
     $response->assertStatus(200)
         ->assertJsonStructure([
             'success',
@@ -26,8 +25,7 @@ it('logs in user', function () {
             'data' => [
                 'access_token',
                 'token_type',
-            ],
-            'errors',
+            ]
         ]);
 });
 

@@ -22,7 +22,7 @@ class CreateVendorRequest extends FormRequest
             'phone' => ['nullable', 'string', 'max:50'],
 
             // Auth
-            'password' => ['required', 'string', 'min:8'],
+            'password' => ['sometimes', 'string', 'min:8'],
 
             // Business
             'code' => ['required', 'string', 'max:50', 'unique:vendors,code'],
@@ -34,7 +34,7 @@ class CreateVendorRequest extends FormRequest
             'city' => ['nullable', 'string', 'max:100'],
             'state' => ['nullable', 'string', 'max:100'],
             'postal_code' => ['nullable', 'string', 'max:30'],
-            'country' => ['nullable', 'string', 'max:2'], // ISO country code
+            'country' => ['nullable', 'string', 'max:255'], // ISO country code
         ];
     }
 

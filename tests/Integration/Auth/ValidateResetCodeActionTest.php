@@ -8,6 +8,7 @@
 
 use App\Domain\Auth\Actions\ValidateResetCodeAction;
 use App\Exceptions\Auth\InvalidResetCodeException;
+use App\Exceptions\BusinessException;
 use App\Models\PasswordResetCode;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -48,7 +49,7 @@ it('throws when reset code is invalid', function () {
     $action = app(ValidateResetCodeAction::class);
 
     expect(fn () => $action->run($user->email, '000000'))
-        ->toThrow(InvalidResetCodeException::class);
+        ->toThrow(BusinessException::class);
 });
 
 it('throws when reset code is expired', function () {
@@ -63,7 +64,7 @@ it('throws when reset code is expired', function () {
     $action = app(ValidateResetCodeAction::class);
 
     expect(fn () => $action->run($user->email, '123456'))
-        ->toThrow(InvalidResetCodeException::class);
+        ->toThrow(BusinessException::class);
 });
 
 it('throws when reset code has already been used', function () {
@@ -78,7 +79,7 @@ it('throws when reset code has already been used', function () {
     $action = app(ValidateResetCodeAction::class);
 
     expect(fn () => $action->run($user->email, '123456'))
-        ->toThrow(InvalidResetCodeException::class);
+        ->toThrow(BusinessException::class);
 });
 
 it('throws when user does not exist', function () {

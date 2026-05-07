@@ -27,7 +27,7 @@ class UpdateCategoryController extends Controller
         $category = $this->useCase->run(
             category: $category,
             data: $request->all(),
-            photo: $request->file('image')
+            photo: $request->file('photo')
         );
 
         return ApiResponse::success($category, 'Category Updated', 200);

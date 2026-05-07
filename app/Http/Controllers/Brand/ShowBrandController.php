@@ -10,6 +10,7 @@ namespace App\Http\Controllers\Brand;
 
 use App\Domain\Brand\UseCases\ShowBrandUseCase;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Brand\BrandResource;
 use App\Http\Responses\ApiResponse;
 use App\Models\Brand;
 
@@ -22,9 +23,9 @@ class ShowBrandController extends Controller
         ShowBrandUseCase $useCase
     ) {
 
-        $result = $this->useCase->run($brand);
+        $brand = $this->useCase->run($brand);
 
-        return ApiResponse::success($result, 'OK', 200);
+        return ApiResponse::success(new BrandResource($brand), 'OK', 200);
 
     }
 }

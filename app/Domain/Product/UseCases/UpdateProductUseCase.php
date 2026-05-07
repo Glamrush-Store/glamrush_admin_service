@@ -10,6 +10,7 @@ namespace App\Domain\Product\UseCases;
 
 use App\Domain\Product\Actions\SyncProductVariantsAction;
 use App\Domain\Product\Actions\UpdateProductAction;
+use App\Domain\Product\Actions\UploadProductPhotosAction;
 use App\Domain\Product\Events\ProductSavedEvent;
 use App\Domain\Shared\Actions\CreateAppLogAction;
 use App\Models\Product;
@@ -20,6 +21,7 @@ class UpdateProductUseCase
     public function __construct(
         private UpdateProductAction $updateProduct,
         private SyncProductVariantsAction $syncVariants,
+        private UploadProductPhotosAction $uploadProductPhotos,
         private CreateAppLogAction $log
     ) {}
 
@@ -30,10 +32,15 @@ class UpdateProductUseCase
                 $this->updateProduct->run($product, $data);
 
                 // required if you want to change a product from simple to variant
-                if ($product->type !== 'simple') {
-                    $this->syncVariants->run($product, $data['variants']);
+                // Obsolete as we decide to have separate endpoints for simple and variant products
+                // if ($product->type !== 'simple') {
+                //     $this->syncVariants->run($product, $data['variants']);
 
-                    return $product->load('variants');
+                //     return $product->load('variants');
+                // }
+
+                if (!empty($data['photos'])) {
+                    $this->uploadProductPhotos->run($product, $data['photos']);
                 }
 
                 event(new ProductSavedEvent($product));

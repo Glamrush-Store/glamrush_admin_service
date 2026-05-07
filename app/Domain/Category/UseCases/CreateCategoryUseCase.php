@@ -27,6 +27,7 @@ class CreateCategoryUseCase
 
     public function run(array $data, ?UploadedFile $photo): Category
     {
+
         try {
             return DB::transaction(function () use ($data, $photo) {
                 $data['slug'] = $this->generateSlug->run($data['name']);

@@ -21,7 +21,7 @@ class UploadVariantPhotosAction
         foreach ($photos as $photo) {
             $variant
                 ->addMedia($photo)
-                ->toMediaCollection('photos');
+                ->toMediaCollection('catalog-photos');
         }
     }
 }

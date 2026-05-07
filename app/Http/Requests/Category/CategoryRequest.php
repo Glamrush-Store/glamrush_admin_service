@@ -34,7 +34,7 @@ class CategoryRequest extends FormRequest
 
             'parent_id' => [
                 'nullable',
-                'integer',
+                'string',
                 Rule::exists('categories', 'id'),
             ],
 
@@ -73,9 +73,10 @@ class CategoryRequest extends FormRequest
             ],
 
             // Spatie Media image (optional)
-            'image' => [
+            'photos' => [
                 'sometimes',
                 'image',
+                'mimes:jpeg,png,jpg,gif,svg',
                 'max:2048', // 2MB
             ],
         ];

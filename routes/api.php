@@ -7,12 +7,20 @@
  */
 
 use App\Http\Controllers\Auth\ConfirmPasswordResetController;
+use App\Http\Controllers\Customer\ListCustomersController;
 use App\Http\Controllers\Auth\CreateAccountController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\RequestPasswordResetController;
 use App\Http\Controllers\Auth\SelfController;
 use App\Http\Controllers\Auth\VerifyPasswordResetCodeController;
+use App\Http\Controllers\Collection\AttachProductsController;
+use App\Http\Controllers\Collection\CreateCollectionController;
+use App\Http\Controllers\Collection\DeleteCollectionController;
+use App\Http\Controllers\Collection\DetachProductController;
+use App\Http\Controllers\Collection\ListCollectionsController;
+use App\Http\Controllers\Collection\ShowCollectionController;
+use App\Http\Controllers\Collection\UpdateCollectionController;
 use App\Http\Controllers\Brand\CreateBrandController;
 use App\Http\Controllers\Brand\DeleteBrandController;
 use App\Http\Controllers\Brand\ListBrandsController;
@@ -23,11 +31,22 @@ use App\Http\Controllers\Category\DeleteCategoryController;
 use App\Http\Controllers\Category\ListCategoriesController;
 use App\Http\Controllers\Category\ShowCategoryController;
 use App\Http\Controllers\Category\UpdateCategoryController;
+use App\Http\Controllers\Media\DeleteMediaController;
 use App\Http\Controllers\Product\CreateProductController;
 use App\Http\Controllers\Product\DeleteProductController;
 use App\Http\Controllers\Product\ListProductsController;
 use App\Http\Controllers\Product\ShowProductController;
 use App\Http\Controllers\Product\UpdateProductController;
+use App\Http\Controllers\ProductVariant\DeleteProductVariantController;
+use App\Http\Controllers\ProductVariant\ShowProductVariantController;
+use App\Http\Controllers\ProductVariant\UpdateProductVariantController;
+use App\Http\Controllers\SkuAttributeCode\SkuAttributeCodeController;
+use App\Http\Controllers\Vendor\CreateVendorController;
+use App\Http\Controllers\Vendor\DeleteVendorController;
+use App\Http\Controllers\Vendor\ListVendorController;
+use App\Http\Controllers\Vendor\ShowVendorController;
+use App\Http\Controllers\Vendor\UpdateVendorController;
+
 use Illuminate\Support\Facades\Route;
 
 // ========================================================
@@ -70,6 +89,17 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
 });
 
 // ========================================================
+// VENDORS API ROUTES
+// ========================================================
+Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
+    Route::get('/vendors', ListVendorController::class)->middleware('permission:View_Vendor');
+    Route::get('/vendors/{vendor}', ShowVendorController::class)->middleware('permission:View_Vendor');
+    Route::post('/vendors', CreateVendorController::class)->middleware('permission:Create_Vendor');
+    Route::put('/vendors/{vendor}', UpdateVendorController::class)->middleware('permission:Update_Vendor');
+    Route::delete('/vendors/{vendor}', DeleteVendorController::class)->middleware('permission:Delete_Vendor');
+});
+
+// ========================================================
 //  PRODUCTS API ROUTES
 // ========================================================
 
@@ -79,4 +109,60 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
     Route::post('/products', CreateProductController::class)->middleware('permission:Create_Product');
     Route::put('/products/{product}', UpdateProductController::class)->middleware('permission:Update_Product');
     Route::delete('/products/{product}', DeleteProductController::class)->middleware('permission:Delete_Product');
+});
+
+
+
+// ========================================================
+//  PRODUCT VARIANT ROUTES
+// ========================================================
+Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
+    Route::get('/productvariants/{variant}', ShowProductVariantController::class)->middleware('permission:View_Product');
+    Route::put('/productvariants/{variant}', UpdateProductVariantController::class)->middleware('permission:Update_Product');
+    Route::delete('/productvariants/{variant}', DeleteProductVariantController::class)->middleware('permission:Delete_Product');
+});
+
+
+
+
+// ========================================================
+// SKU ATTRIBUTE CODES API ROUTES
+// ========================================================
+Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
+    Route::get('/sku-attribute-code', [SkuAttributeCodeController::class, 'index'])->middleware('permission:View_Vendor');
+    Route::get('/sku-attribute-code/list/types', [SkuAttributeCodeController::class, 'types'])->middleware('permission:View_Vendor');
+    Route::get('/sku-attribute-code/{sku-attribute-code}', [SkuAttributeCodeController::class, 'show'])->middleware('permission:View_Vendor');
+    Route::post('/sku-attribute-code', [SkuAttributeCodeController::class, 'store'])->middleware('permission:Create_Vendor');
+    Route::put('/sku-attribute-code/{sku-attribute-code}', [SkuAttributeCodeController::class, 'update'])->middleware('permission:Update_Vendor');
+    Route::delete('/sku-attribute-code/{id}', [SkuAttributeCodeController::class, 'destroy'])->middleware('permission:Delete_Vendor');
+});
+
+
+// ========================================================
+// COLLECTIONS API ROUTES
+// ========================================================
+
+Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
+    Route::get('/collections', ListCollectionsController::class)->middleware('permission:View_Category');
+    Route::get('/collections/{collection}', ShowCollectionController::class)->middleware('permission:View_Category');
+    Route::post('/collections', CreateCollectionController::class)->middleware('permission:Create_Category');
+    Route::put('/collections/{collection}', UpdateCollectionController::class)->middleware('permission:Update_Category');
+    Route::delete('/collections/{collection}', DeleteCollectionController::class)->middleware('permission:Delete_Category');
+    Route::post('/collections/{collection}/products', AttachProductsController::class)->middleware('permission:Update_Category');
+    Route::delete('/collections/{collection}/products/{product}', DetachProductController::class)->middleware('permission:Update_Category');
+});
+
+// ========================================================
+// CUSTOMERS API ROUTES
+// ========================================================
+
+Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
+    Route::get('/customers', ListCustomersController::class)->middleware('permission:View_Customer');
+});
+
+// ========================================================
+// Media Routes
+// ========================================================
+Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
+    Route::delete('/catalog/media/{media}', DeleteMediaController::class)->middleware('permission:Update_Product');
 });

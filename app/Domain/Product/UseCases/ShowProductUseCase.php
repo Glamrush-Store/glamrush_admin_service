@@ -14,6 +14,12 @@ class ShowProductUseCase
 {
     public function run(Product $product): Product
     {
-        return $product;
+        return $product->load('variants')
+            ->load('category')
+            ->load('brand')
+            ->load('vendor')
+            ->load('media')
+            ->load('variants.media')
+            ->load('collections');
     }
 }

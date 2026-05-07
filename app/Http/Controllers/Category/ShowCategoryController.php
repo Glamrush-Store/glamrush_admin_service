@@ -10,6 +10,7 @@ namespace App\Http\Controllers\Category;
 
 use App\Domain\Category\UseCases\ShowCategoryUseCase;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Category\CategoryResource;
 use App\Http\Responses\ApiResponse;
 use App\Models\Category;
 
@@ -23,7 +24,7 @@ class ShowCategoryController extends Controller
 
         $category = $this->useCase->run($category);
 
-        return ApiResponse::success($category);
+        return ApiResponse::success(new CategoryResource($category));
 
     }
 }

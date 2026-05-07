@@ -82,12 +82,13 @@ class ProductFactory extends Factory
      */
     public function simple(): static
     {
-        return $this->afterCreating(function (Product $product) {
-            ProductVariant::factory()
-                ->for($product)
-                ->simple()
-                ->create();
-        });
+        return $this->state(['type' => 'simple'])
+            ->afterCreating(function (Product $product) {
+                ProductVariant::factory()
+                    ->for($product)
+                    ->simple()
+                    ->create();
+            });
     }
 
     /**

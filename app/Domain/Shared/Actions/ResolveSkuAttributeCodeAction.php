@@ -14,7 +14,7 @@ class ResolveSkuAttributeCodeAction
 {
     public function run(string $type, string $value): string
     {
-        $t = SkuAttributeCode::where('type', $type)->get();
+        SkuAttributeCode::where('type', $type)->get();
 
         return SkuAttributeCode::where('type', $type)
             ->where('value', $value)

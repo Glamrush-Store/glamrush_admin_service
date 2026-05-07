@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('phone')->nullable();
 
             // Authentication
-            $table->string('password');
+            $table->string('password')->nullable();
             $table->timestamp('email_verified_at')->nullable();
 
             // Business info

@@ -21,8 +21,8 @@ class CreateBrandController
     ) {
 
         $brand = $this->useCase->run(
-            data: $request->validated(),
-            photo: $request->file('logo')
+            data: $request->all(),
+            photo: $request->file('photo')
         );
 
         return ApiResponse::success($brand, 'OK', 201);

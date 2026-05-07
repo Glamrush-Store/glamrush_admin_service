@@ -34,5 +34,11 @@ class DatabaseSeeder extends Seeder
         $this->call(BrandSeeder::class);
         $this->call(ProductSeeder::class);
         $this->call(CollectionSeeder::class);
+
+        // Shipping data
+        $this->call(ShippingMethodSeeder::class);
+        $this->call(ShippingZoneSeeder::class);
+        $this->call(ShippingRateSeeder::class);
+        $this->call(ShipmentSeeder::class);
     }
 }

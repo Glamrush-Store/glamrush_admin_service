@@ -4199,6 +4199,761 @@
                     ]
                 }
             ]
+        },
+        {
+            "name": "Customers",
+            "description": "Customer account endpoints. Requires `View_Customer` permission.",
+            "item": [
+                {
+                    "name": "List Customers",
+                    "request": {
+                        "method": "GET",
+                        "header": [{"key": "Accept", "value": "application/json"}],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/customers?page=1&per_page=15",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "customers"],
+                            "query": [
+                                {"key": "page", "value": "1"},
+                                {"key": "per_page", "value": "15"},
+                                {"key": "name", "value": "", "disabled": true}
+                            ]
+                        },
+                        "description": "List registered customers with pagination. Filter by `name` (partial match). Requires `View_Customer` permission."
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [{"key": "Accept", "value": "application/json"}],
+                                "url": {
+                                    "raw": "{{base_url}}/api/v1/customers?page=1&per_page=15",
+                                    "host": ["{{base_url}}"],
+                                    "path": ["api", "v1", "customers"],
+                                    "query": [{"key": "page", "value": "1"}, {"key": "per_page", "value": "15"}]
+                                }
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [{"key": "Content-Type", "value": "application/json"}],
+                            "body": "{\"success\":true,\"message\":\"Success\",\"data\":[{\"id\":\"01JKCUST1ABC456DEF789GHI\",\"name\":\"Jane Doe\",\"email\":\"jane.doe@example.com\",\"phone\":\"+2348012345678\",\"is_active\":true,\"email_verified_at\":\"2026-01-10T08:00:00.000000Z\",\"created_at\":\"2026-01-10T08:00:00.000000Z\",\"updated_at\":\"2026-01-10T08:00:00.000000Z\"}],\"meta\":{\"current_page\":1,\"from\":1,\"last_page\":1,\"per_page\":15,\"to\":1,\"total\":1},\"links\":null}"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Shipping Zones",
+            "description": "Manage delivery zones. Requires `View_Shipping` / `Create_Shipping` / `Update_Shipping` / `Delete_Shipping` permissions.",
+            "item": [
+                {
+                    "name": "List Shipping Zones",
+                    "request": {
+                        "method": "GET",
+                        "header": [{"key": "Accept", "value": "application/json"}],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/shipping/zones?page=1&per_page=15",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "shipping", "zones"],
+                            "query": [
+                                {"key": "page", "value": "1"},
+                                {"key": "per_page", "value": "15"},
+                                {"key": "name", "value": "", "disabled": true},
+                                {"key": "country", "value": "", "disabled": true},
+                                {"key": "is_active", "value": "1", "disabled": true}
+                            ]
+                        },
+                        "description": "List all shipping zones with pagination."
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [{"key": "Accept", "value": "application/json"}],
+                                "url": {
+                                    "raw": "{{base_url}}/api/v1/shipping/zones?page=1&per_page=15",
+                                    "host": ["{{base_url}}"],
+                                    "path": ["api", "v1", "shipping", "zones"],
+                                    "query": [{"key": "page", "value": "1"}, {"key": "per_page", "value": "15"}]
+                                }
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [{"key": "Content-Type", "value": "application/json"}],
+                            "body": "{\"success\":true,\"message\":\"Success\",\"data\":[{\"id\":\"01JKZONE1ABC456DEF789GHI\",\"name\":\"Lagos\",\"country\":\"NG\",\"state\":\"Lagos\",\"city\":null,\"postal_code_pattern\":null,\"is_active\":true,\"created_at\":\"2026-05-07T10:00:00.000000Z\",\"updated_at\":\"2026-05-07T10:00:00.000000Z\"}],\"meta\":{\"current_page\":1,\"from\":1,\"last_page\":1,\"per_page\":15,\"to\":4,\"total\":4},\"links\":null}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Show Shipping Zone",
+                    "request": {
+                        "method": "GET",
+                        "header": [{"key": "Accept", "value": "application/json"}],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/shipping/zones/:zone_id",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "shipping", "zones", ":zone_id"],
+                            "variable": [{"key": "zone_id", "value": "", "description": "Shipping Zone ULID"}]
+                        },
+                        "description": "Get a single shipping zone including its rates."
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [{"key": "Accept", "value": "application/json"}],
+                                "url": {
+                                    "raw": "{{base_url}}/api/v1/shipping/zones/:zone_id",
+                                    "host": ["{{base_url}}"],
+                                    "path": ["api", "v1", "shipping", "zones", ":zone_id"],
+                                    "variable": [{"key": "zone_id", "value": "01JKZONE1ABC456DEF789GHI"}]
+                                }
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [{"key": "Content-Type", "value": "application/json"}],
+                            "body": "{\"success\":true,\"message\":\"Success\",\"data\":{\"id\":\"01JKZONE1ABC456DEF789GHI\",\"name\":\"Lagos\",\"country\":\"NG\",\"state\":\"Lagos\",\"city\":null,\"postal_code_pattern\":null,\"is_active\":true,\"rates\":[{\"id\":\"01JKRATE1ABC456DEF789GHI\",\"rate_type\":\"flat\",\"amount\":\"1500.00\",\"method\":{\"id\":\"01JKMETH1ABC456DEF789GHI\",\"name\":\"Standard Delivery\",\"code\":\"standard\"}}],\"created_at\":\"2026-05-07T10:00:00.000000Z\",\"updated_at\":\"2026-05-07T10:00:00.000000Z\"}}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Create Shipping Zone",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {"key": "Accept", "value": "application/json"},
+                            {"key": "Content-Type", "value": "application/json"}
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"Lagos\",\n    \"country\": \"NG\",\n    \"state\": \"Lagos\",\n    \"city\": null,\n    \"postal_code_pattern\": null,\n    \"is_active\": true\n}",
+                            "options": {"raw": {"language": "json"}}
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/shipping/zones",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "shipping", "zones"]
+                        },
+                        "description": "Create a new shipping zone. Required: `name`, `country`."
+                    },
+                    "response": [
+                        {
+                            "name": "Created",
+                            "originalRequest": {
+                                "method": "POST",
+                                "header": [
+                                    {"key": "Accept", "value": "application/json"},
+                                    {"key": "Content-Type", "value": "application/json"}
+                                ],
+                                "body": {"mode": "raw", "raw": "{\n    \"name\": \"Lagos\",\n    \"country\": \"NG\",\n    \"state\": \"Lagos\",\n    \"is_active\": true\n}"},
+                                "url": {"raw": "{{base_url}}/api/v1/shipping/zones", "host": ["{{base_url}}"], "path": ["api", "v1", "shipping", "zones"]}
+                            },
+                            "status": "Created",
+                            "code": 201,
+                            "_postman_previewlanguage": "json",
+                            "header": [{"key": "Content-Type", "value": "application/json"}],
+                            "body": "{\"success\":true,\"message\":\"Shipping zone created\",\"data\":{\"id\":\"01JKZONE1ABC456DEF789GHI\",\"name\":\"Lagos\",\"country\":\"NG\",\"state\":\"Lagos\",\"city\":null,\"postal_code_pattern\":null,\"is_active\":true,\"created_at\":\"2026-05-07T10:00:00.000000Z\",\"updated_at\":\"2026-05-07T10:00:00.000000Z\"}}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Update Shipping Zone",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {"key": "Accept", "value": "application/json"},
+                            {"key": "Content-Type", "value": "application/json"}
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"is_active\": false\n}",
+                            "options": {"raw": {"language": "json"}}
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/shipping/zones/:zone_id",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "shipping", "zones", ":zone_id"],
+                            "variable": [{"key": "zone_id", "value": "", "description": "Shipping Zone ULID"}]
+                        },
+                        "description": "Update a shipping zone. All fields are optional."
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "originalRequest": {
+                                "method": "PUT",
+                                "header": [{"key": "Accept", "value": "application/json"}, {"key": "Content-Type", "value": "application/json"}],
+                                "body": {"mode": "raw", "raw": "{\n    \"is_active\": false\n}"},
+                                "url": {"raw": "{{base_url}}/api/v1/shipping/zones/:zone_id", "host": ["{{base_url}}"], "path": ["api", "v1", "shipping", "zones", ":zone_id"], "variable": [{"key": "zone_id", "value": "01JKZONE1ABC456DEF789GHI"}]}
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [{"key": "Content-Type", "value": "application/json"}],
+                            "body": "{\"success\":true,\"message\":\"Success\",\"data\":{\"id\":\"01JKZONE1ABC456DEF789GHI\",\"name\":\"Lagos\",\"country\":\"NG\",\"state\":\"Lagos\",\"city\":null,\"postal_code_pattern\":null,\"is_active\":false,\"created_at\":\"2026-05-07T10:00:00.000000Z\",\"updated_at\":\"2026-05-07T10:05:00.000000Z\"}}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Delete Shipping Zone",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [{"key": "Accept", "value": "application/json"}],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/shipping/zones/:zone_id",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "shipping", "zones", ":zone_id"],
+                            "variable": [{"key": "zone_id", "value": "", "description": "Shipping Zone ULID"}]
+                        },
+                        "description": "Delete a shipping zone."
+                    },
+                    "response": [
+                        {
+                            "name": "No Content",
+                            "originalRequest": {
+                                "method": "DELETE",
+                                "header": [{"key": "Accept", "value": "application/json"}],
+                                "url": {"raw": "{{base_url}}/api/v1/shipping/zones/:zone_id", "host": ["{{base_url}}"], "path": ["api", "v1", "shipping", "zones", ":zone_id"], "variable": [{"key": "zone_id", "value": "01JKZONE1ABC456DEF789GHI"}]}
+                            },
+                            "status": "No Content",
+                            "code": 204,
+                            "_postman_previewlanguage": "json",
+                            "header": [{"key": "Content-Type", "value": "application/json"}],
+                            "body": "{\"success\":true,\"message\":\"Shipping zone deleted\",\"data\":null}"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Shipping Methods",
+            "description": "Manage shipping methods (standard, express, pickup). Requires `View_Shipping` / `Create_Shipping` / `Update_Shipping` / `Delete_Shipping` permissions.",
+            "item": [
+                {
+                    "name": "List Shipping Methods",
+                    "request": {
+                        "method": "GET",
+                        "header": [{"key": "Accept", "value": "application/json"}],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/shipping/methods?page=1&per_page=15",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "shipping", "methods"],
+                            "query": [
+                                {"key": "page", "value": "1"},
+                                {"key": "per_page", "value": "15"},
+                                {"key": "name", "value": "", "disabled": true},
+                                {"key": "code", "value": "", "disabled": true},
+                                {"key": "is_active", "value": "1", "disabled": true}
+                            ]
+                        },
+                        "description": "List all shipping methods with pagination. Filter by `name`, `code`, or `is_active`."
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [{"key": "Accept", "value": "application/json"}],
+                                "url": {"raw": "{{base_url}}/api/v1/shipping/methods?page=1&per_page=15", "host": ["{{base_url}}"], "path": ["api", "v1", "shipping", "methods"], "query": [{"key": "page", "value": "1"}, {"key": "per_page", "value": "15"}]}
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [{"key": "Content-Type", "value": "application/json"}],
+                            "body": "{\"success\":true,\"message\":\"Success\",\"data\":[{\"id\":\"01JKMETH1ABC456DEF789GHI\",\"name\":\"Standard Delivery\",\"code\":\"standard\",\"description\":\"Regular delivery within 3\\u20137 business days.\",\"is_active\":true,\"sort_order\":1,\"created_at\":\"2026-05-07T10:00:00.000000Z\",\"updated_at\":\"2026-05-07T10:00:00.000000Z\"},{\"id\":\"01JKMETH2DEF789GHI012JKL\",\"name\":\"Express Delivery\",\"code\":\"express\",\"description\":\"Fast delivery within 1\\u20132 business days.\",\"is_active\":true,\"sort_order\":2,\"created_at\":\"2026-05-07T10:00:00.000000Z\",\"updated_at\":\"2026-05-07T10:00:00.000000Z\"},{\"id\":\"01JKMETH3GHI012JKL345MNO\",\"name\":\"Store Pickup\",\"code\":\"pickup\",\"description\":\"Collect your order from our nearest store at no extra cost.\",\"is_active\":true,\"sort_order\":3,\"created_at\":\"2026-05-07T10:00:00.000000Z\",\"updated_at\":\"2026-05-07T10:00:00.000000Z\"}],\"meta\":{\"current_page\":1,\"from\":1,\"last_page\":1,\"per_page\":15,\"to\":3,\"total\":3},\"links\":null}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Show Shipping Method",
+                    "request": {
+                        "method": "GET",
+                        "header": [{"key": "Accept", "value": "application/json"}],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/shipping/methods/:method_id",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "shipping", "methods", ":method_id"],
+                            "variable": [{"key": "method_id", "value": "", "description": "Shipping Method ULID"}]
+                        },
+                        "description": "Get a single shipping method including its rates per zone."
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [{"key": "Accept", "value": "application/json"}],
+                                "url": {"raw": "{{base_url}}/api/v1/shipping/methods/:method_id", "host": ["{{base_url}}"], "path": ["api", "v1", "shipping", "methods", ":method_id"], "variable": [{"key": "method_id", "value": "01JKMETH1ABC456DEF789GHI"}]}
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [{"key": "Content-Type", "value": "application/json"}],
+                            "body": "{\"success\":true,\"message\":\"Success\",\"data\":{\"id\":\"01JKMETH1ABC456DEF789GHI\",\"name\":\"Standard Delivery\",\"code\":\"standard\",\"description\":\"Regular delivery within 3\\u20137 business days.\",\"is_active\":true,\"sort_order\":1,\"rates\":[{\"id\":\"01JKRATE1ABC456DEF789GHI\",\"rate_type\":\"flat\",\"amount\":\"1500.00\",\"zone\":{\"id\":\"01JKZONE1ABC456DEF789GHI\",\"name\":\"Lagos\"}}],\"created_at\":\"2026-05-07T10:00:00.000000Z\",\"updated_at\":\"2026-05-07T10:00:00.000000Z\"}}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Create Shipping Method",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {"key": "Accept", "value": "application/json"},
+                            {"key": "Content-Type", "value": "application/json"}
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"Standard Delivery\",\n    \"code\": \"standard\",\n    \"description\": \"Regular delivery within 3-7 business days.\",\n    \"is_active\": true,\n    \"sort_order\": 1\n}",
+                            "options": {"raw": {"language": "json"}}
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/shipping/methods",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "shipping", "methods"]
+                        },
+                        "description": "Create a new shipping method. `code` must be one of: `standard`, `express`, `pickup`."
+                    },
+                    "response": [
+                        {
+                            "name": "Created",
+                            "originalRequest": {
+                                "method": "POST",
+                                "header": [{"key": "Accept", "value": "application/json"}, {"key": "Content-Type", "value": "application/json"}],
+                                "body": {"mode": "raw", "raw": "{\n    \"name\": \"Standard Delivery\",\n    \"code\": \"standard\",\n    \"description\": \"Regular delivery within 3-7 business days.\",\n    \"is_active\": true,\n    \"sort_order\": 1\n}"},
+                                "url": {"raw": "{{base_url}}/api/v1/shipping/methods", "host": ["{{base_url}}"], "path": ["api", "v1", "shipping", "methods"]}
+                            },
+                            "status": "Created",
+                            "code": 201,
+                            "_postman_previewlanguage": "json",
+                            "header": [{"key": "Content-Type", "value": "application/json"}],
+                            "body": "{\"success\":true,\"message\":\"Shipping method created\",\"data\":{\"id\":\"01JKMETH1ABC456DEF789GHI\",\"name\":\"Standard Delivery\",\"code\":\"standard\",\"description\":\"Regular delivery within 3-7 business days.\",\"is_active\":true,\"sort_order\":1,\"created_at\":\"2026-05-07T10:00:00.000000Z\",\"updated_at\":\"2026-05-07T10:00:00.000000Z\"}}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Update Shipping Method",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {"key": "Accept", "value": "application/json"},
+                            {"key": "Content-Type", "value": "application/json"}
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"Standard Delivery\",\n    \"is_active\": true,\n    \"sort_order\": 1\n}",
+                            "options": {"raw": {"language": "json"}}
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/shipping/methods/:method_id",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "shipping", "methods", ":method_id"],
+                            "variable": [{"key": "method_id", "value": "", "description": "Shipping Method ULID"}]
+                        },
+                        "description": "Update a shipping method. All fields are optional."
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "originalRequest": {
+                                "method": "PUT",
+                                "header": [{"key": "Accept", "value": "application/json"}, {"key": "Content-Type", "value": "application/json"}],
+                                "body": {"mode": "raw", "raw": "{\n    \"is_active\": false\n}"},
+                                "url": {"raw": "{{base_url}}/api/v1/shipping/methods/:method_id", "host": ["{{base_url}}"], "path": ["api", "v1", "shipping", "methods", ":method_id"], "variable": [{"key": "method_id", "value": "01JKMETH1ABC456DEF789GHI"}]}
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [{"key": "Content-Type", "value": "application/json"}],
+                            "body": "{\"success\":true,\"message\":\"Success\",\"data\":{\"id\":\"01JKMETH1ABC456DEF789GHI\",\"name\":\"Standard Delivery\",\"code\":\"standard\",\"description\":\"Regular delivery within 3-7 business days.\",\"is_active\":false,\"sort_order\":1,\"created_at\":\"2026-05-07T10:00:00.000000Z\",\"updated_at\":\"2026-05-07T10:05:00.000000Z\"}}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Delete Shipping Method",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [{"key": "Accept", "value": "application/json"}],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/shipping/methods/:method_id",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "shipping", "methods", ":method_id"],
+                            "variable": [{"key": "method_id", "value": "", "description": "Shipping Method ULID"}]
+                        },
+                        "description": "Delete a shipping method."
+                    },
+                    "response": [
+                        {
+                            "name": "No Content",
+                            "originalRequest": {
+                                "method": "DELETE",
+                                "header": [{"key": "Accept", "value": "application/json"}],
+                                "url": {"raw": "{{base_url}}/api/v1/shipping/methods/:method_id", "host": ["{{base_url}}"], "path": ["api", "v1", "shipping", "methods", ":method_id"], "variable": [{"key": "method_id", "value": "01JKMETH1ABC456DEF789GHI"}]}
+                            },
+                            "status": "No Content",
+                            "code": 204,
+                            "_postman_previewlanguage": "json",
+                            "header": [{"key": "Content-Type", "value": "application/json"}],
+                            "body": "{\"success\":true,\"message\":\"Shipping method deleted\",\"data\":null}"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Shipping Rates",
+            "description": "Manage rates that link a shipping zone to a shipping method. Requires `View_Shipping` / `Create_Shipping` / `Update_Shipping` / `Delete_Shipping` permissions.",
+            "item": [
+                {
+                    "name": "List Shipping Rates",
+                    "request": {
+                        "method": "GET",
+                        "header": [{"key": "Accept", "value": "application/json"}],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/shipping/rates?page=1&per_page=15",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "shipping", "rates"],
+                            "query": [
+                                {"key": "page", "value": "1"},
+                                {"key": "per_page", "value": "15"},
+                                {"key": "shipping_zone_id", "value": "", "disabled": true},
+                                {"key": "shipping_method_id", "value": "", "disabled": true},
+                                {"key": "rate_type", "value": "", "disabled": true},
+                                {"key": "is_active", "value": "1", "disabled": true}
+                            ]
+                        },
+                        "description": "List all shipping rates. Filter by `shipping_zone_id`, `shipping_method_id`, `rate_type` (flat|order_total|weight), or `is_active`."
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [{"key": "Accept", "value": "application/json"}],
+                                "url": {"raw": "{{base_url}}/api/v1/shipping/rates?page=1&per_page=15", "host": ["{{base_url}}"], "path": ["api", "v1", "shipping", "rates"], "query": [{"key": "page", "value": "1"}, {"key": "per_page", "value": "15"}]}
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [{"key": "Content-Type", "value": "application/json"}],
+                            "body": "{\"success\":true,\"message\":\"Success\",\"data\":[{\"id\":\"01JKRATE1ABC456DEF789GHI\",\"rate_type\":\"flat\",\"amount\":\"1500.00\",\"free_over_amount\":\"20000.00\",\"min_order_amount\":null,\"max_order_amount\":null,\"estimated_days_min\":2,\"estimated_days_max\":4,\"is_active\":true,\"zone\":{\"id\":\"01JKZONE1ABC456DEF789GHI\",\"name\":\"Lagos\"},\"method\":{\"id\":\"01JKMETH1ABC456DEF789GHI\",\"name\":\"Standard Delivery\",\"code\":\"standard\"},\"created_at\":\"2026-05-07T10:00:00.000000Z\",\"updated_at\":\"2026-05-07T10:00:00.000000Z\"}],\"meta\":{\"current_page\":1,\"from\":1,\"last_page\":1,\"per_page\":15,\"to\":10,\"total\":10},\"links\":null}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Show Shipping Rate",
+                    "request": {
+                        "method": "GET",
+                        "header": [{"key": "Accept", "value": "application/json"}],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/shipping/rates/:rate_id",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "shipping", "rates", ":rate_id"],
+                            "variable": [{"key": "rate_id", "value": "", "description": "Shipping Rate ULID"}]
+                        },
+                        "description": "Get a single shipping rate with its zone and method."
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [{"key": "Accept", "value": "application/json"}],
+                                "url": {"raw": "{{base_url}}/api/v1/shipping/rates/:rate_id", "host": ["{{base_url}}"], "path": ["api", "v1", "shipping", "rates", ":rate_id"], "variable": [{"key": "rate_id", "value": "01JKRATE1ABC456DEF789GHI"}]}
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [{"key": "Content-Type", "value": "application/json"}],
+                            "body": "{\"success\":true,\"message\":\"Success\",\"data\":{\"id\":\"01JKRATE1ABC456DEF789GHI\",\"rate_type\":\"flat\",\"amount\":\"1500.00\",\"free_over_amount\":\"20000.00\",\"min_order_amount\":null,\"max_order_amount\":null,\"estimated_days_min\":2,\"estimated_days_max\":4,\"is_active\":true,\"zone\":{\"id\":\"01JKZONE1ABC456DEF789GHI\",\"name\":\"Lagos\"},\"method\":{\"id\":\"01JKMETH1ABC456DEF789GHI\",\"name\":\"Standard Delivery\",\"code\":\"standard\"},\"created_at\":\"2026-05-07T10:00:00.000000Z\",\"updated_at\":\"2026-05-07T10:00:00.000000Z\"}}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Create Shipping Rate",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {"key": "Accept", "value": "application/json"},
+                            {"key": "Content-Type", "value": "application/json"}
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"shipping_zone_id\": \"<zone_ulid>\",\n    \"shipping_method_id\": \"<method_ulid>\",\n    \"rate_type\": \"flat\",\n    \"amount\": 1500,\n    \"free_over_amount\": 20000,\n    \"min_order_amount\": null,\n    \"max_order_amount\": null,\n    \"estimated_days_min\": 2,\n    \"estimated_days_max\": 4,\n    \"is_active\": true\n}",
+                            "options": {"raw": {"language": "json"}}
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/shipping/rates",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "shipping", "rates"]
+                        },
+                        "description": "Create a shipping rate for a zone+method pair. `rate_type` must be one of: `flat`, `order_total`, `weight`."
+                    },
+                    "response": [
+                        {
+                            "name": "Created",
+                            "originalRequest": {
+                                "method": "POST",
+                                "header": [{"key": "Accept", "value": "application/json"}, {"key": "Content-Type", "value": "application/json"}],
+                                "body": {"mode": "raw", "raw": "{\n    \"shipping_zone_id\": \"01JKZONE1ABC456DEF789GHI\",\n    \"shipping_method_id\": \"01JKMETH1ABC456DEF789GHI\",\n    \"rate_type\": \"flat\",\n    \"amount\": 1500,\n    \"free_over_amount\": 20000,\n    \"estimated_days_min\": 2,\n    \"estimated_days_max\": 4,\n    \"is_active\": true\n}"},
+                                "url": {"raw": "{{base_url}}/api/v1/shipping/rates", "host": ["{{base_url}}"], "path": ["api", "v1", "shipping", "rates"]}
+                            },
+                            "status": "Created",
+                            "code": 201,
+                            "_postman_previewlanguage": "json",
+                            "header": [{"key": "Content-Type", "value": "application/json"}],
+                            "body": "{\"success\":true,\"message\":\"Shipping rate created\",\"data\":{\"id\":\"01JKRATE1ABC456DEF789GHI\",\"rate_type\":\"flat\",\"amount\":\"1500.00\",\"free_over_amount\":\"20000.00\",\"min_order_amount\":null,\"max_order_amount\":null,\"estimated_days_min\":2,\"estimated_days_max\":4,\"is_active\":true,\"zone\":null,\"method\":null,\"created_at\":\"2026-05-07T10:00:00.000000Z\",\"updated_at\":\"2026-05-07T10:00:00.000000Z\"}}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Update Shipping Rate",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {"key": "Accept", "value": "application/json"},
+                            {"key": "Content-Type", "value": "application/json"}
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"amount\": 2000,\n    \"free_over_amount\": 25000,\n    \"is_active\": true\n}",
+                            "options": {"raw": {"language": "json"}}
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/shipping/rates/:rate_id",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "shipping", "rates", ":rate_id"],
+                            "variable": [{"key": "rate_id", "value": "", "description": "Shipping Rate ULID"}]
+                        },
+                        "description": "Update a shipping rate. All fields are optional."
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "originalRequest": {
+                                "method": "PUT",
+                                "header": [{"key": "Accept", "value": "application/json"}, {"key": "Content-Type", "value": "application/json"}],
+                                "body": {"mode": "raw", "raw": "{\n    \"amount\": 2000\n}"},
+                                "url": {"raw": "{{base_url}}/api/v1/shipping/rates/:rate_id", "host": ["{{base_url}}"], "path": ["api", "v1", "shipping", "rates", ":rate_id"], "variable": [{"key": "rate_id", "value": "01JKRATE1ABC456DEF789GHI"}]}
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [{"key": "Content-Type", "value": "application/json"}],
+                            "body": "{\"success\":true,\"message\":\"Success\",\"data\":{\"id\":\"01JKRATE1ABC456DEF789GHI\",\"rate_type\":\"flat\",\"amount\":\"2000.00\",\"free_over_amount\":\"25000.00\",\"min_order_amount\":null,\"max_order_amount\":null,\"estimated_days_min\":2,\"estimated_days_max\":4,\"is_active\":true,\"zone\":null,\"method\":null,\"created_at\":\"2026-05-07T10:00:00.000000Z\",\"updated_at\":\"2026-05-07T10:05:00.000000Z\"}}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Delete Shipping Rate",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [{"key": "Accept", "value": "application/json"}],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/shipping/rates/:rate_id",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "shipping", "rates", ":rate_id"],
+                            "variable": [{"key": "rate_id", "value": "", "description": "Shipping Rate ULID"}]
+                        },
+                        "description": "Delete a shipping rate."
+                    },
+                    "response": [
+                        {
+                            "name": "No Content",
+                            "originalRequest": {
+                                "method": "DELETE",
+                                "header": [{"key": "Accept", "value": "application/json"}],
+                                "url": {"raw": "{{base_url}}/api/v1/shipping/rates/:rate_id", "host": ["{{base_url}}"], "path": ["api", "v1", "shipping", "rates", ":rate_id"], "variable": [{"key": "rate_id", "value": "01JKRATE1ABC456DEF789GHI"}]}
+                            },
+                            "status": "No Content",
+                            "code": 204,
+                            "_postman_previewlanguage": "json",
+                            "header": [{"key": "Content-Type", "value": "application/json"}],
+                            "body": "{\"success\":true,\"message\":\"Shipping rate deleted\",\"data\":null}"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Shipments",
+            "description": "Manage shipments tied to orders. Statuses: pending → ready → shipped → delivered (or failed). Requires `View_Shipping` / `Create_Shipping` / `Update_Shipping` / `Delete_Shipping` permissions.",
+            "item": [
+                {
+                    "name": "List Shipments",
+                    "request": {
+                        "method": "GET",
+                        "header": [{"key": "Accept", "value": "application/json"}],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/shipments?page=1&per_page=15",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "shipments"],
+                            "query": [
+                                {"key": "page", "value": "1"},
+                                {"key": "per_page", "value": "15"},
+                                {"key": "order_id", "value": "", "disabled": true},
+                                {"key": "status", "value": "", "disabled": true},
+                                {"key": "shipping_method_id", "value": "", "disabled": true},
+                                {"key": "shipping_zone_id", "value": "", "disabled": true}
+                            ]
+                        },
+                        "description": "List shipments with pagination. Filter by `order_id`, `status` (pending|ready|shipped|delivered|failed), `shipping_method_id`, or `shipping_zone_id`."
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [{"key": "Accept", "value": "application/json"}],
+                                "url": {"raw": "{{base_url}}/api/v1/shipments?page=1&per_page=15", "host": ["{{base_url}}"], "path": ["api", "v1", "shipments"], "query": [{"key": "page", "value": "1"}, {"key": "per_page", "value": "15"}]}
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [{"key": "Content-Type", "value": "application/json"}],
+                            "body": "{\"success\":true,\"message\":\"Success\",\"data\":[{\"id\":\"01JKSHIP1ABC456DEF789GHI\",\"order_id\":\"01JKORD1AABC456DEF789GHI\",\"shipping_amount\":\"1500.00\",\"status\":\"shipped\",\"tracking_number\":\"GR-20260001\",\"carrier\":\"GIG Logistics\",\"shipped_at\":\"2026-05-02T08:00:00.000000Z\",\"delivered_at\":null,\"method\":{\"id\":\"01JKMETH1ABC456DEF789GHI\",\"name\":\"Standard Delivery\",\"code\":\"standard\"},\"zone\":{\"id\":\"01JKZONE1ABC456DEF789GHI\",\"name\":\"Lagos\"},\"created_at\":\"2026-05-07T10:00:00.000000Z\",\"updated_at\":\"2026-05-07T10:00:00.000000Z\"}],\"meta\":{\"current_page\":1,\"from\":1,\"last_page\":1,\"per_page\":15,\"to\":3,\"total\":3},\"links\":null}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Show Shipment",
+                    "request": {
+                        "method": "GET",
+                        "header": [{"key": "Accept", "value": "application/json"}],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/shipments/:shipment_id",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "shipments", ":shipment_id"],
+                            "variable": [{"key": "shipment_id", "value": "", "description": "Shipment ULID"}]
+                        },
+                        "description": "Get a single shipment with method and zone."
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [{"key": "Accept", "value": "application/json"}],
+                                "url": {"raw": "{{base_url}}/api/v1/shipments/:shipment_id", "host": ["{{base_url}}"], "path": ["api", "v1", "shipments", ":shipment_id"], "variable": [{"key": "shipment_id", "value": "01JKSHIP1ABC456DEF789GHI"}]}
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [{"key": "Content-Type", "value": "application/json"}],
+                            "body": "{\"success\":true,\"message\":\"Success\",\"data\":{\"id\":\"01JKSHIP1ABC456DEF789GHI\",\"order_id\":\"01JKORD1AABC456DEF789GHI\",\"shipping_amount\":\"1500.00\",\"status\":\"shipped\",\"tracking_number\":\"GR-20260001\",\"carrier\":\"GIG Logistics\",\"shipped_at\":\"2026-05-02T08:00:00.000000Z\",\"delivered_at\":null,\"method\":{\"id\":\"01JKMETH1ABC456DEF789GHI\",\"name\":\"Standard Delivery\",\"code\":\"standard\"},\"zone\":{\"id\":\"01JKZONE1ABC456DEF789GHI\",\"name\":\"Lagos\"},\"created_at\":\"2026-05-07T10:00:00.000000Z\",\"updated_at\":\"2026-05-07T10:00:00.000000Z\"}}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Create Shipment",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {"key": "Accept", "value": "application/json"},
+                            {"key": "Content-Type", "value": "application/json"}
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"order_id\": \"<order_ulid>\",\n    \"shipping_method_id\": \"<method_ulid>\",\n    \"shipping_zone_id\": \"<zone_ulid>\",\n    \"shipping_amount\": 1500,\n    \"status\": \"pending\",\n    \"tracking_number\": null,\n    \"carrier\": null,\n    \"shipped_at\": null,\n    \"delivered_at\": null\n}",
+                            "options": {"raw": {"language": "json"}}
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/shipments",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "shipments"]
+                        },
+                        "description": "Create a new shipment. Required: `order_id`, `shipping_method_id`, `shipping_zone_id`, `shipping_amount`."
+                    },
+                    "response": [
+                        {
+                            "name": "Created",
+                            "originalRequest": {
+                                "method": "POST",
+                                "header": [{"key": "Accept", "value": "application/json"}, {"key": "Content-Type", "value": "application/json"}],
+                                "body": {"mode": "raw", "raw": "{\n    \"order_id\": \"01JKORD1AABC456DEF789GHI\",\n    \"shipping_method_id\": \"01JKMETH1ABC456DEF789GHI\",\n    \"shipping_zone_id\": \"01JKZONE1ABC456DEF789GHI\",\n    \"shipping_amount\": 1500,\n    \"status\": \"pending\"\n}"},
+                                "url": {"raw": "{{base_url}}/api/v1/shipments", "host": ["{{base_url}}"], "path": ["api", "v1", "shipments"]}
+                            },
+                            "status": "Created",
+                            "code": 201,
+                            "_postman_previewlanguage": "json",
+                            "header": [{"key": "Content-Type", "value": "application/json"}],
+                            "body": "{\"success\":true,\"message\":\"Shipment created\",\"data\":{\"id\":\"01JKSHIP2DEF789GHI012JKL\",\"order_id\":\"01JKORD1AABC456DEF789GHI\",\"shipping_amount\":\"1500.00\",\"status\":\"pending\",\"tracking_number\":null,\"carrier\":null,\"shipped_at\":null,\"delivered_at\":null,\"method\":null,\"zone\":null,\"created_at\":\"2026-05-07T10:00:00.000000Z\",\"updated_at\":\"2026-05-07T10:00:00.000000Z\"}}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Update Shipment",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {"key": "Accept", "value": "application/json"},
+                            {"key": "Content-Type", "value": "application/json"}
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"status\": \"shipped\",\n    \"tracking_number\": \"GR-20260099\",\n    \"carrier\": \"DHL\",\n    \"shipped_at\": \"2026-05-07T12:00:00Z\"\n}",
+                            "options": {"raw": {"language": "json"}}
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/shipments/:shipment_id",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "shipments", ":shipment_id"],
+                            "variable": [{"key": "shipment_id", "value": "", "description": "Shipment ULID"}]
+                        },
+                        "description": "Update a shipment — typically used to advance status or add tracking info. All fields are optional."
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "originalRequest": {
+                                "method": "PUT",
+                                "header": [{"key": "Accept", "value": "application/json"}, {"key": "Content-Type", "value": "application/json"}],
+                                "body": {"mode": "raw", "raw": "{\n    \"status\": \"shipped\",\n    \"tracking_number\": \"GR-20260099\",\n    \"carrier\": \"DHL\",\n    \"shipped_at\": \"2026-05-07T12:00:00Z\"\n}"},
+                                "url": {"raw": "{{base_url}}/api/v1/shipments/:shipment_id", "host": ["{{base_url}}"], "path": ["api", "v1", "shipments", ":shipment_id"], "variable": [{"key": "shipment_id", "value": "01JKSHIP1ABC456DEF789GHI"}]}
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [{"key": "Content-Type", "value": "application/json"}],
+                            "body": "{\"success\":true,\"message\":\"Success\",\"data\":{\"id\":\"01JKSHIP1ABC456DEF789GHI\",\"order_id\":\"01JKORD1AABC456DEF789GHI\",\"shipping_amount\":\"1500.00\",\"status\":\"shipped\",\"tracking_number\":\"GR-20260099\",\"carrier\":\"DHL\",\"shipped_at\":\"2026-05-07T12:00:00.000000Z\",\"delivered_at\":null,\"method\":null,\"zone\":null,\"created_at\":\"2026-05-07T10:00:00.000000Z\",\"updated_at\":\"2026-05-07T10:10:00.000000Z\"}}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Delete Shipment",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [{"key": "Accept", "value": "application/json"}],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/shipments/:shipment_id",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "shipments", ":shipment_id"],
+                            "variable": [{"key": "shipment_id", "value": "", "description": "Shipment ULID"}]
+                        },
+                        "description": "Delete a shipment."
+                    },
+                    "response": [
+                        {
+                            "name": "No Content",
+                            "originalRequest": {
+                                "method": "DELETE",
+                                "header": [{"key": "Accept", "value": "application/json"}],
+                                "url": {"raw": "{{base_url}}/api/v1/shipments/:shipment_id", "host": ["{{base_url}}"], "path": ["api", "v1", "shipments", ":shipment_id"], "variable": [{"key": "shipment_id", "value": "01JKSHIP1ABC456DEF789GHI"}]}
+                            },
+                            "status": "No Content",
+                            "code": 204,
+                            "_postman_previewlanguage": "json",
+                            "header": [{"key": "Content-Type", "value": "application/json"}],
+                            "body": "{\"success\":true,\"message\":\"Shipment deleted\",\"data\":null}"
+                        }
+                    ]
+                }
+            ]
         }
     ]
 }

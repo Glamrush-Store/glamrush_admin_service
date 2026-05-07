@@ -8,6 +8,26 @@
 
 use App\Http\Controllers\Auth\ConfirmPasswordResetController;
 use App\Http\Controllers\Customer\ListCustomersController;
+use App\Http\Controllers\Shipping\ShippingZone\ListShippingZonesController;
+use App\Http\Controllers\Shipping\ShippingZone\ShowShippingZoneController;
+use App\Http\Controllers\Shipping\ShippingZone\CreateShippingZoneController;
+use App\Http\Controllers\Shipping\ShippingZone\UpdateShippingZoneController;
+use App\Http\Controllers\Shipping\ShippingZone\DeleteShippingZoneController;
+use App\Http\Controllers\Shipping\ShippingMethod\ListShippingMethodsController;
+use App\Http\Controllers\Shipping\ShippingMethod\ShowShippingMethodController;
+use App\Http\Controllers\Shipping\ShippingMethod\CreateShippingMethodController;
+use App\Http\Controllers\Shipping\ShippingMethod\UpdateShippingMethodController;
+use App\Http\Controllers\Shipping\ShippingMethod\DeleteShippingMethodController;
+use App\Http\Controllers\Shipping\ShippingRate\ListShippingRatesController;
+use App\Http\Controllers\Shipping\ShippingRate\ShowShippingRateController;
+use App\Http\Controllers\Shipping\ShippingRate\CreateShippingRateController;
+use App\Http\Controllers\Shipping\ShippingRate\UpdateShippingRateController;
+use App\Http\Controllers\Shipping\ShippingRate\DeleteShippingRateController;
+use App\Http\Controllers\Shipping\Shipment\ListShipmentsController;
+use App\Http\Controllers\Shipping\Shipment\ShowShipmentController;
+use App\Http\Controllers\Shipping\Shipment\CreateShipmentController;
+use App\Http\Controllers\Shipping\Shipment\UpdateShipmentController;
+use App\Http\Controllers\Shipping\Shipment\DeleteShipmentController;
 use App\Http\Controllers\Auth\CreateAccountController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
@@ -158,6 +178,36 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
 
 Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
     Route::get('/customers', ListCustomersController::class)->middleware('permission:View_Customer');
+});
+
+// ========================================================
+// SHIPPING API ROUTES
+// ========================================================
+
+Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
+    Route::get('/shipping/zones', ListShippingZonesController::class)->middleware('permission:View_Shipment');
+    Route::get('/shipping/zones/{shippingZone}', ShowShippingZoneController::class)->middleware('permission:View_Shipment');
+    Route::post('/shipping/zones', CreateShippingZoneController::class)->middleware('permission:Create_Shipment');
+    Route::put('/shipping/zones/{shippingZone}', UpdateShippingZoneController::class)->middleware('permission:Update_Shipment');
+    Route::delete('/shipping/zones/{shippingZone}', DeleteShippingZoneController::class)->middleware('permission:Delete_Shipment');
+
+    Route::get('/shipping/methods', ListShippingMethodsController::class)->middleware('permission:View_Shipment');
+    Route::get('/shipping/methods/{shippingMethod}', ShowShippingMethodController::class)->middleware('permission:View_Shipment');
+    Route::post('/shipping/methods', CreateShippingMethodController::class)->middleware('permission:Create_Shipment');
+    Route::put('/shipping/methods/{shippingMethod}', UpdateShippingMethodController::class)->middleware('permission:Update_Shipment');
+    Route::delete('/shipping/methods/{shippingMethod}', DeleteShippingMethodController::class)->middleware('permission:Delete_Shipment');
+
+    Route::get('/shipping/rates', ListShippingRatesController::class)->middleware('permission:View_Shipment');
+    Route::get('/shipping/rates/{shippingRate}', ShowShippingRateController::class)->middleware('permission:View_Shipment');
+    Route::post('/shipping/rates', CreateShippingRateController::class)->middleware('permission:Create_Shipment');
+    Route::put('/shipping/rates/{shippingRate}', UpdateShippingRateController::class)->middleware('permission:Update_Shipment');
+    Route::delete('/shipping/rates/{shippingRate}', DeleteShippingRateController::class)->middleware('permission:Delete_Shipment');
+
+    Route::get('/shipments', ListShipmentsController::class)->middleware('permission:View_Shipment');
+    Route::get('/shipments/{shipment}', ShowShipmentController::class)->middleware('permission:View_Shipment');
+    Route::post('/shipments', CreateShipmentController::class)->middleware('permission:Create_Shipment');
+    Route::put('/shipments/{shipment}', UpdateShipmentController::class)->middleware('permission:Update_Shipment');
+    Route::delete('/shipments/{shipment}', DeleteShipmentController::class)->middleware('permission:Delete_Shipment');
 });
 
 // ========================================================

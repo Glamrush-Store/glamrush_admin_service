@@ -26,6 +26,11 @@ class PermissionsSeeder extends Seeder
             'Vendor',
             'SkuAttributeCode',
             'Customer',
+            'Shipment',
+            'ShippingMethod',
+            'ShippingRate',
+            'ShippingZone',
+
             // Add more models here...
         ];
 

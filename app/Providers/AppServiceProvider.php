@@ -25,6 +25,25 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+
+        $encoded = env('GOOGLE_APPLICATION_CREDENTIALS_BASE64');
+
+        if ($encoded) {
+            $path = storage_path('app/google-credentials.json');
+
+            if (!file_exists($path)) {
+                file_put_contents($path, base64_decode($encoded));
+            }
+
+            putenv('GOOGLE_APPLICATION_CREDENTIALS=' . $path);
+            $_ENV['GOOGLE_APPLICATION_CREDENTIALS'] = $path;
+            $_SERVER['GOOGLE_APPLICATION_CREDENTIALS'] = $path;
+        }
+
+
+
+
+
         Relation::enforceMorphMap([
             'category' => Category::class,
             'product' => Product::class,

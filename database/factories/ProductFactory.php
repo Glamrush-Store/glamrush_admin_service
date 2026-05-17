@@ -36,10 +36,10 @@ class ProductFactory extends Factory
         return [
             'id' => (string) Str::ulid(),
             'name' => $this->getProductName(),
-            'vendor_id' => fake()->randomElement(static::$vendorIds),
+            'vendor_id' => $this->faker->randomElement(static::$vendorIds),
             'slug' => Str::slug($this->getProductName(), '-'),
-            'category_id' => fake()->randomElement(static::$categoryIds),
-            'brand_id' => fake()->randomElement(static::$brandIds),
+            'category_id' => $this->faker->randomElement(static::$categoryIds),
+            'brand_id' => $this->faker->randomElement(static::$brandIds),
             'short_description' => $this->faker->text(),
             'description' => $this->faker->paragraphs(4, true),
             'status' => $this->faker->randomElement(['draft', 'published', 'archived']),

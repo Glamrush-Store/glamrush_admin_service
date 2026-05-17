@@ -52,6 +52,11 @@ use App\Http\Controllers\Category\ListCategoriesController;
 use App\Http\Controllers\Category\ShowCategoryController;
 use App\Http\Controllers\Category\UpdateCategoryController;
 use App\Http\Controllers\Media\DeleteMediaController;
+use App\Http\Controllers\PaymentMethod\CreatePaymentMethodController;
+use App\Http\Controllers\PaymentMethod\DeletePaymentMethodController;
+use App\Http\Controllers\PaymentMethod\ListPaymentMethodsController;
+use App\Http\Controllers\PaymentMethod\ShowPaymentMethodController;
+use App\Http\Controllers\PaymentMethod\UpdatePaymentMethodController;
 use App\Http\Controllers\Product\CreateProductController;
 use App\Http\Controllers\Product\DeleteProductController;
 use App\Http\Controllers\Product\ListProductsController;
@@ -208,6 +213,18 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
     Route::post('/shipments', CreateShipmentController::class)->middleware('permission:Create_Shipment');
     Route::put('/shipments/{shipment}', UpdateShipmentController::class)->middleware('permission:Update_Shipment');
     Route::delete('/shipments/{shipment}', DeleteShipmentController::class)->middleware('permission:Delete_Shipment');
+});
+
+// ========================================================
+// PAYMENT METHOD API ROUTES
+// ========================================================
+
+Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
+    Route::get('/payment-methods', ListPaymentMethodsController::class)->middleware('permission:View_PaymentMethod');
+    Route::get('/payment-methods/{paymentMethod}', ShowPaymentMethodController::class)->middleware('permission:View_PaymentMethod');
+    Route::post('/payment-methods', CreatePaymentMethodController::class)->middleware('permission:Create_PaymentMethod');
+    Route::put('/payment-methods/{paymentMethod}', UpdatePaymentMethodController::class)->middleware('permission:Update_PaymentMethod');
+    Route::delete('/payment-methods/{paymentMethod}', DeletePaymentMethodController::class)->middleware('permission:Delete_PaymentMethod');
 });
 
 // ========================================================

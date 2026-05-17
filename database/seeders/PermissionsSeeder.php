@@ -30,6 +30,7 @@ class PermissionsSeeder extends Seeder
             'ShippingMethod',
             'ShippingRate',
             'ShippingZone',
+            'PaymentMethod',
 
             // Add more models here...
         ];

@@ -40,5 +40,6 @@ class DatabaseSeeder extends Seeder
         $this->call(ShippingZoneSeeder::class);
         $this->call(ShippingRateSeeder::class);
         $this->call(ShipmentSeeder::class);
+        $this->call(PaymentMethodSeeder::class);
     }
 }

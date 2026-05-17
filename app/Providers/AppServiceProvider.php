@@ -25,23 +25,30 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+$encoded = env('GOOGLE_APPLICATION_CREDENTIALS_BASE64');
 
-        // $encoded = env('GOOGLE_APPLICATION_CREDENTIALS_BASE64');
+if ($encoded) {
+    $directory = storage_path('app');
+    $path = $directory . '/google-credentials.json';
 
-        // $path = '';
+    if (! is_dir($directory)) {
+        mkdir($directory, 0755, true);
+    }
 
-        // if ($encoded) {
-        //     $path = storage_path('app/google-credentials.json');
+    $decoded = base64_decode($encoded, true);
 
-        //     if (!file_exists($path)) {
-        //         file_put_contents($path, base64_decode($encoded));
-        //     }
+    if ($decoded === false) {
+        throw new RuntimeException('Invalid GOOGLE_APPLICATION_CREDENTIALS_BASE64 value.');
+    }
 
-        //     putenv('GOOGLE_APPLICATION_CREDENTIALS=' . $path);
-        //     $_ENV['GOOGLE_APPLICATION_CREDENTIALS'] = $path;
-        //     $_SERVER['GOOGLE_APPLICATION_CREDENTIALS'] = $path;
-        // }
+    if (! file_exists($path)) {
+        file_put_contents($path, $decoded);
+    }
 
+    putenv('GOOGLE_APPLICATION_CREDENTIALS=' . $path);
+    $_ENV['GOOGLE_APPLICATION_CREDENTIALS'] = $path;
+    $_SERVER['GOOGLE_APPLICATION_CREDENTIALS'] = $path;
+}
 
 
 

@@ -118,11 +118,3 @@ Route::get('/test-laravel-storage', function () {
         ], 500);
     }
 });
-
-
-
-
-
-
-
-});

@@ -8,7 +8,7 @@
 
 namespace App\Providers;
 
-use App\Filesystem\GcsFilesystemAdapter;
+use App\FileSystem\GcsFilesystemAdapter;
 use Google\Cloud\Storage\StorageClient;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\ServiceProvider;

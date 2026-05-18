@@ -34,6 +34,11 @@ class Shipment extends Model
         ];
     }
 
+    public function order(): BelongsTo
+    {
+        return $this->belongsTo(Order::class, 'order_id');
+    }
+
     public function method(): BelongsTo
     {
         return $this->belongsTo(ShippingMethod::class, 'shipping_method_id');
@@ -44,3 +49,4 @@ class Shipment extends Model
         return $this->belongsTo(ShippingZone::class, 'shipping_zone_id');
     }
 }
+

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * © 2026 Demilade Oyewusi
+ * (c) 2026 Demilade Oyewusi
  * Licensed under the MIT License.
  * See the LICENSE file for details.
  */
@@ -52,6 +52,10 @@ use App\Http\Controllers\Category\ListCategoriesController;
 use App\Http\Controllers\Category\ShowCategoryController;
 use App\Http\Controllers\Category\UpdateCategoryController;
 use App\Http\Controllers\Media\DeleteMediaController;
+use App\Http\Controllers\Order\ListOrdersController;
+use App\Http\Controllers\Order\ShowOrderController;
+use App\Http\Controllers\Order\UpdateOrderStatusController;
+use App\Http\Controllers\Order\UpdateOrderStatusesController;
 use App\Http\Controllers\PaymentMethod\CreatePaymentMethodController;
 use App\Http\Controllers\PaymentMethod\DeletePaymentMethodController;
 use App\Http\Controllers\PaymentMethod\ListPaymentMethodsController;
@@ -228,8 +232,22 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
 });
 
 // ========================================================
+// ORDERS API ROUTES
+// ========================================================
+
+Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
+    Route::get('/orders', ListOrdersController::class)->middleware('permission:View_Order');
+    Route::get('/orders/{order}', ShowOrderController::class)->middleware('permission:View_Order');
+    Route::patch('/orders/{order}/status', UpdateOrderStatusController::class)->middleware('permission:Update_Order');
+    Route::patch('/orders/{order}/statuses', UpdateOrderStatusesController::class)->middleware('permission:Update_Order');
+});
+// ========================================================
 // Media Routes
 // ========================================================
 Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
     Route::delete('/catalog/media/{media}', DeleteMediaController::class)->middleware('permission:Update_Product');
 });
+
+
+
+

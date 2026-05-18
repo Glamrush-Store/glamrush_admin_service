@@ -31,6 +31,7 @@ class PermissionsSeeder extends Seeder
             'ShippingRate',
             'ShippingZone',
             'PaymentMethod',
+            'Order',
 
             // Add more models here...
         ];
@@ -67,3 +68,4 @@ class PermissionsSeeder extends Seeder
         }
     }
 }
+

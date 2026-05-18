@@ -92,6 +92,14 @@ class ProductResource extends JsonResource
                 ];
             }),
 
+            'collections' => $this->whenLoaded('collections', function () {
+                return $this->collections->map(fn ($collection) => [
+                    'id' => $collection->id,
+                    'name' => $collection->name,
+                    'slug' => $collection->slug,
+                ]);
+            }),
+
             'variants' => $this->whenLoaded('variants', function () {
                 return $this->variants->map(function ($variant) {
                     return [
@@ -99,7 +107,7 @@ class ProductResource extends JsonResource
                         'sku' => $variant->sku,
                         'is_default' => $variant->is_default,
 
-                        'images' => $variant->getMedia('variant-photos')->map(function ($media) {
+                        'images' => $variant->getMedia('catalog-photos')->map(function ($media) {
                             return [
                                 'id' => $media->id,
                                 'name' => $media->name,

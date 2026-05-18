@@ -9,7 +9,7 @@
 namespace App\Http\Controllers\Category;
 
 use App\Domain\Category\UseCases\ListCategoriesUseCase;
-use App\Http\Resources\Category\CategoryResource;
+use App\Http\Resources\Category\CategoryListResource;
 use App\Http\Responses\ApiResponse;
 use Illuminate\Http\Request;
 
@@ -26,6 +26,6 @@ class ListCategoriesController
             perPage: $request->integer('per_page', 5)
         );
 
-        return ApiResponse::success(CategoryResource::collection($categories));
+        return ApiResponse::success(CategoryListResource::collection($categories));
     }
 }

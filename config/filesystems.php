@@ -66,6 +66,7 @@ return [
             'bucket' => env('GCP_BUCKET'),
             'path_prefix' => env('GCP_PATH_PREFIX', ''),
             'key_file' => env('GOOGLE_APPLICATION_CREDENTIALS', null),
+            //'key_file_contents' => env('GOOGLE_APPLICATION_CREDENTIALS', ''),
             'throw' => true,
             'url' => 'https://storage.googleapis.com/'.env('GCP_BUCKET'),
         ],

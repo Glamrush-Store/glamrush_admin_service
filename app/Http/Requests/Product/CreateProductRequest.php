@@ -24,9 +24,9 @@ class CreateProductRequest extends FormRequest
             'description' => ['nullable', 'string'],
 
             'price' => ['required_if:type,simple', 'numeric'],
-            'sale_price' => ['required_if:type,simple', 'nullable', 'numeric'],
-            'sale_starts_at' => ['required_if:type,simple', 'nullable', 'date'],
-            'sale_ends_at' => ['required_if:type,simple', 'nullable', 'date'],
+            'sale_price' => [ 'nullable', 'numeric'],
+            'sale_starts_at' => [ 'nullable', 'date'],
+            'sale_ends_at' => [ 'nullable', 'date'],
             'manage_stock' => ['required_if:type,simple', 'boolean'],
             'stock_quantity' => ['required_if:type,simple', 'integer'],
             'in_stock' => ['required_if:type,simple', 'boolean'],

@@ -48,16 +48,13 @@ class ProductVariant extends Model implements HasMedia
     ): void {
         $this->addMediaConversion('thumb')
             ->fit(Fit::Crop, 400, 400)
-            ->sharpen(10)
-            ->nonQueued();
+            ->sharpen(10);
 
         $this->addMediaConversion('medium')
-            ->fit(Fit::Max, 800, 800)
-            ->nonQueued();
+            ->fit(Fit::Max, 800, 800);
 
         $this->addMediaConversion('large')
-            ->fit(Fit::Max, 1600, 1600)
-            ->nonQueued();
+            ->fit(Fit::Max, 1600, 1600);
     }
 
     public function product()

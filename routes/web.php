@@ -16,15 +16,15 @@ Route::get('/test-gcs', function () {
 
         // Test 2: Check if key file exists
         $keyFilePath = env('GOOGLE_APPLICATION_CREDENTIALS');
-        var_dump($keyFilePath);
-        dump('Key file exists:', file_exists($keyFilePath));
+        //var_dump($keyFilePath);
+        //dump('Key file exists:', file_exists($keyFilePath));
 
         // Test 3: Check if key file is readable
-        if (file_exists($keyFilePath)) {
-            $keyContent = json_decode(file_get_contents($keyFilePath), true);
-            dump('Key file valid JSON:', ! is_null($keyContent));
-            dump('Project ID in key file:', $keyContent['project_id'] ?? 'NOT FOUND');
-        }
+        // if (file_exists($keyFilePath)) {
+        //     $keyContent = json_decode(file_get_contents($keyFilePath), true);
+        //     //dump('Key file valid JSON:', ! is_null($keyContent));
+        //     dump('Project ID in key file:', $keyContent['project_id'] ?? 'NOT FOUND');
+        // }
 
         // Test 4: Try to connect directly
         $storageClient = new StorageClient([
@@ -74,6 +74,47 @@ Route::get('/test-gcs', function () {
             'file' => $e->getFile(),
             'line' => $e->getLine(),
             'trace' => $e->getTraceAsString(),
+        ], 500);
+    }
+});
+
+
+
+Route::get('/test-laravel-storage', function () {
+    try {
+        $filename = 'laravel-test-' . time() . '.txt';
+        $content = 'Laravel Storage Test - ' . now();
+
+        // Upload using Laravel Storage
+        $result = Storage::disk('gcs')->put($filename, $content);
+
+        dump('Put result:', $result);
+        dump('Filename:', $filename);
+
+        // Check if it exists
+        $exists = Storage::disk('gcs')->exists($filename);
+        dump('File exists:', $exists);
+
+        // List all files
+        $allFiles = Storage::disk('gcs')->files();
+        dump('All files:', $allFiles);
+
+        // Get the content back
+        if ($exists) {
+            $readContent = Storage::disk('gcs')->get($filename);
+            dump('Content:', $readContent);
+        }
+
+        return response()->json([
+            'success' => true,
+            'filename' => $filename,
+            'exists' => $exists,
+            'all_files' => $allFiles
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
         ], 500);
     }
 });

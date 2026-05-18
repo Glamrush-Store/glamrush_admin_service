@@ -92,16 +92,13 @@ class Product extends Model implements hasMedia
     ): void {
         $this->addMediaConversion('thumb')
             ->fit(Fit::Crop, 400, 400)
-            ->sharpen(10)
-            ->nonQueued();
+            ->sharpen(10);
 
         $this->addMediaConversion('medium')
-            ->fit(Fit::Max, 800, 800)
-            ->nonQueued();
+            ->fit(Fit::Max, 800, 800);
 
         $this->addMediaConversion('large')
-            ->fit(Fit::Max, 1600, 1600)
-            ->nonQueued();
+            ->fit(Fit::Max, 1600, 1600);
     }
 
     public function category()
@@ -117,6 +114,12 @@ class Product extends Model implements hasMedia
     public function vendor()
     {
         return $this->belongsTo(Vendor::class);
+    }
+
+    public function collections()
+    {
+        return $this->belongsToMany(Collection::class, 'collection_product')
+            ->withPivot('sort_order', 'created_at');
     }
 
     /**

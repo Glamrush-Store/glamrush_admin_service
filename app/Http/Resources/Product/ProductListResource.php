@@ -25,7 +25,7 @@ class ProductListResource extends JsonResource
             'price' => (float) $this->price,
             'sale_price' => $this->sale_price ? (float) $this->sale_price : null,
 
-            // 🔥 Relationships as structured objects
+            // Relationships as structured objects
             'category' => $this->whenLoaded('category', function () {
                 return [
                     'id' => $this->category->id,

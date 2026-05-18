@@ -36,7 +36,7 @@ class ProductVariantResource extends JsonResource
                     'value' => $attribute['value'],
                 ]),
 
-            'images' => $this->getMedia('variant-photos')->map(function ($media) {
+            'images' => $this->getMedia('catalog-photos')->map(function ($media) {
                 return [
                     'id' => $media->id,
                     'name' => $media->name,

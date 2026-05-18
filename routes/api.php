@@ -7,12 +7,40 @@
  */
 
 use App\Http\Controllers\Auth\ConfirmPasswordResetController;
+use App\Http\Controllers\Customer\ListCustomersController;
+use App\Http\Controllers\Shipping\ShippingZone\ListShippingZonesController;
+use App\Http\Controllers\Shipping\ShippingZone\ShowShippingZoneController;
+use App\Http\Controllers\Shipping\ShippingZone\CreateShippingZoneController;
+use App\Http\Controllers\Shipping\ShippingZone\UpdateShippingZoneController;
+use App\Http\Controllers\Shipping\ShippingZone\DeleteShippingZoneController;
+use App\Http\Controllers\Shipping\ShippingMethod\ListShippingMethodsController;
+use App\Http\Controllers\Shipping\ShippingMethod\ShowShippingMethodController;
+use App\Http\Controllers\Shipping\ShippingMethod\CreateShippingMethodController;
+use App\Http\Controllers\Shipping\ShippingMethod\UpdateShippingMethodController;
+use App\Http\Controllers\Shipping\ShippingMethod\DeleteShippingMethodController;
+use App\Http\Controllers\Shipping\ShippingRate\ListShippingRatesController;
+use App\Http\Controllers\Shipping\ShippingRate\ShowShippingRateController;
+use App\Http\Controllers\Shipping\ShippingRate\CreateShippingRateController;
+use App\Http\Controllers\Shipping\ShippingRate\UpdateShippingRateController;
+use App\Http\Controllers\Shipping\ShippingRate\DeleteShippingRateController;
+use App\Http\Controllers\Shipping\Shipment\ListShipmentsController;
+use App\Http\Controllers\Shipping\Shipment\ShowShipmentController;
+use App\Http\Controllers\Shipping\Shipment\CreateShipmentController;
+use App\Http\Controllers\Shipping\Shipment\UpdateShipmentController;
+use App\Http\Controllers\Shipping\Shipment\DeleteShipmentController;
 use App\Http\Controllers\Auth\CreateAccountController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\RequestPasswordResetController;
 use App\Http\Controllers\Auth\SelfController;
 use App\Http\Controllers\Auth\VerifyPasswordResetCodeController;
+use App\Http\Controllers\Collection\AttachProductsController;
+use App\Http\Controllers\Collection\CreateCollectionController;
+use App\Http\Controllers\Collection\DeleteCollectionController;
+use App\Http\Controllers\Collection\DetachProductController;
+use App\Http\Controllers\Collection\ListCollectionsController;
+use App\Http\Controllers\Collection\ShowCollectionController;
+use App\Http\Controllers\Collection\UpdateCollectionController;
 use App\Http\Controllers\Brand\CreateBrandController;
 use App\Http\Controllers\Brand\DeleteBrandController;
 use App\Http\Controllers\Brand\ListBrandsController;
@@ -24,6 +52,11 @@ use App\Http\Controllers\Category\ListCategoriesController;
 use App\Http\Controllers\Category\ShowCategoryController;
 use App\Http\Controllers\Category\UpdateCategoryController;
 use App\Http\Controllers\Media\DeleteMediaController;
+use App\Http\Controllers\PaymentMethod\CreatePaymentMethodController;
+use App\Http\Controllers\PaymentMethod\DeletePaymentMethodController;
+use App\Http\Controllers\PaymentMethod\ListPaymentMethodsController;
+use App\Http\Controllers\PaymentMethod\ShowPaymentMethodController;
+use App\Http\Controllers\PaymentMethod\UpdatePaymentMethodController;
 use App\Http\Controllers\Product\CreateProductController;
 use App\Http\Controllers\Product\DeleteProductController;
 use App\Http\Controllers\Product\ListProductsController;
@@ -126,9 +159,73 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
     Route::get('/sku-attribute-code/{sku-attribute-code}', [SkuAttributeCodeController::class, 'show'])->middleware('permission:View_Vendor');
     Route::post('/sku-attribute-code', [SkuAttributeCodeController::class, 'store'])->middleware('permission:Create_Vendor');
     Route::put('/sku-attribute-code/{sku-attribute-code}', [SkuAttributeCodeController::class, 'update'])->middleware('permission:Update_Vendor');
-    Route::delete('/sku-attribute-code/{sku-attribute-code}', [DeleteVendorController::class, 'delete'])->middleware('permission:Delete_Vendor');
+    Route::delete('/sku-attribute-code/{id}', [SkuAttributeCodeController::class, 'destroy'])->middleware('permission:Delete_Vendor');
 });
 
+
+// ========================================================
+// COLLECTIONS API ROUTES
+// ========================================================
+
+Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
+    Route::get('/collections', ListCollectionsController::class)->middleware('permission:View_Category');
+    Route::get('/collections/{collection}', ShowCollectionController::class)->middleware('permission:View_Category');
+    Route::post('/collections', CreateCollectionController::class)->middleware('permission:Create_Category');
+    Route::put('/collections/{collection}', UpdateCollectionController::class)->middleware('permission:Update_Category');
+    Route::delete('/collections/{collection}', DeleteCollectionController::class)->middleware('permission:Delete_Category');
+    Route::post('/collections/{collection}/products', AttachProductsController::class)->middleware('permission:Update_Category');
+    Route::delete('/collections/{collection}/products/{product}', DetachProductController::class)->middleware('permission:Update_Category');
+});
+
+// ========================================================
+// CUSTOMERS API ROUTES
+// ========================================================
+
+Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
+    Route::get('/customers', ListCustomersController::class)->middleware('permission:View_Customer');
+});
+
+// ========================================================
+// SHIPPING API ROUTES
+// ========================================================
+
+Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
+    Route::get('/shipping/zones', ListShippingZonesController::class)->middleware('permission:View_Shipment');
+    Route::get('/shipping/zones/{shippingZone}', ShowShippingZoneController::class)->middleware('permission:View_Shipment');
+    Route::post('/shipping/zones', CreateShippingZoneController::class)->middleware('permission:Create_Shipment');
+    Route::put('/shipping/zones/{shippingZone}', UpdateShippingZoneController::class)->middleware('permission:Update_Shipment');
+    Route::delete('/shipping/zones/{shippingZone}', DeleteShippingZoneController::class)->middleware('permission:Delete_Shipment');
+
+    Route::get('/shipping/methods', ListShippingMethodsController::class)->middleware('permission:View_Shipment');
+    Route::get('/shipping/methods/{shippingMethod}', ShowShippingMethodController::class)->middleware('permission:View_Shipment');
+    Route::post('/shipping/methods', CreateShippingMethodController::class)->middleware('permission:Create_Shipment');
+    Route::put('/shipping/methods/{shippingMethod}', UpdateShippingMethodController::class)->middleware('permission:Update_Shipment');
+    Route::delete('/shipping/methods/{shippingMethod}', DeleteShippingMethodController::class)->middleware('permission:Delete_Shipment');
+
+    Route::get('/shipping/rates', ListShippingRatesController::class)->middleware('permission:View_Shipment');
+    Route::get('/shipping/rates/{shippingRate}', ShowShippingRateController::class)->middleware('permission:View_Shipment');
+    Route::post('/shipping/rates', CreateShippingRateController::class)->middleware('permission:Create_Shipment');
+    Route::put('/shipping/rates/{shippingRate}', UpdateShippingRateController::class)->middleware('permission:Update_Shipment');
+    Route::delete('/shipping/rates/{shippingRate}', DeleteShippingRateController::class)->middleware('permission:Delete_Shipment');
+
+    Route::get('/shipments', ListShipmentsController::class)->middleware('permission:View_Shipment');
+    Route::get('/shipments/{shipment}', ShowShipmentController::class)->middleware('permission:View_Shipment');
+    Route::post('/shipments', CreateShipmentController::class)->middleware('permission:Create_Shipment');
+    Route::put('/shipments/{shipment}', UpdateShipmentController::class)->middleware('permission:Update_Shipment');
+    Route::delete('/shipments/{shipment}', DeleteShipmentController::class)->middleware('permission:Delete_Shipment');
+});
+
+// ========================================================
+// PAYMENT METHOD API ROUTES
+// ========================================================
+
+Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
+    Route::get('/payment-methods', ListPaymentMethodsController::class)->middleware('permission:View_PaymentMethod');
+    Route::get('/payment-methods/{paymentMethod}', ShowPaymentMethodController::class)->middleware('permission:View_PaymentMethod');
+    Route::post('/payment-methods', CreatePaymentMethodController::class)->middleware('permission:Create_PaymentMethod');
+    Route::put('/payment-methods/{paymentMethod}', UpdatePaymentMethodController::class)->middleware('permission:Update_PaymentMethod');
+    Route::delete('/payment-methods/{paymentMethod}', DeletePaymentMethodController::class)->middleware('permission:Delete_PaymentMethod');
+});
 
 // ========================================================
 // Media Routes

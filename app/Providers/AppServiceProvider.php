@@ -8,6 +8,7 @@ use App\Models\ProductVariant;
 use App\Models\Category;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use RuntimeException;
 
 
 class AppServiceProvider extends ServiceProvider
@@ -25,7 +26,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-$encoded = env('GOOGLE_APPLICATION_CREDENTIALS_BASE64');
+
+
+    $encoded = env('GOOGLE_APPLICATION_CREDENTIALS_BASE64');
 
 if ($encoded) {
     $directory = storage_path('app');

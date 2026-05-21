@@ -16,6 +16,7 @@
         "laravel/sanctum": "^4.3",
         "laravel/tinker": "^2.10.1",
         "league/flysystem-google-cloud-storage": "^3.31",
+        "resend/resend-php": "1.0",
         "spatie/image": "^3.9",
         "spatie/laravel-medialibrary": "^11.17",
         "spatie/laravel-permission": "^6.24",
@@ -98,4 +99,3 @@
     "minimum-stability": "stable",
     "prefer-stable": true
 }
-

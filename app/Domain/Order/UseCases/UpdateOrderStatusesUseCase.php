@@ -2,6 +2,8 @@
 
 namespace App\Domain\Order\UseCases;
 
+use App\Domain\Order\Events\OrderPaymentStatusChangedEvent;
+use App\Domain\Order\Events\OrderShippingStatusChangedEvent;
 use App\Exceptions\BusinessException;
 use App\Models\Order;
 use Illuminate\Support\Facades\DB;
@@ -18,17 +20,28 @@ class UpdateOrderStatusesUseCase
                     throw BusinessException::invalidOperation('Order has no shipment record to update.');
                 }
 
-                $shipmentUpdates = ['status' => $data['shipping_status']];
+                $oldShippingStatus = (string) $shipment->status;
+                $newShippingStatus = (string) $data['shipping_status'];
+                $shipmentUpdates = ['status' => $newShippingStatus];
 
-                if ($data['shipping_status'] === 'shipped' && is_null($shipment->shipped_at)) {
+                if ($newShippingStatus === 'shipped' && is_null($shipment->shipped_at)) {
                     $shipmentUpdates['shipped_at'] = now();
                 }
 
-                if ($data['shipping_status'] === 'delivered' && is_null($shipment->delivered_at)) {
+                if ($newShippingStatus === 'delivered' && is_null($shipment->delivered_at)) {
                     $shipmentUpdates['delivered_at'] = now();
                 }
 
-                $shipment->update($shipmentUpdates);
+                if ($oldShippingStatus !== $newShippingStatus) {
+                    $shipment->update($shipmentUpdates);
+
+                    event(new OrderShippingStatusChangedEvent(
+                        $order->id,
+                        $shipment->id,
+                        $oldShippingStatus,
+                        $newShippingStatus,
+                    ));
+                }
             }
 
             if (array_key_exists('payment_status', $data)) {
@@ -38,17 +51,28 @@ class UpdateOrderStatusesUseCase
                     throw BusinessException::invalidOperation('Order has no payment record to update.');
                 }
 
-                $paymentUpdates = ['status' => $data['payment_status']];
+                $oldPaymentStatus = (string) $payment->status;
+                $newPaymentStatus = (string) $data['payment_status'];
+                $paymentUpdates = ['status' => $newPaymentStatus];
 
-                if ($data['payment_status'] === 'paid' && is_null($payment->paid_at)) {
+                if ($newPaymentStatus === 'paid' && is_null($payment->paid_at)) {
                     $paymentUpdates['paid_at'] = now();
                 }
 
-                if ($data['payment_status'] === 'failed' && is_null($payment->failed_at)) {
+                if ($newPaymentStatus === 'failed' && is_null($payment->failed_at)) {
                     $paymentUpdates['failed_at'] = now();
                 }
 
-                $payment->update($paymentUpdates);
+                if ($oldPaymentStatus !== $newPaymentStatus) {
+                    $payment->update($paymentUpdates);
+
+                    event(new OrderPaymentStatusChangedEvent(
+                        $order->id,
+                        $payment->id,
+                        $oldPaymentStatus,
+                        $newPaymentStatus,
+                    ));
+                }
             }
 
             return $order->fresh()->load([

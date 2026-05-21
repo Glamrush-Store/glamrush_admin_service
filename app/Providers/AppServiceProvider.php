@@ -2,19 +2,18 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
+use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductVariant;
-use App\Models\Category;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\ServiceProvider;
 use RuntimeException;
-
 
 class AppServiceProvider extends ServiceProvider
 {
     /**
-     * Register any application services\[xcv]
+     * Register any application services.
      */
     public function register(): void
     {
@@ -26,35 +25,30 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        $encoded = env('GOOGLE_APPLICATION_CREDENTIALS_BASE64');
 
+        if ($encoded) {
+            $directory = storage_path('app');
+            $path = $directory . '/google-credentials.json';
 
-    $encoded = env('GOOGLE_APPLICATION_CREDENTIALS_BASE64');
+            if (! is_dir($directory)) {
+                mkdir($directory, 0755, true);
+            }
 
-if ($encoded) {
-    $directory = storage_path('app');
-    $path = $directory . '/google-credentials.json';
+            $decoded = base64_decode($encoded, true);
 
-    if (! is_dir($directory)) {
-        mkdir($directory, 0755, true);
-    }
+            if ($decoded === false) {
+                throw new RuntimeException('Invalid GOOGLE_APPLICATION_CREDENTIALS_BASE64 value.');
+            }
 
-    $decoded = base64_decode($encoded, true);
+            if (! file_exists($path)) {
+                file_put_contents($path, $decoded);
+            }
 
-    if ($decoded === false) {
-        throw new RuntimeException('Invalid GOOGLE_APPLICATION_CREDENTIALS_BASE64 value.');
-    }
-
-    if (! file_exists($path)) {
-        file_put_contents($path, $decoded);
-    }
-
-    putenv('GOOGLE_APPLICATION_CREDENTIALS=' . $path);
-    $_ENV['GOOGLE_APPLICATION_CREDENTIALS'] = $path;
-    $_SERVER['GOOGLE_APPLICATION_CREDENTIALS'] = $path;
-}
-
-
-
+            putenv('GOOGLE_APPLICATION_CREDENTIALS=' . $path);
+            $_ENV['GOOGLE_APPLICATION_CREDENTIALS'] = $path;
+            $_SERVER['GOOGLE_APPLICATION_CREDENTIALS'] = $path;
+        }
 
         Relation::enforceMorphMap([
             'category' => Category::class,

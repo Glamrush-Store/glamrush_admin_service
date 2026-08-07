@@ -20,6 +20,8 @@ class SkuAttributeCodeResource extends JsonResource
             'type' => $this->type,
             'value' => $this->value,
             'code' => $this->code,
+            'display_type' => $this->display_type,
+            'meta' => $this->meta,
             'is_active' => $this->is_active,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,

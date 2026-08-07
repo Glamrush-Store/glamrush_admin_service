@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('type');        // color, size, storage, material
             $table->string('value');       // Black, Large, 128GB
             $table->string('code');        // BLK, L, 128G
+            $table->string('display_type')->nullable(); // Optional field to specify how the attribute should be displayed (e.g., color swatch, size label)
+             $table->jsonb('meta')->default('{}')->nullable(); // Optional field for any additional metadata related to the attribute
 
             $table->boolean('is_active')->default(true);
 

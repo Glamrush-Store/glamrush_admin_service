@@ -23,10 +23,10 @@ class CategoryResource extends JsonResource
 
             'sort_order' => (int) $this->sort_order,
             'is_active' => (bool) $this->is_active,
-            'image' => [
-                'url' => $this->getFirstMediaUrl('catalog-photos'),
-                'thumb' => $this->getFirstMediaUrl('catalog-photos', 'thumb'),
-                'medium' => $this->getFirstMediaUrl('catalog-photos', 'medium'),
+            'image' => $this->getFirstMediaUrl('catalog-photos') == "" ? null : [
+                'url' => $this->getFirstMediaUrl('catalog-photos') ?: null,
+                'thumb' => $this->getFirstMediaUrl('catalog-photos', 'thumb') ?: null,
+                'medium' => $this->getFirstMediaUrl('catalog-photos', 'medium') ?: null,
             ],
 
             'created_at' => optional($this->created_at)->toISOString(),

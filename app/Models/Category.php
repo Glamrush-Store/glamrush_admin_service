@@ -47,8 +47,7 @@ class Category extends Model implements HasMedia
             ->sharpen(10);
 
         $this->addMediaConversion('medium')
-            ->fit(Fit::Max, 800, 800)
-            ->nonQueued();
+            ->fit(Fit::Max, 800, 800);
     }
 
     public function parent()

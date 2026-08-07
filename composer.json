@@ -12,12 +12,16 @@
         "php": "^8.2",
         "darkaonline/l5-swagger": "10.1",
         "laravel/framework": "12.39.0",
+        "laravel/octane": "^2.17",
         "laravel/sanctum": "^4.3",
         "laravel/tinker": "^2.10.1",
         "league/flysystem-google-cloud-storage": "^3.31",
+        "resend/resend-php": "1.0",
         "spatie/image": "^3.9",
         "spatie/laravel-medialibrary": "^11.17",
         "spatie/laravel-permission": "^6.24",
+        "spiral/roadrunner-cli": "^2.7",
+        "spiral/roadrunner-http": "^4.1",
         "tymon/jwt-auth": "^2.2"
     },
     "require-dev": {

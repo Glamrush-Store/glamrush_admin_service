@@ -24,7 +24,18 @@ class PermissionsSeeder extends Seeder
             'Category',
             'Brand',
             'Vendor',
-            'SkuAttributeCode'
+            'SkuAttributeCode',
+            'Customer',
+            'Shipment',
+            'ShippingMethod',
+            'ShippingRate',
+            'ShippingZone',
+            'PaymentMethod',
+            'Order',
+            'StorefrontCampaign',
+            'StorefrontHomepageSection',
+            'NewsletterSubscriber',
+
             // Add more models here...
         ];
 
@@ -47,6 +58,8 @@ class PermissionsSeeder extends Seeder
                 $allPermissions[] = $permission;
             }
         }
+
+        $allPermissions[] = Permission::firstOrCreate(['name' => 'Export_NewsletterSubscriber']);
 
         // Create or fetch the super_admin role
         $superAdmin = Role::firstOrCreate(['name' => 'super_admin']);

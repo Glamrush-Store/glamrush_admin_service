@@ -14,6 +14,13 @@ class SkuAttributeCode extends Model
         'type',
         'value',
         'code',
+        'display_type',
+        'meta',
         'is_active',
     ];
+
+    protected $casts = [
+        'meta' => 'array',
+    ];
+
 }

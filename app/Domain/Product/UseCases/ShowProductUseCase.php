@@ -19,6 +19,7 @@ class ShowProductUseCase
             ->load('brand')
             ->load('vendor')
             ->load('media')
-            ->load('variants.media');
+            ->load('variants.media')
+            ->load('collections');
     }
 }

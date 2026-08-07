@@ -15,46 +15,53 @@ class AttributeType
         return [
 
             // Fashion
-            'color',
-            'size',
-            'material',
-            'pattern',
-            'fit',
-            'style',
-            'season',
+            'color' => 'color_swatch',
+            'size' => 'size_label',
+            'material' => 'select',
+            'pattern' => 'select',
+            'fit' => 'select',
+            'style' => 'select',
+            'season' => 'select',
 
             // Cosmetics
-            'shade',
-            'finish',
-            'coverage',
-            'skin_type',
-            'undertone',
-            'formula',
-            'texture',
-            'spf',
+            'shade' => 'select',
+            'finish' => 'select',
+            'coverage' => 'select',
+            'skin_type' => 'select',
+            'undertone' => 'select',
+            'formula' => 'select',
+            'texture' => 'select',
+            'spf' => 'select',
 
             // Fragrance
-            'volume',
-            'concentration',
-            'scent_family',
-            'longevity',
-            'sillage',
+            'volume' => 'select',
+            'concentration' => 'select',
+            'scent_family' => 'select',
+            'longevity' => 'select',
+            'sillage' => 'select',
 
             // Universal
-            'gender',
-            'age_group',
-            'limited_edition',
+            'gender' => 'select',
+            'age_group' => 'select',
+            'limited_edition' => 'select',
         ];
     }
 
-    public static function formatted(): array
+    public static function displayType(string $type): string
     {
-        return collect(self::all())
-            ->map(fn($type) => [
-                'value' => $type,
-                'label' => ucwords(str_replace('_', ' ', $type)),
-            ])
-            ->values()
-            ->toArray();
+        return self::all()[$type] ?? 'select';
     }
+
+
+    public static function formatted(): array
+{
+    return collect(self::all())
+        ->map(fn($displayType, $type) => [
+            'value'        => $type,
+            'label'        => ucwords(str_replace('_', ' ', $type)),
+            'display_type' => $displayType,
+        ])
+        ->values()
+        ->toArray();
+}
 }

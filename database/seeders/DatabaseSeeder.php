@@ -17,28 +17,20 @@ class DatabaseSeeder extends Seeder
     {
         // Users
         User::factory()->create([
-            'name'  => 'Test User',
+            'name' => 'Test User',
             'email' => 'test@example.com',
         ]);
 
         User::factory()->create([
-            'name'  => 'Demi User',
+            'name' => 'Demi User',
             'email' => 'demi@example.com',
         ]);
 
         User::factory(5)->create();
 
-        // Reference / lookup data
+        // Permissions and cohesive application demo data
         $this->call(PermissionsSeeder::class);
-        $this->call(SkuAttributeCodeSeeder::class);
-        $this->call(AttributeTypeSeeder::class);
-
-//        // Catalogue data
-        $this->call(VendorSeeder::class);
-        $this->call(CategorySeeder::class);
-        $this->call(BrandSeeder::class);
-        $this->call(ProductSeeder::class);
-        $this->call(CollectionSeeder::class);
+        $this->call(AppDataSeeder::class);
 
         // Shipping data
         $this->call(ShippingMethodSeeder::class);

@@ -29,7 +29,7 @@ class AppServiceProvider extends ServiceProvider
 
         if ($encoded) {
             $directory = storage_path('app');
-            $path = $directory . '/google-credentials.json';
+            $path = $directory.'/google-credentials.json';
 
             if (! is_dir($directory)) {
                 mkdir($directory, 0755, true);
@@ -45,7 +45,7 @@ class AppServiceProvider extends ServiceProvider
                 file_put_contents($path, $decoded);
             }
 
-            putenv('GOOGLE_APPLICATION_CREDENTIALS=' . $path);
+            putenv('GOOGLE_APPLICATION_CREDENTIALS='.$path);
             $_ENV['GOOGLE_APPLICATION_CREDENTIALS'] = $path;
             $_SERVER['GOOGLE_APPLICATION_CREDENTIALS'] = $path;
         }
@@ -59,6 +59,7 @@ class AppServiceProvider extends ServiceProvider
             'vendor' => \App\Models\Vendor::class,
             'sku_attribute_code' => \App\Models\SkuAttributeCode::class,
             'collection' => \App\Models\Collection::class,
+            'storefront_campaign' => \App\Models\StorefrontCampaign::class,
         ]);
     }
 }

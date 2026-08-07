@@ -7,40 +7,12 @@
  */
 
 use App\Http\Controllers\Auth\ConfirmPasswordResetController;
-use App\Http\Controllers\Customer\ListCustomersController;
-use App\Http\Controllers\Shipping\ShippingZone\ListShippingZonesController;
-use App\Http\Controllers\Shipping\ShippingZone\ShowShippingZoneController;
-use App\Http\Controllers\Shipping\ShippingZone\CreateShippingZoneController;
-use App\Http\Controllers\Shipping\ShippingZone\UpdateShippingZoneController;
-use App\Http\Controllers\Shipping\ShippingZone\DeleteShippingZoneController;
-use App\Http\Controllers\Shipping\ShippingMethod\ListShippingMethodsController;
-use App\Http\Controllers\Shipping\ShippingMethod\ShowShippingMethodController;
-use App\Http\Controllers\Shipping\ShippingMethod\CreateShippingMethodController;
-use App\Http\Controllers\Shipping\ShippingMethod\UpdateShippingMethodController;
-use App\Http\Controllers\Shipping\ShippingMethod\DeleteShippingMethodController;
-use App\Http\Controllers\Shipping\ShippingRate\ListShippingRatesController;
-use App\Http\Controllers\Shipping\ShippingRate\ShowShippingRateController;
-use App\Http\Controllers\Shipping\ShippingRate\CreateShippingRateController;
-use App\Http\Controllers\Shipping\ShippingRate\UpdateShippingRateController;
-use App\Http\Controllers\Shipping\ShippingRate\DeleteShippingRateController;
-use App\Http\Controllers\Shipping\Shipment\ListShipmentsController;
-use App\Http\Controllers\Shipping\Shipment\ShowShipmentController;
-use App\Http\Controllers\Shipping\Shipment\CreateShipmentController;
-use App\Http\Controllers\Shipping\Shipment\UpdateShipmentController;
-use App\Http\Controllers\Shipping\Shipment\DeleteShipmentController;
 use App\Http\Controllers\Auth\CreateAccountController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\RequestPasswordResetController;
 use App\Http\Controllers\Auth\SelfController;
 use App\Http\Controllers\Auth\VerifyPasswordResetCodeController;
-use App\Http\Controllers\Collection\AttachProductsController;
-use App\Http\Controllers\Collection\CreateCollectionController;
-use App\Http\Controllers\Collection\DeleteCollectionController;
-use App\Http\Controllers\Collection\DetachProductController;
-use App\Http\Controllers\Collection\ListCollectionsController;
-use App\Http\Controllers\Collection\ShowCollectionController;
-use App\Http\Controllers\Collection\UpdateCollectionController;
 use App\Http\Controllers\Brand\CreateBrandController;
 use App\Http\Controllers\Brand\DeleteBrandController;
 use App\Http\Controllers\Brand\ListBrandsController;
@@ -51,7 +23,18 @@ use App\Http\Controllers\Category\DeleteCategoryController;
 use App\Http\Controllers\Category\ListCategoriesController;
 use App\Http\Controllers\Category\ShowCategoryController;
 use App\Http\Controllers\Category\UpdateCategoryController;
+use App\Http\Controllers\Collection\AttachProductsController;
+use App\Http\Controllers\Collection\CreateCollectionController;
+use App\Http\Controllers\Collection\DeleteCollectionController;
+use App\Http\Controllers\Collection\DetachProductController;
+use App\Http\Controllers\Collection\ListCollectionsController;
+use App\Http\Controllers\Collection\ShowCollectionController;
+use App\Http\Controllers\Collection\UpdateCollectionController;
+use App\Http\Controllers\Customer\ListCustomersController;
 use App\Http\Controllers\Media\DeleteMediaController;
+use App\Http\Controllers\Newsletter\ExportNewsletterSubscribersController;
+use App\Http\Controllers\Newsletter\ListNewsletterSubscribersController;
+use App\Http\Controllers\Newsletter\ShowNewsletterSubscriberController;
 use App\Http\Controllers\Order\ListOrdersController;
 use App\Http\Controllers\Order\ShowOrderController;
 use App\Http\Controllers\Order\UpdateOrderStatusController;
@@ -69,13 +52,35 @@ use App\Http\Controllers\Product\UpdateProductController;
 use App\Http\Controllers\ProductVariant\DeleteProductVariantController;
 use App\Http\Controllers\ProductVariant\ShowProductVariantController;
 use App\Http\Controllers\ProductVariant\UpdateProductVariantController;
+use App\Http\Controllers\Shipping\Shipment\CreateShipmentController;
+use App\Http\Controllers\Shipping\Shipment\DeleteShipmentController;
+use App\Http\Controllers\Shipping\Shipment\ListShipmentsController;
+use App\Http\Controllers\Shipping\Shipment\ShowShipmentController;
+use App\Http\Controllers\Shipping\Shipment\UpdateShipmentController;
+use App\Http\Controllers\Shipping\ShippingMethod\CreateShippingMethodController;
+use App\Http\Controllers\Shipping\ShippingMethod\DeleteShippingMethodController;
+use App\Http\Controllers\Shipping\ShippingMethod\ListShippingMethodsController;
+use App\Http\Controllers\Shipping\ShippingMethod\ShowShippingMethodController;
+use App\Http\Controllers\Shipping\ShippingMethod\UpdateShippingMethodController;
+use App\Http\Controllers\Shipping\ShippingRate\CreateShippingRateController;
+use App\Http\Controllers\Shipping\ShippingRate\DeleteShippingRateController;
+use App\Http\Controllers\Shipping\ShippingRate\ListShippingRatesController;
+use App\Http\Controllers\Shipping\ShippingRate\ShowShippingRateController;
+use App\Http\Controllers\Shipping\ShippingRate\UpdateShippingRateController;
+use App\Http\Controllers\Shipping\ShippingZone\CreateShippingZoneController;
+use App\Http\Controllers\Shipping\ShippingZone\DeleteShippingZoneController;
+use App\Http\Controllers\Shipping\ShippingZone\ListShippingZonesController;
+use App\Http\Controllers\Shipping\ShippingZone\ShowShippingZoneController;
+use App\Http\Controllers\Shipping\ShippingZone\UpdateShippingZoneController;
 use App\Http\Controllers\SkuAttributeCode\SkuAttributeCodeController;
+use App\Http\Controllers\Storefront\PublishedStorefrontHomepageController;
+use App\Http\Controllers\Storefront\StorefrontCampaignController;
+use App\Http\Controllers\Storefront\StorefrontHomepageSectionController;
 use App\Http\Controllers\Vendor\CreateVendorController;
 use App\Http\Controllers\Vendor\DeleteVendorController;
 use App\Http\Controllers\Vendor\ListVendorController;
 use App\Http\Controllers\Vendor\ShowVendorController;
 use App\Http\Controllers\Vendor\UpdateVendorController;
-
 use Illuminate\Support\Facades\Route;
 
 // ========================================================
@@ -104,6 +109,31 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
     Route::put('/categories/{category}', UpdateCategoryController::class)->middleware('permission:Update_Category');
     Route::delete('/categories/{category}', DeleteCategoryController::class)->middleware('permission:Delete_Category');
 });
+
+// ========================================================
+// STOREFRONT HOMEPAGE MERCHANDISING
+// ========================================================
+Route::prefix('v1/storefronts/{storefront}')->middleware('auth:sanctum')->group(function () {
+    Route::get('/campaigns', [StorefrontCampaignController::class, 'index'])->middleware('permission:ViewAny_StorefrontCampaign');
+    Route::post('/campaigns', [StorefrontCampaignController::class, 'store'])->middleware('permission:Create_StorefrontCampaign');
+    Route::get('/campaigns/{campaign}', [StorefrontCampaignController::class, 'show'])->middleware('permission:View_StorefrontCampaign');
+    Route::put('/campaigns/{campaign}', [StorefrontCampaignController::class, 'update'])->middleware('permission:Update_StorefrontCampaign');
+    Route::delete('/campaigns/{campaign}', [StorefrontCampaignController::class, 'destroy'])->middleware('permission:Delete_StorefrontCampaign');
+    Route::patch('/campaigns/{campaign}/enable', [StorefrontCampaignController::class, 'enable'])->middleware('permission:Update_StorefrontCampaign');
+    Route::patch('/campaigns/{campaign}/disable', [StorefrontCampaignController::class, 'disable'])->middleware('permission:Update_StorefrontCampaign');
+
+    Route::get('/homepage-sections', [StorefrontHomepageSectionController::class, 'index'])->middleware('permission:ViewAny_StorefrontHomepageSection');
+    Route::post('/homepage-sections', [StorefrontHomepageSectionController::class, 'store'])->middleware('permission:Create_StorefrontHomepageSection');
+    Route::put('/homepage-sections/reorder', [StorefrontHomepageSectionController::class, 'reorder'])->middleware('permission:Update_StorefrontHomepageSection');
+    Route::get('/homepage-sections/{section}', [StorefrontHomepageSectionController::class, 'show'])->middleware('permission:View_StorefrontHomepageSection');
+    Route::put('/homepage-sections/{section}', [StorefrontHomepageSectionController::class, 'update'])->middleware('permission:Update_StorefrontHomepageSection');
+    Route::delete('/homepage-sections/{section}', [StorefrontHomepageSectionController::class, 'destroy'])->middleware('permission:Delete_StorefrontHomepageSection');
+    Route::patch('/homepage-sections/{section}/enable', [StorefrontHomepageSectionController::class, 'enable'])->middleware('permission:Update_StorefrontHomepageSection');
+    Route::patch('/homepage-sections/{section}/disable', [StorefrontHomepageSectionController::class, 'disable'])->middleware('permission:Update_StorefrontHomepageSection');
+});
+
+Route::get('/internal/v1/storefronts/{storefront}/homepage', PublishedStorefrontHomepageController::class)
+    ->middleware('internal-service');
 
 // ========================================================
 //  BRAND API ROUTES
@@ -140,8 +170,6 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
     Route::delete('/products/{product}', DeleteProductController::class)->middleware('permission:Delete_Product');
 });
 
-
-
 // ========================================================
 //  PRODUCT VARIANT ROUTES
 // ========================================================
@@ -150,9 +178,6 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
     Route::put('/productvariants/{variant}', UpdateProductVariantController::class)->middleware('permission:Update_Product');
     Route::delete('/productvariants/{variant}', DeleteProductVariantController::class)->middleware('permission:Delete_Product');
 });
-
-
-
 
 // ========================================================
 // SKU ATTRIBUTE CODES API ROUTES
@@ -165,7 +190,6 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
     Route::put('/sku-attribute-code/{sku-attribute-code}', [SkuAttributeCodeController::class, 'update'])->middleware('permission:Update_Vendor');
     Route::delete('/sku-attribute-code/{id}', [SkuAttributeCodeController::class, 'destroy'])->middleware('permission:Delete_Vendor');
 });
-
 
 // ========================================================
 // COLLECTIONS API ROUTES
@@ -187,6 +211,17 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
 
 Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
     Route::get('/customers', ListCustomersController::class)->middleware('permission:View_Customer');
+});
+
+// ========================================================
+// NEWSLETTER SUBSCRIBERS API ROUTES
+// ========================================================
+
+Route::prefix('v1/newsletter/subscribers')->middleware('auth:sanctum')->group(function () {
+    Route::get('/', ListNewsletterSubscribersController::class)->middleware('permission:ViewAny_NewsletterSubscriber');
+    Route::get('/export', ExportNewsletterSubscribersController::class)
+        ->middleware(['permission:Export_NewsletterSubscriber', 'throttle:5,1']);
+    Route::get('/{subscriber}', ShowNewsletterSubscriberController::class)->middleware('permission:View_NewsletterSubscriber');
 });
 
 // ========================================================
@@ -247,7 +282,3 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
 Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
     Route::delete('/catalog/media/{media}', DeleteMediaController::class)->middleware('permission:Update_Product');
 });
-
-
-
-

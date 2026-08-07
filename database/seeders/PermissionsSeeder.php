@@ -32,6 +32,9 @@ class PermissionsSeeder extends Seeder
             'ShippingZone',
             'PaymentMethod',
             'Order',
+            'StorefrontCampaign',
+            'StorefrontHomepageSection',
+            'NewsletterSubscriber',
 
             // Add more models here...
         ];
@@ -56,6 +59,8 @@ class PermissionsSeeder extends Seeder
             }
         }
 
+        $allPermissions[] = Permission::firstOrCreate(['name' => 'Export_NewsletterSubscriber']);
+
         // Create or fetch the super_admin role
         $superAdmin = Role::firstOrCreate(['name' => 'super_admin']);
 
@@ -68,4 +73,3 @@ class PermissionsSeeder extends Seeder
         }
     }
 }
-

@@ -930,6 +930,275 @@
                 ]
             }
         },
+        "/discount-codes": {
+            "get": {
+                "tags": [
+                    "Discount Codes"
+                ],
+                "operationId": "ddba39a29652021758b611ed2ea78b09",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "type",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "state",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "draft",
+                                "scheduled",
+                                "active",
+                                "expired",
+                                "inactive"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "storefront_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 100
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Paginated discount codes"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Discount Codes"
+                ],
+                "operationId": "07784992a5a35a515c37c53a069a38cf",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/DiscountCodeInput"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/discount-codes/{discountCode}": {
+            "get": {
+                "tags": [
+                    "Discount Codes"
+                ],
+                "operationId": "663dbf7717002a9a0d4ca428ede25365",
+                "parameters": [
+                    {
+                        "name": "discountCode",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Discount code details"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "patch": {
+                "tags": [
+                    "Discount Codes"
+                ],
+                "operationId": "2d70fb8c14217b17bd1e1800a19108ab",
+                "parameters": [
+                    {
+                        "name": "discountCode",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/DiscountCodeInput"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Updated"
+                    },
+                    "409": {
+                        "description": "Immutable after redemption"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/discount-codes/{discountCode}/activate": {
+            "post": {
+                "tags": [
+                    "Discount Codes"
+                ],
+                "operationId": "4b3f915d468fa9e0b941b97bfa440f14",
+                "parameters": [
+                    {
+                        "name": "discountCode",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Activated"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/discount-codes/{discountCode}/deactivate": {
+            "post": {
+                "tags": [
+                    "Discount Codes"
+                ],
+                "operationId": "70b04406b244427afec367b793908665",
+                "parameters": [
+                    {
+                        "name": "discountCode",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Deactivated"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/discount-codes/{discountCode}/duplicate": {
+            "post": {
+                "tags": [
+                    "Discount Codes"
+                ],
+                "operationId": "7f04f939ae58300027c24ae47f69cd0a",
+                "parameters": [
+                    {
+                        "name": "discountCode",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "code"
+                                ],
+                                "properties": {
+                                    "code": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Duplicated"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
         "/api/products": {
             "get": {
                 "tags": [
@@ -1585,6 +1854,129 @@
                 },
                 "type": "object"
             },
+            "DiscountTargetInput": {
+                "required": [
+                    "target_type",
+                    "target_id",
+                    "mode"
+                ],
+                "properties": {
+                    "target_type": {
+                        "type": "string",
+                        "enum": [
+                            "product",
+                            "product_variant",
+                            "category",
+                            "brand",
+                            "collection"
+                        ]
+                    },
+                    "target_id": {
+                        "type": "string"
+                    },
+                    "mode": {
+                        "type": "string",
+                        "enum": [
+                            "include",
+                            "exclude"
+                        ]
+                    }
+                },
+                "type": "object"
+            },
+            "DiscountCodeInput": {
+                "required": [
+                    "code",
+                    "name",
+                    "type",
+                    "is_active",
+                    "first_order_only",
+                    "applies_to_sale_items",
+                    "applies_to_all_storefronts"
+                ],
+                "properties": {
+                    "code": {
+                        "type": "string",
+                        "example": "WELCOME10"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "type": {
+                        "type": "string",
+                        "enum": [
+                            "percentage",
+                            "fixed_amount",
+                            "free_shipping"
+                        ]
+                    },
+                    "value": {
+                        "type": "string",
+                        "example": "10.00",
+                        "nullable": true
+                    },
+                    "currency": {
+                        "type": "string",
+                        "example": "NGN",
+                        "nullable": true
+                    },
+                    "maximum_discount_amount": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "minimum_subtotal": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "starts_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "ends_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "is_active": {
+                        "type": "boolean"
+                    },
+                    "total_usage_limit": {
+                        "type": "integer",
+                        "nullable": true
+                    },
+                    "per_customer_usage_limit": {
+                        "type": "integer",
+                        "nullable": true
+                    },
+                    "first_order_only": {
+                        "type": "boolean"
+                    },
+                    "applies_to_sale_items": {
+                        "type": "boolean"
+                    },
+                    "applies_to_all_storefronts": {
+                        "type": "boolean"
+                    },
+                    "storefront_ids": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "targets": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/DiscountTargetInput"
+                        }
+                    }
+                },
+                "type": "object"
+            },
             "Product": {
                 "required": [
                     "id",
@@ -1780,6 +2172,10 @@
         {
             "name": "Categories",
             "description": "Categories"
+        },
+        {
+            "name": "Discount Codes",
+            "description": "Discount Codes"
         },
         {
             "name": "Products",

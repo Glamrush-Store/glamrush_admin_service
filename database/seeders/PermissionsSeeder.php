@@ -61,6 +61,10 @@ class PermissionsSeeder extends Seeder
 
         $allPermissions[] = Permission::firstOrCreate(['name' => 'Export_NewsletterSubscriber']);
 
+        foreach (['View', 'Create', 'Update', 'Activate', 'Deactivate', 'Duplicate'] as $action) {
+            $allPermissions[] = Permission::firstOrCreate(['name' => "{$action}_Discount"]);
+        }
+
         // Create or fetch the super_admin role
         $superAdmin = Role::firstOrCreate(['name' => 'super_admin']);
 

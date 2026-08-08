@@ -30,6 +30,11 @@
       "key": "newsletter_subscriber_id",
       "value": "",
       "type": "string"
+    },
+    {
+      "key": "discount_code_id",
+      "value": "",
+      "type": "string"
     }
   ],
   "auth": {
@@ -7435,6 +7440,57 @@
               "body": "{\"success\":true,\"message\":\"Shipment deleted\",\"data\":null}"
             }
           ]
+        }
+      ]
+    },
+    {
+      "name": "Discount Codes",
+      "item": [
+        {
+          "name": "List Discount Codes",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": { "raw": "{{base_url}}/api/v1/discount-codes?page=1&per_page=20&search=&type=&state=&storefront_id=&sort=created_at&direction=desc", "host": ["{{base_url}}"], "path": ["api", "v1", "discount-codes"] },
+            "description": "Paginated configuration list. Requires View_Discount."
+          },
+          "response": []
+        },
+        {
+          "name": "Create Percentage Discount",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"code\": \"WELCOME10\",\n  \"name\": \"New customer welcome discount\",\n  \"type\": \"percentage\",\n  \"value\": \"10.00\",\n  \"currency\": null,\n  \"maximum_discount_amount\": \"5000.00\",\n  \"minimum_subtotal\": \"20000.00\",\n  \"starts_at\": null,\n  \"ends_at\": \"2026-12-31T23:59:59Z\",\n  \"is_active\": true,\n  \"total_usage_limit\": 1000,\n  \"per_customer_usage_limit\": 1,\n  \"first_order_only\": true,\n  \"applies_to_sale_items\": false,\n  \"applies_to_all_storefronts\": true,\n  \"storefront_ids\": [],\n  \"targets\": []\n}" },
+            "url": { "raw": "{{base_url}}/api/v1/discount-codes", "host": ["{{base_url}}"], "path": ["api", "v1", "discount-codes"] },
+            "description": "Creates configuration only; checkout performs final validation. Requires Create_Discount."
+          },
+          "response": []
+        },
+        {
+          "name": "Show Discount Code",
+          "request": { "method": "GET", "header": [], "url": { "raw": "{{base_url}}/api/v1/discount-codes/{{discount_code_id}}", "host": ["{{base_url}}"], "path": ["api", "v1", "discount-codes", "{{discount_code_id}}"] } },
+          "response": []
+        },
+        {
+          "name": "Update Discount Code",
+          "request": { "method": "PATCH", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"name\": \"Updated administrator name\",\n  \"ends_at\": \"2026-12-30T23:59:59Z\"\n}" }, "url": { "raw": "{{base_url}}/api/v1/discount-codes/{{discount_code_id}}", "host": ["{{base_url}}"], "path": ["api", "v1", "discount-codes", "{{discount_code_id}}"] } },
+          "response": []
+        },
+        {
+          "name": "Activate Discount Code",
+          "request": { "method": "POST", "header": [], "url": { "raw": "{{base_url}}/api/v1/discount-codes/{{discount_code_id}}/activate", "host": ["{{base_url}}"], "path": ["api", "v1", "discount-codes", "{{discount_code_id}}", "activate"] } },
+          "response": []
+        },
+        {
+          "name": "Deactivate Discount Code",
+          "request": { "method": "POST", "header": [], "url": { "raw": "{{base_url}}/api/v1/discount-codes/{{discount_code_id}}/deactivate", "host": ["{{base_url}}"], "path": ["api", "v1", "discount-codes", "{{discount_code_id}}", "deactivate"] } },
+          "response": []
+        },
+        {
+          "name": "Duplicate Discount Code",
+          "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"code\": \"WELCOME10_COPY\"\n}" }, "url": { "raw": "{{base_url}}/api/v1/discount-codes/{{discount_code_id}}/duplicate", "host": ["{{base_url}}"], "path": ["api", "v1", "discount-codes", "{{discount_code_id}}", "duplicate"] } },
+          "response": []
         }
       ]
     },

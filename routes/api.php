@@ -31,6 +31,7 @@ use App\Http\Controllers\Collection\ListCollectionsController;
 use App\Http\Controllers\Collection\ShowCollectionController;
 use App\Http\Controllers\Collection\UpdateCollectionController;
 use App\Http\Controllers\Customer\ListCustomersController;
+use App\Http\Controllers\Discount\DiscountCodeController;
 use App\Http\Controllers\Media\DeleteMediaController;
 use App\Http\Controllers\Newsletter\ExportNewsletterSubscribersController;
 use App\Http\Controllers\Newsletter\ListNewsletterSubscribersController;
@@ -108,6 +109,19 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
     Route::post('/categories', CreateCategoryController::class)->middleware('permission:Create_Category');
     Route::put('/categories/{category}', UpdateCategoryController::class)->middleware('permission:Update_Category');
     Route::delete('/categories/{category}', DeleteCategoryController::class)->middleware('permission:Delete_Category');
+});
+
+// ========================================================
+// DISCOUNT CODE MANAGEMENT
+// ========================================================
+Route::prefix('v1/discount-codes')->middleware('auth:sanctum')->group(function () {
+    Route::get('/', [DiscountCodeController::class, 'index'])->middleware('permission:View_Discount');
+    Route::post('/', [DiscountCodeController::class, 'store'])->middleware('permission:Create_Discount');
+    Route::get('/{discountCode}', [DiscountCodeController::class, 'show'])->middleware('permission:View_Discount');
+    Route::patch('/{discountCode}', [DiscountCodeController::class, 'update'])->middleware('permission:Update_Discount');
+    Route::post('/{discountCode}/activate', [DiscountCodeController::class, 'activate'])->middleware('permission:Activate_Discount');
+    Route::post('/{discountCode}/deactivate', [DiscountCodeController::class, 'deactivate'])->middleware('permission:Deactivate_Discount');
+    Route::post('/{discountCode}/duplicate', [DiscountCodeController::class, 'duplicate'])->middleware('permission:Duplicate_Discount');
 });
 
 // ========================================================

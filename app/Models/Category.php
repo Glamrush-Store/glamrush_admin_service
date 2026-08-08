@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Infrastructure\Cache\CatalogCache;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -26,6 +25,8 @@ class Category extends Model implements HasMedia
         'parent_id',
         'is_active',
         'description',
+        'announcement_primary_text',
+        'announcement_secondary_text',
         'meta_title',
         'meta_description',
         'meta_keywords',

@@ -32,6 +32,9 @@ class PermissionsSeeder extends Seeder
             'ShippingZone',
             'PaymentMethod',
             'Order',
+            'StorefrontCampaign',
+            'StorefrontHomepageSection',
+            'NewsletterSubscriber',
 
             // Add more models here...
         ];
@@ -56,6 +59,22 @@ class PermissionsSeeder extends Seeder
             }
         }
 
+        $allPermissions[] = Permission::firstOrCreate(['name' => 'Export_NewsletterSubscriber']);
+
+        foreach (['View', 'Create', 'Update', 'Activate', 'Deactivate', 'Duplicate'] as $action) {
+            $allPermissions[] = Permission::firstOrCreate(['name' => "{$action}_Discount"]);
+        }
+
+        foreach (['View', 'Create', 'Update', 'Publish', 'Unpublish', 'Duplicate', 'Delete'] as $action) {
+            $allPermissions[] = Permission::firstOrCreate(['name' => "{$action}_ContentPage"]);
+        }
+        foreach (['View', 'Create', 'Update', 'Reorder', 'Delete'] as $action) {
+            $allPermissions[] = Permission::firstOrCreate(['name' => "{$action}_FaqCategory"]);
+        }
+        foreach (['View', 'Create', 'Update', 'Publish', 'Unpublish', 'Duplicate', 'Reorder', 'Delete'] as $action) {
+            $allPermissions[] = Permission::firstOrCreate(['name' => "{$action}_Faq"]);
+        }
+
         // Create or fetch the super_admin role
         $superAdmin = Role::firstOrCreate(['name' => 'super_admin']);
 
@@ -68,4 +87,3 @@ class PermissionsSeeder extends Seeder
         }
     }
 }
-

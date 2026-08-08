@@ -9,6 +9,7 @@ use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
 use Laravel\Sanctum\Http\Middleware\CheckAbilities;
 use Laravel\Sanctum\Http\Middleware\CheckForAnyAbility;
+use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 return Application::configure(basePath: dirname(__DIR__))
@@ -29,6 +30,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
             'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
             'device-lock' => App\Http\Middleware\EnforceDeviceLock::class,
+            'internal-service' => App\Http\Middleware\AuthenticateInternalService::class,
         ]);
     })->withExceptions(function (Exceptions $exceptions): void {
 
@@ -63,6 +65,17 @@ return Application::configure(basePath: dirname(__DIR__))
                     $e->getMessage(),
                     [],
                     401
+                );
+            }
+        });
+
+        // Preserve authorization and other intentional HTTP status codes.
+        $exceptions->render(function (HttpExceptionInterface $e, Request $request) {
+            if ($request->expectsJson()) {
+                return ApiResponse::error(
+                    $e->getMessage() ?: 'Request failed',
+                    [],
+                    $e->getStatusCode()
                 );
             }
         });

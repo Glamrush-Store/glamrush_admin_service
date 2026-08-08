@@ -35,4 +35,9 @@ return [
         ],
     ],
 
+    'storefront_internal' => [
+        'token' => env('STOREFRONT_INTERNAL_API_TOKEN'),
+        'cache_ttl' => (int) env('STOREFRONT_HOMEPAGE_CACHE_TTL', 300),
+    ],
+
 ];

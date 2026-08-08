@@ -10,10 +10,10 @@ namespace App\Http\Controllers\Category;
 
 use App\Domain\Category\UseCases\UpdateCategoryUseCase;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Category\UpdateCategoryRequest;
 use App\Http\Responses\ApiResponse;
 use App\Models\Category;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class UpdateCategoryController extends Controller
 {
@@ -21,7 +21,7 @@ class UpdateCategoryController extends Controller
 
     public function __invoke(
         Category $category,
-        Request $request,
+        UpdateCategoryRequest $request,
     ): JsonResponse {
 
         $category = $this->useCase->run(

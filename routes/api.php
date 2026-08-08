@@ -30,6 +30,9 @@ use App\Http\Controllers\Collection\DetachProductController;
 use App\Http\Controllers\Collection\ListCollectionsController;
 use App\Http\Controllers\Collection\ShowCollectionController;
 use App\Http\Controllers\Collection\UpdateCollectionController;
+use App\Http\Controllers\Content\ContentPageController;
+use App\Http\Controllers\Content\FaqCategoryController;
+use App\Http\Controllers\Content\FaqController;
 use App\Http\Controllers\Customer\ListCustomersController;
 use App\Http\Controllers\Discount\DiscountCodeController;
 use App\Http\Controllers\Media\DeleteMediaController;
@@ -109,6 +112,37 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
     Route::post('/categories', CreateCategoryController::class)->middleware('permission:Create_Category');
     Route::put('/categories/{category}', UpdateCategoryController::class)->middleware('permission:Update_Category');
     Route::delete('/categories/{category}', DeleteCategoryController::class)->middleware('permission:Delete_Category');
+});
+
+// ========================================================
+// CONTENT PAGES AND FAQ MANAGEMENT
+// ========================================================
+Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
+    Route::get('/content-pages', [ContentPageController::class, 'index'])->middleware('permission:View_ContentPage');
+    Route::post('/content-pages', [ContentPageController::class, 'store'])->middleware('permission:Create_ContentPage');
+    Route::get('/content-pages/{contentPage}', [ContentPageController::class, 'show'])->middleware('permission:View_ContentPage');
+    Route::patch('/content-pages/{contentPage}', [ContentPageController::class, 'update'])->middleware('permission:Update_ContentPage');
+    Route::post('/content-pages/{contentPage}/publish', [ContentPageController::class, 'publish'])->middleware('permission:Publish_ContentPage');
+    Route::post('/content-pages/{contentPage}/unpublish', [ContentPageController::class, 'unpublish'])->middleware('permission:Unpublish_ContentPage');
+    Route::post('/content-pages/{contentPage}/duplicate', [ContentPageController::class, 'duplicate'])->middleware('permission:Duplicate_ContentPage');
+    Route::delete('/content-pages/{contentPage}', [ContentPageController::class, 'destroy'])->middleware('permission:Delete_ContentPage');
+
+    Route::get('/faq-categories', [FaqCategoryController::class, 'index'])->middleware('permission:View_FaqCategory');
+    Route::post('/faq-categories', [FaqCategoryController::class, 'store'])->middleware('permission:Create_FaqCategory');
+    Route::post('/faq-categories/reorder', [FaqCategoryController::class, 'reorder'])->name('faq-categories.reorder')->middleware('permission:Reorder_FaqCategory');
+    Route::get('/faq-categories/{faqCategory}', [FaqCategoryController::class, 'show'])->middleware('permission:View_FaqCategory');
+    Route::patch('/faq-categories/{faqCategory}', [FaqCategoryController::class, 'update'])->middleware('permission:Update_FaqCategory');
+    Route::delete('/faq-categories/{faqCategory}', [FaqCategoryController::class, 'destroy'])->middleware('permission:Delete_FaqCategory');
+
+    Route::get('/faqs', [FaqController::class, 'index'])->middleware('permission:View_Faq');
+    Route::post('/faqs', [FaqController::class, 'store'])->middleware('permission:Create_Faq');
+    Route::post('/faqs/reorder', [FaqController::class, 'reorder'])->name('faqs.reorder')->middleware('permission:Reorder_Faq');
+    Route::get('/faqs/{faq}', [FaqController::class, 'show'])->middleware('permission:View_Faq');
+    Route::patch('/faqs/{faq}', [FaqController::class, 'update'])->middleware('permission:Update_Faq');
+    Route::post('/faqs/{faq}/publish', [FaqController::class, 'publish'])->middleware('permission:Publish_Faq');
+    Route::post('/faqs/{faq}/unpublish', [FaqController::class, 'unpublish'])->middleware('permission:Unpublish_Faq');
+    Route::post('/faqs/{faq}/duplicate', [FaqController::class, 'duplicate'])->middleware('permission:Duplicate_Faq');
+    Route::delete('/faqs/{faq}', [FaqController::class, 'destroy'])->middleware('permission:Delete_Faq');
 });
 
 // ========================================================

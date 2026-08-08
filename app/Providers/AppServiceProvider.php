@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\Category;
+use App\Models\ContentPage;
 use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Models\User;
@@ -60,6 +61,7 @@ class AppServiceProvider extends ServiceProvider
             'sku_attribute_code' => \App\Models\SkuAttributeCode::class,
             'collection' => \App\Models\Collection::class,
             'storefront_campaign' => \App\Models\StorefrontCampaign::class,
+            'content_page' => ContentPage::class,
         ]);
     }
 }

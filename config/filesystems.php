@@ -65,6 +65,7 @@ return [
             'project_id' => env('GCP_PROJECT_ID'),
             'bucket' => env('GCP_BUCKET'),
             'path_prefix' => env('GCP_PATH_PREFIX', ''),
+            'use_key_file' => env('USE_GCP_KEY_FILE',false),
             'key_file' => env('GOOGLE_APPLICATION_CREDENTIALS', null),
             'key_file_contents' => env('GOOGLE_APPLICATION_CREDENTIALS_BASE64', ''),
             'throw' => true,

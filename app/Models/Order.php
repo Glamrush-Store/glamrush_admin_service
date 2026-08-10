@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Domain\Order\Enums\OrderStatus;
-
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -15,15 +14,24 @@ class Order extends Model
     use HasUlids;
 
     public $incrementing = false;
+
     protected $keyType = 'string';
 
     protected $fillable = [
         'user_id',
         'guest_id',
+        'idempotency_owner',
+        'idempotency_key',
+        'idempotency_request_hash',
         'order_number',
         'status',
+        'discount_code_id',
+        'discount_code',
         'subtotal',
+        'discount_amount',
         'shipping_amount',
+        'shipping_discount_amount',
+        'discount_snapshot',
         'total',
         'currency',
         'shipping_rate_id',
@@ -33,6 +41,7 @@ class Order extends Model
         'billing_address',
         'placed_at',
         'paid_at',
+        'inventory_committed_at',
         'expires_at',
         'cancelled_at',
     ];
@@ -41,13 +50,17 @@ class Order extends Model
     {
         return [
             'subtotal' => 'decimal:2',
+            'discount_amount' => 'decimal:2',
             'shipping_amount' => 'decimal:2',
+            'shipping_discount_amount' => 'decimal:2',
             'total' => 'decimal:2',
             'status' => OrderStatus::class,
             'shipping_address' => 'array',
             'billing_address' => 'array',
+            'discount_snapshot' => 'array',
             'placed_at' => 'datetime',
             'paid_at' => 'datetime',
+            'inventory_committed_at' => 'datetime',
             'expires_at' => 'datetime',
             'cancelled_at' => 'datetime',
         ];
@@ -83,4 +96,3 @@ class Order extends Model
         return $this->hasOne(Payment::class, 'order_id')->latestOfMany();
     }
 }
-

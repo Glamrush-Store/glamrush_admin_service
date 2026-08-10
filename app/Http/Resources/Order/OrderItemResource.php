@@ -18,6 +18,8 @@ class OrderItemResource extends JsonResource
             'sku' => $this->sku,
             'unit_price' => $this->unit_price,
             'quantity' => $this->quantity,
+            'line_subtotal' => $this->line_subtotal,
+            'discount_amount' => $this->discount_amount,
             'line_total' => $this->line_total,
             'images' => $this->product_snapshot['images'] ?? [],
             'product_snapshot' => $this->product_snapshot,

@@ -6,6 +6,8 @@
  * See the LICENSE file for details.
  */
 
+use App\Http\Controllers\AccessControl\RoleController;
+use App\Http\Controllers\AccessControl\UserController;
 use App\Http\Controllers\Auth\ConfirmPasswordResetController;
 use App\Http\Controllers\Auth\CreateAccountController;
 use App\Http\Controllers\Auth\LoginController;
@@ -34,11 +36,13 @@ use App\Http\Controllers\Content\ContentPageController;
 use App\Http\Controllers\Content\FaqCategoryController;
 use App\Http\Controllers\Content\FaqController;
 use App\Http\Controllers\Customer\ListCustomersController;
+use App\Http\Controllers\Dashboard\ShowDashboardAnalyticsController;
 use App\Http\Controllers\Discount\DiscountCodeController;
 use App\Http\Controllers\Media\DeleteMediaController;
 use App\Http\Controllers\Newsletter\ExportNewsletterSubscribersController;
 use App\Http\Controllers\Newsletter\ListNewsletterSubscribersController;
 use App\Http\Controllers\Newsletter\ShowNewsletterSubscriberController;
+use App\Http\Controllers\Order\CreateManualOrderController;
 use App\Http\Controllers\Order\ListOrdersController;
 use App\Http\Controllers\Order\ShowOrderController;
 use App\Http\Controllers\Order\UpdateOrderStatusController;
@@ -102,6 +106,32 @@ Route::prefix('v1')->group(function () {
     Route::get('/whoami', SelfController::class)->middleware(['auth:sanctum']);
 });
 
+// ========================================================
+// ADMIN USERS, ROLES AND PERMISSIONS
+// ========================================================
+Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
+    Route::get('/permissions', [RoleController::class, 'permissions'])->middleware('permission:ViewAny_Role');
+
+    Route::get('/roles', [RoleController::class, 'index'])->middleware('permission:ViewAny_Role');
+    Route::post('/roles', [RoleController::class, 'store'])->middleware('permission:Create_Role');
+    Route::get('/roles/{role}', [RoleController::class, 'show'])->middleware('permission:View_Role');
+    Route::patch('/roles/{role}', [RoleController::class, 'update'])->middleware('permission:Update_Role');
+    Route::put('/roles/{role}/permissions', [RoleController::class, 'syncPermissions'])->middleware('permission:Update_Role');
+    Route::delete('/roles/{role}', [RoleController::class, 'destroy'])->middleware('permission:Delete_Role');
+
+    Route::get('/users', [UserController::class, 'index'])->middleware('permission:ViewAny_User');
+    Route::post('/users', [UserController::class, 'store'])->middleware('permission:Create_User');
+    Route::get('/users/{user}', [UserController::class, 'show'])->middleware('permission:View_User');
+    Route::patch('/users/{user}', [UserController::class, 'update'])->middleware('permission:Update_User');
+    Route::delete('/users/{user}', [UserController::class, 'destroy'])->middleware('permission:Delete_User');
+});
+
+// ========================================================
+// DASHBOARD ANALYTICS
+// ========================================================
+Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
+    Route::get('/dashboard/analytics', ShowDashboardAnalyticsController::class)->middleware('permission:View_Dashboard');
+});
 // ========================================================
 //  CATEGORY API ROUTES
 // ========================================================
@@ -320,6 +350,7 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
 
 Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
     Route::get('/orders', ListOrdersController::class)->middleware('permission:View_Order');
+    Route::post('/orders/manual', CreateManualOrderController::class)->middleware('permission:Create_Order');
     Route::get('/orders/{order}', ShowOrderController::class)->middleware('permission:View_Order');
     Route::patch('/orders/{order}/status', UpdateOrderStatusController::class)->middleware('permission:Update_Order');
     Route::patch('/orders/{order}/statuses', UpdateOrderStatusesController::class)->middleware('permission:Update_Order');
@@ -330,3 +361,11 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
 Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
     Route::delete('/catalog/media/{media}', DeleteMediaController::class)->middleware('permission:Update_Product');
 });
+
+// ========================================================
+// Liveliness Test Route
+// ========================================================
+Route::prefix('v1')->group(function () {
+    Route::get('/up', fn () => response()->json(['status' => 'ok']));
+});
+

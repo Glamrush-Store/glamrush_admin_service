@@ -15,6 +15,401 @@
         }
     ],
     "paths": {
+        "/permissions": {
+            "get": {
+                "tags": [
+                    "Access Control"
+                ],
+                "operationId": "0164170598e259043a14e6f65463e11e",
+                "responses": {
+                    "200": {
+                        "description": "Permission catalog"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/roles": {
+            "get": {
+                "tags": [
+                    "Access Control"
+                ],
+                "operationId": "ef73af867f74c4e1e5392e5a779ed7f8",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 100
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Paginated roles"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Access Control"
+                ],
+                "operationId": "5fb0487de188f674721651290baad3c1",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RoleInput"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Role created"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/roles/{role}": {
+            "get": {
+                "tags": [
+                    "Access Control"
+                ],
+                "operationId": "d290832cc0adcfbed6e13e9612b650a5",
+                "parameters": [
+                    {
+                        "name": "role",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Role details"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Access Control"
+                ],
+                "operationId": "cf49f8e6292e02373c4cd05093d7129b",
+                "parameters": [
+                    {
+                        "name": "role",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Role deleted"
+                    },
+                    "409": {
+                        "description": "System or assigned role"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "patch": {
+                "tags": [
+                    "Access Control"
+                ],
+                "operationId": "82e9b56c5007a42a026bfb3d4d24d736",
+                "parameters": [
+                    {
+                        "name": "role",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RoleInput"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Role updated"
+                    },
+                    "409": {
+                        "description": "Protected system role"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/roles/{role}/permissions": {
+            "put": {
+                "tags": [
+                    "Access Control"
+                ],
+                "operationId": "d4da1298043eb8f49003b2250f579be7",
+                "parameters": [
+                    {
+                        "name": "role",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "permissions"
+                                ],
+                                "properties": {
+                                    "permissions": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Permissions replaced"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/users": {
+            "get": {
+                "tags": [
+                    "Access Control"
+                ],
+                "operationId": "628f7d3ad1f019ac7b508ac7ecb96145",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "role_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 100
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Paginated admin users"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Access Control"
+                ],
+                "operationId": "0a3b5628cc67a02ecca92e70e1744fab",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AdminUserInput"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "User created"
+                    },
+                    "403": {
+                        "description": "Cannot assign super_admin"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/users/{user}": {
+            "get": {
+                "tags": [
+                    "Access Control"
+                ],
+                "operationId": "22278b4de031f9c36d4783f5ec4d32c6",
+                "parameters": [
+                    {
+                        "name": "user",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User details"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Access Control"
+                ],
+                "operationId": "18a8d520ed79bc23344c221be27cdacf",
+                "parameters": [
+                    {
+                        "name": "user",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User deleted"
+                    },
+                    "409": {
+                        "description": "Self or last-super-admin conflict"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "patch": {
+                "tags": [
+                    "Access Control"
+                ],
+                "operationId": "7d5b4c1f8cbb5e3a069cf59f099c13ed",
+                "parameters": [
+                    {
+                        "name": "user",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AdminUserInput"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "User updated"
+                    },
+                    "409": {
+                        "description": "Self or last-super-admin conflict"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
         "/api/password/reset/confirm": {
             "post": {
                 "tags": [
@@ -1937,6 +2332,61 @@
                 ]
             }
         },
+        "/orders/manual": {
+            "post": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Record a paid offline sale",
+                "operationId": "0f2fdd26e0f88fbfe3e72f66f4f276b5",
+                "parameters": [
+                    {
+                        "name": "Idempotency-Key",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "maxLength": 100
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ManualOrderInput"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Manual order created"
+                    },
+                    "200": {
+                        "description": "Idempotent replay"
+                    },
+                    "409": {
+                        "description": "Stock, transaction reference, or idempotency conflict"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
         "/api/products": {
             "get": {
                 "tags": [
@@ -2442,6 +2892,61 @@
     },
     "components": {
         "schemas": {
+            "RoleInput": {
+                "required": [
+                    "name"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "sales_manager"
+                    },
+                    "permissions": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "example": [
+                            "ViewAny_Order",
+                            "View_Order",
+                            "Update_Order"
+                        ]
+                    }
+                },
+                "type": "object"
+            },
+            "AdminUserInput": {
+                "required": [
+                    "name",
+                    "email",
+                    "password",
+                    "password_confirmation",
+                    "role_id"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "Ada Manager"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "ada@example.com"
+                    },
+                    "password": {
+                        "type": "string",
+                        "format": "password"
+                    },
+                    "password_confirmation": {
+                        "type": "string",
+                        "format": "password"
+                    },
+                    "role_id": {
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
             "UserResponse": {
                 "properties": {
                     "id": {
@@ -2861,6 +3366,163 @@
                 },
                 "type": "object"
             },
+            "ManualOrderItemInput": {
+                "required": [
+                    "product_variant_id",
+                    "quantity",
+                    "unit_price"
+                ],
+                "properties": {
+                    "product_variant_id": {
+                        "type": "string"
+                    },
+                    "quantity": {
+                        "type": "integer",
+                        "minimum": 1
+                    },
+                    "unit_price": {
+                        "type": "string",
+                        "example": "12500.00"
+                    }
+                },
+                "type": "object"
+            },
+            "ManualOrderAddressInput": {
+                "required": [
+                    "name",
+                    "phone",
+                    "address_line_1",
+                    "city",
+                    "state",
+                    "country"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "nullable": true
+                    },
+                    "phone": {
+                        "type": "string"
+                    },
+                    "address_line_1": {
+                        "type": "string"
+                    },
+                    "address_line_2": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "city": {
+                        "type": "string"
+                    },
+                    "state": {
+                        "type": "string"
+                    },
+                    "country": {
+                        "type": "string",
+                        "example": "NG"
+                    },
+                    "postal_code": {
+                        "type": "string",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "ManualOrderInput": {
+                "required": [
+                    "items",
+                    "payment_method_id",
+                    "shipping_method_id",
+                    "shipping_zone_id",
+                    "shipping_address"
+                ],
+                "properties": {
+                    "customer_id": {
+                        "type": "integer",
+                        "nullable": true
+                    },
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ManualOrderItemInput"
+                        }
+                    },
+                    "currency": {
+                        "type": "string",
+                        "default": "NGN"
+                    },
+                    "payment_method_id": {
+                        "type": "string"
+                    },
+                    "transaction_reference": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "shipping_method_id": {
+                        "type": "string"
+                    },
+                    "shipping_zone_id": {
+                        "type": "string"
+                    },
+                    "shipping_rate_id": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "shipping_amount": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "shipping_address": {
+                        "$ref": "#/components/schemas/ManualOrderAddressInput"
+                    },
+                    "billing_address": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/components/schemas/ManualOrderAddressInput"
+                            }
+                        ],
+                        "nullable": true
+                    },
+                    "order_status": {
+                        "type": "string",
+                        "default": "completed",
+                        "enum": [
+                            "paid",
+                            "processing",
+                            "shipped",
+                            "completed"
+                        ]
+                    },
+                    "shipment_status": {
+                        "type": "string",
+                        "default": "delivered",
+                        "enum": [
+                            "pending",
+                            "ready",
+                            "shipped",
+                            "delivered"
+                        ]
+                    },
+                    "carrier": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "tracking_number": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "placed_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
             "Product": {
                 "required": [
                     "id",
@@ -3050,6 +3712,10 @@
             "description": "Authentication Endpoints"
         },
         {
+            "name": "Access Control",
+            "description": "Access Control"
+        },
+        {
             "name": "Brands",
             "description": "Brands"
         },
@@ -3072,6 +3738,10 @@
         {
             "name": "Discount Codes",
             "description": "Discount Codes"
+        },
+        {
+            "name": "Orders",
+            "description": "Orders"
         },
         {
             "name": "Products",

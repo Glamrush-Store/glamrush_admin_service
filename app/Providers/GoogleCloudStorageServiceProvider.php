@@ -39,7 +39,7 @@ class GoogleCloudStorageServiceProvider extends ServiceProvider
             if($config['use_key_file']){
                  $clientConfig['keyFilePath'] = $config['key_file'];
             }else{
-                $clientConfig['keyFile'] = json_decode($config['key_file_contents'], true);
+                 $clientConfig['keyFile'] = json_decode($config['key_file_contents'], true);
             }
 
             // Support both key_file and key_file_contents

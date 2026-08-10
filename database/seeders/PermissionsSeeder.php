@@ -35,6 +35,7 @@ class PermissionsSeeder extends Seeder
             'StorefrontCampaign',
             'StorefrontHomepageSection',
             'NewsletterSubscriber',
+            'Dashboard',
 
             // Add more models here...
         ];
@@ -87,3 +88,4 @@ class PermissionsSeeder extends Seeder
         }
     }
 }
+

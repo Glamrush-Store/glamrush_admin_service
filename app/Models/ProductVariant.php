@@ -27,6 +27,7 @@ class ProductVariant extends Model implements HasMedia
         'sale_ends_at',
         'manage_stock',
         'stock_quantity',
+        'reserved_quantity',
         'in_stock',
         'attributes',
         'sort_order',
@@ -35,6 +36,10 @@ class ProductVariant extends Model implements HasMedia
 
     protected $casts = [
         'attributes' => 'array',
+        'stock_quantity' => 'integer',
+        'reserved_quantity' => 'integer',
+        'manage_stock' => 'boolean',
+        'in_stock' => 'boolean',
     ];
 
     public function registerMediaCollections(): void
@@ -44,7 +49,7 @@ class ProductVariant extends Model implements HasMedia
     }
 
     public function registerMediaConversions(
-        \Spatie\MediaLibrary\MediaCollections\Models\Media $media = null
+        ?\Spatie\MediaLibrary\MediaCollections\Models\Media $media = null
     ): void {
         $this->addMediaConversion('thumb')
             ->fit(Fit::Crop, 400, 400)

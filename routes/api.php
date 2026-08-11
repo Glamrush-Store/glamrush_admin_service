@@ -60,6 +60,8 @@ use App\Http\Controllers\Product\UpdateProductController;
 use App\Http\Controllers\ProductVariant\DeleteProductVariantController;
 use App\Http\Controllers\ProductVariant\ShowProductVariantController;
 use App\Http\Controllers\ProductVariant\UpdateProductVariantController;
+use App\Http\Controllers\Shipping\LocationOptions\ListCountriesController;
+use App\Http\Controllers\Shipping\LocationOptions\ListCountryStatesAndCitiesController;
 use App\Http\Controllers\Shipping\Shipment\CreateShipmentController;
 use App\Http\Controllers\Shipping\Shipment\DeleteShipmentController;
 use App\Http\Controllers\Shipping\Shipment\ListShipmentsController;
@@ -307,6 +309,9 @@ Route::prefix('v1/newsletter/subscribers')->middleware('auth:sanctum')->group(fu
 // ========================================================
 
 Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
+    Route::get('/shipping/location-options/countries', ListCountriesController::class)->middleware('permission:View_Shipment');
+    Route::get('/shipping/location-options/countries/{country}', ListCountryStatesAndCitiesController::class)->middleware('permission:View_Shipment');
+
     Route::get('/shipping/zones', ListShippingZonesController::class)->middleware('permission:View_Shipment');
     Route::get('/shipping/zones/{shippingZone}', ShowShippingZoneController::class)->middleware('permission:View_Shipment');
     Route::post('/shipping/zones', CreateShippingZoneController::class)->middleware('permission:Create_Shipment');
@@ -368,4 +373,5 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
 Route::prefix('v1')->group(function () {
     Route::get('/up', fn () => response()->json(['status' => 'ok']));
 });
+
 

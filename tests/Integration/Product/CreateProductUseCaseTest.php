@@ -8,6 +8,7 @@
 
 use App\Domain\Product\UseCases\CreateProductUseCase;
 use App\Models\Brand;
+use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Models\SkuAttributeCode;
@@ -23,13 +24,14 @@ it('creates a simple product without variants', function () {
         'id' => '01KGWBRMZTEKQMKAQ4YYJ79GR8',
     ]);
 
-    $category = Brand::factory()->create([
+    $category = Category::factory()->create([
         'id' => '01KGWBRMZTEKQMKAQ4zzJ79GR8',
     ]);
 
     $productData = Product::factory()->make([
         'brand_id' => $brand->id,
-        'category_id' => $category->id,
+        'category_ids' => [$category->id],
+        'primary_category_id' => $category->id,
         'type' => 'simple',
         'status' => 'published',
     ])->toArray();
@@ -51,7 +53,7 @@ it('creates variable product with multiple variants', function () {
         'id' => '01KGWBRMZTEKQMKAQ4YYJ79GR8',
     ]);
 
-    $category = Brand::factory()->create([
+    $category = Category::factory()->create([
         'id' => '01KGWBRMZTEKQMKAQ4zzJ79GR8',
     ]);
 
@@ -61,8 +63,8 @@ it('creates variable product with multiple variants', function () {
         ->count(2)
         ->sequence(fn ($sequence) => [
             'attributes' => [
-                'color' => ['Red', 'Blue'][$sequence->index],
-                'size' => ['Small', 'Medium'][$sequence->index],
+                ['type' => 'color', 'value' => ['Red', 'Blue'][$sequence->index]],
+                ['type' => 'size', 'value' => ['Small', 'Medium'][$sequence->index]],
             ],
         ])
         ->make([
@@ -73,7 +75,8 @@ it('creates variable product with multiple variants', function () {
 
     $productData = Product::factory()->make([
         'brand_id' => $brand->id,
-        'category_id' => $category->id,
+        'category_ids' => [$category->id],
+        'primary_category_id' => $category->id,
         'type' => 'variable',
         'status' => 'published',
         'variants' => $productVariantData,
@@ -90,3 +93,5 @@ it('creates variable product with multiple variants', function () {
 });
 
 afterEach(fn () => Mockery::close());
+
+

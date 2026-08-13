@@ -68,7 +68,8 @@ it('targets root storefronts and every allowlisted catalog type atomically', fun
     $root = Category::factory()->create(['parent_id' => null, 'is_active' => true]);
     $child = Category::factory()->create(['parent_id' => $root->id]);
     $brand = Brand::factory()->create();
-    $product = Product::factory()->create(['category_id' => $child->id, 'brand_id' => $brand->id]);
+    $product = Product::factory()->create(['brand_id' => $brand->id]);
+    $product->categories()->sync([$child->id => ['id' => (string) Str::ulid(), 'is_primary' => true, 'sequence' => 1]]);
     $variant = ProductVariant::factory()->create(['product_id' => $product->id]);
     $collection = Collection::create(['name' => 'Edit', 'slug' => 'edit', 'is_active' => true]);
     $targets = [
@@ -134,3 +135,6 @@ it('updates activates deactivates duplicates and audits without internal fields'
     $copy->assertJsonMissingPath('data.deleted_at')->assertJsonMissingPath('data.created_by_admin_id');
     expect(AppLog::whereIn('event', ['DISCOUNT_CODE_UPDATED', 'DISCOUNT_CODE_ACTIVATED', 'DISCOUNT_CODE_DEACTIVATED', 'DISCOUNT_CODE_DUPLICATED'])->count())->toBe(4);
 });
+
+
+

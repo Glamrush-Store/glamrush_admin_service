@@ -35,8 +35,8 @@ it('seeds cohesive application data idempotently', function () {
         ->and(Product::count())->toBeGreaterThanOrEqual(150)
         ->and(Product::where('type', 'variable')->count())->toBeGreaterThanOrEqual(50);
 
-    $product = Product::where('slug', 'midnight-amber-perfume-oil')->with('variants')->firstOrFail();
-    expect($product->category_id)->toBe($perfumeOils->id)
+    $product = Product::where('slug', 'midnight-amber-perfume-oil')->with(['variants', 'primaryCategory'])->firstOrFail();
+    expect($product->primaryCategory->first()?->id)->toBe($perfumeOils->id)
         ->and($product->variants)->toHaveCount(2)
         ->and($product->variants->first()->attributes[0])->toBe(['type' => 'volume', 'value' => '30ml'])
         ->and($product->getMedia('catalog-photos'))->toHaveCount(1)
@@ -67,3 +67,5 @@ it('seeds cohesive application data idempotently', function () {
             'velvet-oud-perfume-oil',
         ]);
 });
+
+

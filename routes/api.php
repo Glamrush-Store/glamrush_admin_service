@@ -52,6 +52,7 @@ use App\Http\Controllers\PaymentMethod\DeletePaymentMethodController;
 use App\Http\Controllers\PaymentMethod\ListPaymentMethodsController;
 use App\Http\Controllers\PaymentMethod\ShowPaymentMethodController;
 use App\Http\Controllers\PaymentMethod\UpdatePaymentMethodController;
+use App\Http\Controllers\PaymentTransaction\ListPaymentTransactionsController;
 use App\Http\Controllers\Product\CreateProductController;
 use App\Http\Controllers\Product\DeleteProductController;
 use App\Http\Controllers\Product\ListProductsController;
@@ -82,6 +83,8 @@ use App\Http\Controllers\Shipping\ShippingZone\DeleteShippingZoneController;
 use App\Http\Controllers\Shipping\ShippingZone\ListShippingZonesController;
 use App\Http\Controllers\Shipping\ShippingZone\ShowShippingZoneController;
 use App\Http\Controllers\Shipping\ShippingZone\UpdateShippingZoneController;
+use App\Http\Controllers\Setting\SettingCategoryController;
+use App\Http\Controllers\Setting\SettingController;
 use App\Http\Controllers\SkuAttributeCode\SkuAttributeCodeController;
 use App\Http\Controllers\Storefront\PublishedStorefrontHomepageController;
 use App\Http\Controllers\Storefront\StorefrontCampaignController;
@@ -215,6 +218,24 @@ Route::prefix('v1/storefronts/{storefront}')->middleware('auth:sanctum')->group(
 Route::get('/internal/v1/storefronts/{storefront}/homepage', PublishedStorefrontHomepageController::class)
     ->middleware('internal-service');
 
+
+// ========================================================
+// SITE SETTINGS API ROUTES
+// ========================================================
+Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
+    Route::get('/settings/categories', [SettingCategoryController::class, 'index'])->middleware('permission:View_Setting');
+    Route::post('/settings/categories', [SettingCategoryController::class, 'store'])->middleware('permission:Create_Setting');
+    Route::get('/settings/categories/{settingCategory}', [SettingCategoryController::class, 'show'])->middleware('permission:View_Setting');
+    Route::patch('/settings/categories/{settingCategory}', [SettingCategoryController::class, 'update'])->middleware('permission:Update_Setting');
+    Route::delete('/settings/categories/{settingCategory}', [SettingCategoryController::class, 'destroy'])->middleware('permission:Delete_Setting');
+
+    Route::get('/settings', [SettingController::class, 'index'])->middleware('permission:View_Setting');
+    Route::post('/settings', [SettingController::class, 'store'])->middleware('permission:Create_Setting');
+    Route::get('/settings/{setting}', [SettingController::class, 'show'])->middleware('permission:View_Setting');
+    Route::patch('/settings/{setting}', [SettingController::class, 'update'])->middleware('permission:Update_Setting');
+    Route::delete('/settings/{setting}', [SettingController::class, 'destroy'])->middleware('permission:Delete_Setting');
+});
+
 // ========================================================
 //  BRAND API ROUTES
 // ========================================================
@@ -347,6 +368,7 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
     Route::post('/payment-methods', CreatePaymentMethodController::class)->middleware('permission:Create_PaymentMethod');
     Route::put('/payment-methods/{paymentMethod}', UpdatePaymentMethodController::class)->middleware('permission:Update_PaymentMethod');
     Route::delete('/payment-methods/{paymentMethod}', DeletePaymentMethodController::class)->middleware('permission:Delete_PaymentMethod');
+    Route::get('/payment-transactions', ListPaymentTransactionsController::class)->middleware('permission:View_PaymentTransaction');
 });
 
 // ========================================================
@@ -373,5 +395,3 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
 Route::prefix('v1')->group(function () {
     Route::get('/up', fn () => response()->json(['status' => 'ok']));
 });
-
-

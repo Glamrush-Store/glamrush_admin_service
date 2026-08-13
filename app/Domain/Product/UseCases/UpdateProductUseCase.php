@@ -1,13 +1,14 @@
 <?php
 
 /*
- * © 2026 Demilade Oyewusi
+ * (c) 2026 Demilade Oyewusi
  * Licensed under the MIT License.
  * See the LICENSE file for details.
  */
 
 namespace App\Domain\Product\UseCases;
 
+use App\Domain\Product\Actions\SyncProductCategoriesAction;
 use App\Domain\Product\Actions\SyncProductVariantsAction;
 use App\Domain\Product\Actions\UpdateProductAction;
 use App\Domain\Product\Actions\UploadProductPhotosAction;
@@ -22,7 +23,8 @@ class UpdateProductUseCase
         private UpdateProductAction $updateProduct,
         private SyncProductVariantsAction $syncVariants,
         private UploadProductPhotosAction $uploadProductPhotos,
-        private CreateAppLogAction $log
+        private CreateAppLogAction $log,
+        private SyncProductCategoriesAction $syncCategories,
     ) {}
 
     public function execute(Product $product, array $data): Product
@@ -31,23 +33,23 @@ class UpdateProductUseCase
             return DB::transaction(function () use ($product, $data) {
                 $this->updateProduct->run($product, $data);
 
-                // required if you want to change a product from simple to variant
-                // Obsolete as we decide to have separate endpoints for simple and variant products
-                // if ($product->type !== 'simple') {
-                //     $this->syncVariants->run($product, $data['variants']);
+                if (array_key_exists('category_ids', $data) || array_key_exists('category_id', $data)) {
+                    $this->syncCategories->run(
+                        $product,
+                        $data['category_ids'] ?? [$data['category_id']],
+                        $data['primary_category_id'] ?? $data['category_id'] ?? null,
+                        $data['category_sequences'] ?? []
+                    );
+                }
 
-                //     return $product->load('variants');
-                // }
-
-                if (!empty($data['photos'])) {
+                if (! empty($data['photos'])) {
                     $this->uploadProductPhotos->run($product, $data['photos']);
                 }
 
                 event(new ProductSavedEvent($product));
 
-                return $product;
+                return $product->load(['categories', 'primaryCategory']);
             });
-
         } catch (\Throwable $e) {
             $this->log->run(
                 level: 'error',
@@ -62,6 +64,5 @@ class UpdateProductUseCase
 
             throw new \RuntimeException('failed to update Product', 0, $e);
         }
-
     }
 }

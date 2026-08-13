@@ -32,6 +32,7 @@ class DatabaseSeeder extends Seeder
         $this->call(PermissionsSeeder::class);
         $this->call(AppDataSeeder::class);
         $this->call(ContentManagementSeeder::class);
+        $this->call(SiteSettingSeeder::class);
 
         // Shipping data
         $this->call(ShippingMethodSeeder::class);

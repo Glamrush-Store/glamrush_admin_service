@@ -20,12 +20,16 @@ use Illuminate\Support\Facades\Hash;
 
 class AppDataSeeder extends Seeder
 {
+    // Set to false to seed product/catalog data without attaching product images.
+    private const SEED_PRODUCT_IMAGES = false;
+
     public function run(): void
     {
         DB::transaction(function () {
             $this->seedAttributes();
             [$vendor, $brand] = $this->seedProductOwners();
             $categories = $this->seedCategories();
+            $this->resetSeededProductSequences();
             $products = $this->seedProducts($categories, $vendor, $brand);
             $collections = $this->seedCollections($products);
             $this->seedStorefrontMerchandising($products, $collections);
@@ -113,6 +117,30 @@ class AppDataSeeder extends Seeder
         );
 
         return [$vendor, $brand];
+    }
+
+    private function resetSeededProductSequences(): void
+    {
+        Product::query()
+            ->whereIn('slug', $this->seededProductSlugs())
+            ->get(['id', 'sequence'])
+            ->values()
+            ->each(function (Product $product, int $index): void {
+                $product->forceFill(['sequence' => 1_000_000 + $index])->save();
+            });
+    }
+
+    private function seededProductSlugs(): array
+    {
+        return [
+            'midnight-amber-perfume-oil',
+            'velvet-oud-perfume-oil',
+            'after-dark-eau-de-parfum',
+            'white-bloom-eau-de-parfum',
+            'sunlit-neroli-body-mist',
+            'cloud-cream-moisturizer',
+            ...array_map(fn (int $index): string => "catalog-product-{$index}", range(1, 144)),
+        ];
     }
 
     /** @return array<string, Category> */
@@ -221,11 +249,10 @@ class AppDataSeeder extends Seeder
                 ['slug' => $slug],
                 [
                     'name' => $definition['name'],
-                    'sequence' => 'APP-'.str_pad((string) ($order + 1), 4, '0', STR_PAD_LEFT),
+                    'sequence' => $order + 1,
                     'type' => count($definition['variants']) > 1 ? 'variable' : 'simple',
                     'status' => 'published',
                     'published_at' => now()->subDays(count($definitions) - $order),
-                    'category_id' => $categories[$definition['category']]->id,
                     'brand_id' => $brand->id,
                     'vendor_id' => $vendor->id,
                     'short_description' => "A curated {$definition['name']} from GlamRush.",
@@ -243,6 +270,8 @@ class AppDataSeeder extends Seeder
                     'meta_description' => "Shop {$definition['name']} at GlamRush.",
                 ]
             );
+
+            $this->syncProductCategory($product, $categories[$definition['category']]->id, $order + 1);
 
             $variantSkus = [];
             foreach ($definition['variants'] as $variantOrder => $variantDefinition) {
@@ -295,8 +324,10 @@ class AppDataSeeder extends Seeder
         // The six hand-authored products above include two variable products.
         // Generate 144 more products, of which 48 are variable, for totals of
         // 150 products and 50 variable products.
+        $baseSequence = count($products);
         for ($index = 1; $index <= 144; $index++) {
-            $number = str_pad((string) $index, 3, '0', STR_PAD_LEFT);
+            $number = $index;
+            $sequence = $baseSequence + $index;
             $slug = "catalog-product-{$number}";
             $categorySlug = $categorySlugs[($index - 1) % count($categorySlugs)];
             $isVariable = $index <= 48;
@@ -309,11 +340,10 @@ class AppDataSeeder extends Seeder
                 ['slug' => $slug],
                 [
                     'name' => $name,
-                    'sequence' => "APP-G{$number}",
+                    'sequence' => $sequence,
                     'type' => $isVariable ? 'variable' : 'simple',
                     'status' => 'published',
                     'published_at' => now()->subDays($index % 120),
-                    'category_id' => $categories[$categorySlug]->id,
                     'brand_id' => $brand->id,
                     'vendor_id' => $vendor->id,
                     'short_description' => "{$name}, selected for the GlamRush catalogue.",
@@ -332,7 +362,10 @@ class AppDataSeeder extends Seeder
                 ]
             );
 
+            $this->syncProductCategory($product, $categories[$categorySlug]->id, $sequence);
+
             $variantCount = $isVariable ? 3 : 1;
+
             $variantSkus = [];
             for ($variantOrder = 0; $variantOrder < $variantCount; $variantOrder++) {
                 $option = in_array($categorySlug, $makeupCategories, true) ? $shades[$variantOrder] : $volumes[$variantOrder];
@@ -372,6 +405,10 @@ class AppDataSeeder extends Seeder
 
     private function attachSeedImage(Product|Category $model, string $categorySlug, int $index): void
     {
+        if ($model instanceof Product && ! self::SEED_PRODUCT_IMAGES) {
+            return;
+        }
+
         if ($model->getMedia('catalog-photos')->isNotEmpty()) {
             return;
         }
@@ -509,4 +546,24 @@ class AppDataSeeder extends Seeder
             }
         }
     }
+    private function syncProductCategory(Product $product, string $categoryId, int $sequence): void
+    {
+        $product->categories()->sync([
+            $categoryId => [
+                'is_primary' => true,
+                'sequence' => $sequence,
+            ],
+        ]);
+    }
 }
+
+
+
+
+
+
+
+
+
+
+

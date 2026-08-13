@@ -31,6 +31,8 @@ class PermissionsSeeder extends Seeder
             'ShippingRate',
             'ShippingZone',
             'PaymentMethod',
+            'PaymentTransaction',
+            'Setting',
             'Order',
             'StorefrontCampaign',
             'StorefrontHomepageSection',
@@ -88,4 +90,3 @@ class PermissionsSeeder extends Seeder
         }
     }
 }
-

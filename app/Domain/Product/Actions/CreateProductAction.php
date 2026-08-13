@@ -1,7 +1,7 @@
 <?php
 
 /*
- * © 2026 Demilade Oyewusi
+ * (c) 2026 Demilade Oyewusi
  * Licensed under the MIT License.
  * See the LICENSE file for details.
  */
@@ -14,9 +14,8 @@ class CreateProductAction
 {
     public function run(array $data): Product
     {
-
-       return Product::create(
-            collect($data)->except('photos')->toArray()
+        return Product::create(
+            collect($data)->except('photos', 'category_id', 'category_ids', 'primary_category_id', 'category_sequences')->toArray()
         );
     }
 }

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * © 2026 Demilade Oyewusi
+ * (c) 2026 Demilade Oyewusi
  * Licensed under the MIT License.
  * See the LICENSE file for details.
  */
@@ -11,6 +11,7 @@ namespace App\Domain\Product\UseCases;
 use App\Domain\Brand\Actions\GetBrandByIdAction;
 use App\Domain\Product\Actions\CreateProductAction;
 use App\Domain\Product\Actions\GenerateProductSkuAction;
+use App\Domain\Product\Actions\SyncProductCategoriesAction;
 use App\Domain\Product\Actions\UploadProductPhotosAction;
 use App\Domain\Product\Events\ProductSavedEvent;
 use App\Domain\Product\ProductVariant\Actions\CreateProductVariantsAction;
@@ -20,7 +21,6 @@ use App\Domain\Shared\Actions\CreateAppLogAction;
 use App\Domain\Shared\Actions\GenerateUniqueSlugAction;
 use App\Models\Product;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class CreateProductUseCase
 {
@@ -34,18 +34,14 @@ class CreateProductUseCase
         private GenerateVariantSkuAction $generateVariantSku,
         private GenerateUniqueSlugAction $generateSlug,
         private UploadProductPhotosAction $uploadProductPhotos,
+        private SyncProductCategoriesAction $syncCategories,
     ) {}
 
     public function execute(array $data): Product
     {
-
         try {
             return DB::transaction(function () use ($data) {
-
-                // TODO: Refactor this, to maybe use  strategy pattern
-
-                $sequence = Product::max('sequence') + 1;
-
+                $sequence = (Product::max('sequence') ?? 0) + 1;
                 $slug = $this->generateSlug->run($data['name']);
 
                 $sku = $this->generateSku->run(
@@ -57,40 +53,39 @@ class CreateProductUseCase
                 $product = $this->createProduct->run([
                     ...$data,
                     'sku' => $sku,
-                    'sequence' => $sequence ?? 1,
+                    'sequence' => $sequence,
                     'slug' => $slug ?? $data['name'],
                 ]);
 
-                if (!empty($data['photos'])) {
+                $this->syncCategories->run(
+                    $product,
+                    $data['category_ids'] ?? [$data['category_id']],
+                    $data['primary_category_id'] ?? $data['category_id'] ?? null,
+                    $data['category_sequences'] ?? []
+                );
+
+                if (! empty($data['photos'])) {
                     $this->uploadProductPhotos->run($product, $data['photos']);
                 }
 
-                if ($data['type'] == 'variable') {
+                if ($data['type'] === 'variable') {
                     foreach ($data['variants'] as $variantData) {
-
-                        $variantSku = $this->generateVariantSku->run(
+                        $variantData['sku'] = $this->generateVariantSku->run(
                             $product->sku,
                             $variantData['attributes'],
                         );
 
-                        $variantData['sku'] = $variantSku;
-
                         $variant = $this->createVariants->run($product, $variantData);
 
                         if (! empty($variantData['photos'])) {
-                            $this->uploadVariantPhotos->run(
-                                $variant,
-                                $variantData['photos']
-                            );
+                            $this->uploadVariantPhotos->run($variant, $variantData['photos']);
                         }
                     }
-
-                    event(new ProductSavedEvent($product));
-
-                    return $product->load('variants');
                 }
-                return $product;
 
+                event(new ProductSavedEvent($product));
+
+                return $product->load(['variants', 'categories', 'primaryCategory']);
             });
         } catch (\Throwable $e) {
             $this->log->run(
@@ -104,9 +99,7 @@ class CreateProductUseCase
                 actor: auth()->user()
             );
 
-            // throw new \RuntimeException('failed to create Product', 0, $e);
             throw new \RuntimeException($e->getMessage(), 0, $e);
         }
-
     }
 }

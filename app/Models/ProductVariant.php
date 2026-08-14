@@ -36,6 +36,7 @@ class ProductVariant extends Model implements HasMedia
 
     protected $casts = [
         'attributes' => 'array',
+        'is_default' => 'boolean',
         'stock_quantity' => 'integer',
         'reserved_quantity' => 'integer',
         'manage_stock' => 'boolean',

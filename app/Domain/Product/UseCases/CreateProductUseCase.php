@@ -12,6 +12,7 @@ use App\Domain\Brand\Actions\GetBrandByIdAction;
 use App\Domain\Product\Actions\CreateProductAction;
 use App\Domain\Product\Actions\GenerateProductSkuAction;
 use App\Domain\Product\Actions\SyncProductCategoriesAction;
+use App\Domain\Product\Actions\SyncSimpleProductVariantAction;
 use App\Domain\Product\Actions\UploadProductPhotosAction;
 use App\Domain\Product\Events\ProductSavedEvent;
 use App\Domain\Product\ProductVariant\Actions\CreateProductVariantsAction;
@@ -35,6 +36,7 @@ class CreateProductUseCase
         private GenerateUniqueSlugAction $generateSlug,
         private UploadProductPhotosAction $uploadProductPhotos,
         private SyncProductCategoriesAction $syncCategories,
+        private SyncSimpleProductVariantAction $syncSimpleVariant,
     ) {}
 
     public function execute(array $data): Product
@@ -68,7 +70,9 @@ class CreateProductUseCase
                     $this->uploadProductPhotos->run($product, $data['photos']);
                 }
 
-                if ($data['type'] === 'variable') {
+                if ($data['type'] === 'simple') {
+                    $this->syncSimpleVariant->run($product);
+                } elseif ($data['type'] === 'variable') {
                     foreach ($data['variants'] as $variantData) {
                         $variantData['sku'] = $this->generateVariantSku->run(
                             $product->sku,

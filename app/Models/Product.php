@@ -58,11 +58,6 @@ class Product extends Model implements HasMedia
         static::updated(fn () => CatalogCache::flushProducts());
         static::deleted(fn () => CatalogCache::flushProducts());
 
-        static::saving(function ($product) {
-            if ($product->type === 'simple') {
-                $product->variants()->delete();
-            }
-        });
     }
 
     public function variants(): HasMany
@@ -78,7 +73,7 @@ class Product extends Model implements HasMedia
     }
 
     public function registerMediaConversions(
-        \Spatie\MediaLibrary\MediaCollections\Models\Media $media = null
+        ?\Spatie\MediaLibrary\MediaCollections\Models\Media $media = null
     ): void {
         $this->addMediaConversion('thumb')
             ->fit(Fit::Crop, 400, 400)
@@ -152,4 +147,3 @@ class Product extends Model implements HasMedia
             ?? $this->variants()->first();
     }
 }
-

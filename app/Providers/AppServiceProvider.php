@@ -7,6 +7,7 @@ use App\Models\ContentPage;
 use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Models\User;
+use App\Infrastructure\CacheMetrics\RegisterCacheMetricsListeners;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\ServiceProvider;
 use RuntimeException;
@@ -26,6 +27,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        app(RegisterCacheMetricsListeners::class)->register();
         $encoded = env('GOOGLE_APPLICATION_CREDENTIALS_BASE64');
 
         if ($encoded) {
@@ -65,3 +67,6 @@ class AppServiceProvider extends ServiceProvider
         ]);
     }
 }
+
+
+

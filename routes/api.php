@@ -20,6 +20,7 @@ use App\Http\Controllers\Brand\DeleteBrandController;
 use App\Http\Controllers\Brand\ListBrandsController;
 use App\Http\Controllers\Brand\ShowBrandController;
 use App\Http\Controllers\Brand\UpdateBrandController;
+use App\Http\Controllers\CacheMetrics\CacheMetricController;
 use App\Http\Controllers\Category\CreateCategoryController;
 use App\Http\Controllers\Category\DeleteCategoryController;
 use App\Http\Controllers\Category\ListCategoriesController;
@@ -84,6 +85,7 @@ use App\Http\Controllers\Shipping\ShippingZone\ListShippingZonesController;
 use App\Http\Controllers\Shipping\ShippingZone\ShowShippingZoneController;
 use App\Http\Controllers\Shipping\ShippingZone\UpdateShippingZoneController;
 use App\Http\Controllers\Setting\SettingCategoryController;
+use App\Http\Controllers\Setting\SendTestEmailController;
 use App\Http\Controllers\Setting\SettingController;
 use App\Http\Controllers\SkuAttributeCode\SkuAttributeCodeController;
 use App\Http\Controllers\Storefront\PublishedStorefrontHomepageController;
@@ -136,6 +138,10 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
 // ========================================================
 Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
     Route::get('/dashboard/analytics', ShowDashboardAnalyticsController::class)->middleware('permission:View_Dashboard');
+    Route::get('/cache-metrics', [CacheMetricController::class, 'index'])->middleware('permission:View_Dashboard');
+    Route::get('/cache-metrics/status', [CacheMetricController::class, 'status'])->middleware('permission:View_Dashboard');
+    Route::post('/cache-metrics/refresh', [CacheMetricController::class, 'refresh'])->middleware('permission:View_Dashboard');
+    Route::post('/cache-metrics/flush', [CacheMetricController::class, 'flush'])->middleware('permission:Update_Dashboard');
 });
 // ========================================================
 //  CATEGORY API ROUTES
@@ -231,6 +237,7 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
 
     Route::get('/settings', [SettingController::class, 'index'])->middleware('permission:View_Setting');
     Route::post('/settings', [SettingController::class, 'store'])->middleware('permission:Create_Setting');
+    Route::post('/settings/test-email', SendTestEmailController::class)->middleware('permission:Update_Setting');
     Route::get('/settings/{setting}', [SettingController::class, 'show'])->middleware('permission:View_Setting');
     Route::patch('/settings/{setting}', [SettingController::class, 'update'])->middleware('permission:Update_Setting');
     Route::delete('/settings/{setting}', [SettingController::class, 'destroy'])->middleware('permission:Delete_Setting');
@@ -395,3 +402,5 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
 Route::prefix('v1')->group(function () {
     Route::get('/up', fn () => response()->json(['status' => 'ok']));
 });
+
+

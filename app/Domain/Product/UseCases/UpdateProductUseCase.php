@@ -9,7 +9,7 @@
 namespace App\Domain\Product\UseCases;
 
 use App\Domain\Product\Actions\SyncProductCategoriesAction;
-use App\Domain\Product\Actions\SyncProductVariantsAction;
+use App\Domain\Product\Actions\SyncSimpleProductVariantAction;
 use App\Domain\Product\Actions\UpdateProductAction;
 use App\Domain\Product\Actions\UploadProductPhotosAction;
 use App\Domain\Product\Events\ProductSavedEvent;
@@ -21,7 +21,7 @@ class UpdateProductUseCase
 {
     public function __construct(
         private UpdateProductAction $updateProduct,
-        private SyncProductVariantsAction $syncVariants,
+        private SyncSimpleProductVariantAction $syncSimpleVariant,
         private UploadProductPhotosAction $uploadProductPhotos,
         private CreateAppLogAction $log,
         private SyncProductCategoriesAction $syncCategories,
@@ -32,6 +32,7 @@ class UpdateProductUseCase
         try {
             return DB::transaction(function () use ($product, $data) {
                 $this->updateProduct->run($product, $data);
+                $this->syncSimpleVariant->run($product->refresh());
 
                 if (array_key_exists('category_ids', $data) || array_key_exists('category_id', $data)) {
                     $this->syncCategories->run(
@@ -48,7 +49,7 @@ class UpdateProductUseCase
 
                 event(new ProductSavedEvent($product));
 
-                return $product->load(['categories', 'primaryCategory']);
+                return $product->load(['variants', 'categories', 'primaryCategory']);
             });
         } catch (\Throwable $e) {
             $this->log->run(

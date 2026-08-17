@@ -51,6 +51,41 @@ it('requires admin authentication and campaign permissions', function () {
     $this->getJson('/api/v1/storefronts/fragrances/campaigns')->assertForbidden();
 });
 
+it('allows an administrator to configure storefront announcement text', function () {
+    $storefront = fragrancesStorefront();
+    storefrontAdmin(['Update_Category', 'View_Category']);
+
+    $this->putJson("/api/v1/categories/{$storefront->id}", [
+        'announcement_primary_text' => 'Free delivery today',
+        'announcement_secondary_text' => 'Book a private scent consultation',
+    ])->assertOk()
+        ->assertJsonPath('data.announcement_primary_text', 'Free delivery today')
+        ->assertJsonPath('data.announcement_secondary_text', 'Book a private scent consultation');
+
+    $this->getJson("/api/v1/categories/{$storefront->id}")
+        ->assertOk()
+        ->assertJsonPath('data.announcement_primary_text', 'Free delivery today')
+        ->assertJsonPath('data.announcement_secondary_text', 'Book a private scent consultation');
+
+    $this->putJson("/api/v1/categories/{$storefront->id}", [
+        'announcement_primary_text' => '',
+        'announcement_secondary_text' => '',
+    ])->assertOk()
+        ->assertJsonPath('data.announcement_primary_text', null)
+        ->assertJsonPath('data.announcement_secondary_text', null);
+
+    $this->assertDatabaseHas('categories', [
+        'id' => $storefront->id,
+        'announcement_primary_text' => null,
+        'announcement_secondary_text' => null,
+    ]);
+
+    $this->putJson("/api/v1/categories/{$storefront->id}", [
+        'announcement_secondary_text' => str_repeat('x', 161),
+    ])->assertUnprocessable()
+        ->assertJsonValidationErrors('announcement_secondary_text');
+});
+
 it('creates updates enables and deletes a campaign', function () {
     fragrancesStorefront();
     storefrontAdmin(['Create_StorefrontCampaign', 'View_StorefrontCampaign', 'Update_StorefrontCampaign', 'Delete_StorefrontCampaign']);

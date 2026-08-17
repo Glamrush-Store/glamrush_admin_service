@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Brand;
 
+use App\Support\Media\SafeMediaUrl;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -14,6 +15,8 @@ class BrandResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $media = $this->getFirstMedia('image');
+
         return [
             'id' => $this->id,
             'name' => $this->name,
@@ -22,11 +25,7 @@ class BrandResource extends JsonResource
             'sort_order' => (int) $this->sort_order,
             'is_active' => (bool) $this->is_active,
 
-            'image' => [
-                'url' => $this->getFirstMediaUrl('catalog-photos'),
-                'thumb' => $this->getFirstMediaUrl('catalog-photos', 'thumb'),
-                'medium' => $this->getFirstMediaUrl('catalog-photos', 'medium'),
-            ],
+            'image' => $media ? SafeMediaUrl::image($media) : null,
 
             'created_at' => optional($this->created_at)->toISOString(),
             'updated_at' => optional($this->updated_at)->toISOString(),

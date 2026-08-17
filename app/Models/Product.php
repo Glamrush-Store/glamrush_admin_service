@@ -6,6 +6,7 @@ use App\Infrastructure\Cache\CatalogCache;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -13,7 +14,7 @@ use Spatie\Image\Enums\Fit;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Product extends Model implements hasMedia
+class Product extends Model implements HasMedia
 {
     use HasFactory, HasUlids, InteractsWithMedia, SoftDeletes;
 
@@ -35,7 +36,6 @@ class Product extends Model implements hasMedia
         'meta_description',
         'is_featured',
         'sort_order',
-        'category_id',
         'brand_id',
         'sku',
         'price',
@@ -58,27 +58,13 @@ class Product extends Model implements hasMedia
         static::updated(fn () => CatalogCache::flushProducts());
         static::deleted(fn () => CatalogCache::flushProducts());
 
-        static::saving(function ($product) {
-            if ($product->type === 'simple') {
-                $product->variants()->delete();
-            }
-        });
     }
 
-    /**
-     * All variants belonging to this product.
-     */
     public function variants(): HasMany
     {
         return $this->hasMany(ProductVariant::class)
             ->orderBy('sort_order');
     }
-
-    /*
-     |--------------------------------------------------------------------------
-     | Relationships
-     |--------------------------------------------------------------------------
-     */
 
     public function registerMediaCollections(): void
     {
@@ -86,9 +72,8 @@ class Product extends Model implements hasMedia
             ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/webp']);
     }
 
-
     public function registerMediaConversions(
-        \Spatie\MediaLibrary\MediaCollections\Models\Media $media = null
+        ?\Spatie\MediaLibrary\MediaCollections\Models\Media $media = null
     ): void {
         $this->addMediaConversion('thumb')
             ->fit(Fit::Crop, 400, 400)
@@ -101,9 +86,27 @@ class Product extends Model implements hasMedia
             ->fit(Fit::Max, 1600, 1600);
     }
 
-    public function category()
+    public function categories(): BelongsToMany
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsToMany(Category::class, 'category_product')
+            ->using(CategoryProduct::class)
+            ->withPivot(['id', 'is_primary', 'sequence'])
+            ->withTimestamps()
+            ->orderByPivot('sequence');
+    }
+
+    public function primaryCategory(): BelongsToMany
+    {
+        return $this->belongsToMany(Category::class, 'category_product')
+            ->using(CategoryProduct::class)
+            ->withPivot(['id', 'is_primary', 'sequence'])
+            ->wherePivot('is_primary', true)
+            ->withTimestamps();
+    }
+
+    public function category(): BelongsToMany
+    {
+        return $this->primaryCategory();
     }
 
     public function brand()
@@ -122,40 +125,22 @@ class Product extends Model implements hasMedia
             ->withPivot('sort_order', 'created_at');
     }
 
-    /**
-     * Default variant (used for simple products).
-     */
     public function defaultVariant(): HasOne
     {
         return $this->hasOne(ProductVariant::class)
             ->where('is_default', true);
     }
 
-    /*
-     |--------------------------------------------------------------------------
-     | Convenience helpers
-     |--------------------------------------------------------------------------
-     */
-
-    /**
-     * Determine if the product is variable.
-     */
     public function isVariable(): bool
     {
         return $this->type === 'variable';
     }
 
-    /**
-     * Determine if the product is simple.
-     */
     public function isSimple(): bool
     {
         return $this->type === 'simple';
     }
 
-    /**
-     * Get the variant that should be sold by default.
-     */
     public function sellableVariant(): ?ProductVariant
     {
         return $this->defaultVariant

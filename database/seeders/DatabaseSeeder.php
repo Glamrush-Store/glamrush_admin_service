@@ -31,6 +31,8 @@ class DatabaseSeeder extends Seeder
         // Permissions and cohesive application demo data
         $this->call(PermissionsSeeder::class);
         $this->call(AppDataSeeder::class);
+        $this->call(ContentManagementSeeder::class);
+        $this->call(SiteSettingSeeder::class);
 
         // Shipping data
         $this->call(ShippingMethodSeeder::class);

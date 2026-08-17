@@ -36,6 +36,30 @@ class PaymentMethodSeeder extends Seeder
                     'supports_verification' => true,
                 ],
             ],
+            [
+                'name' => 'Cash',
+                'code' => 'cash',
+                'description' => 'Cash received for an offline or in-person sale.',
+                'is_active' => true,
+                'sort_order' => 10,
+                'public_config' => ['manual_entry' => true, 'requires_reference' => false],
+            ],
+            [
+                'name' => 'POS',
+                'code' => 'pos',
+                'description' => 'Payment received through a point-of-sale terminal.',
+                'is_active' => true,
+                'sort_order' => 11,
+                'public_config' => ['manual_entry' => true, 'requires_reference' => true],
+            ],
+            [
+                'name' => 'Bank Transfer',
+                'code' => 'bank_transfer',
+                'description' => 'Bank transfer confirmed outside the online checkout.',
+                'is_active' => true,
+                'sort_order' => 12,
+                'public_config' => ['manual_entry' => true, 'requires_reference' => true],
+            ],
         ];
 
         foreach ($methods as $method) {

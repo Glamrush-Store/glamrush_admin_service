@@ -1,59 +1,140 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Glamrush Admin Service
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+The administrative API and control plane for the Glamrush commerce platform. This Laravel service manages catalog data, merchandising, operational configuration, staff access, and the administrative views of commerce data consumed by the Glamrush Admin frontend.
 
-## About Laravel
+## Platform context
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Glamrush is split across four repositories:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+| Repository | Responsibility |
+| --- | --- |
+| `glamrush_admin_service` | Admin API, catalog ownership, configuration, reporting, and staff authorization |
+| `glamrush-admin` | Nuxt administration interface for staff |
+| `glamrush_backend_service` | Customer-facing commerce API, authentication, carts, checkout, orders, and payments |
+| `glamrush_storefront` | Nuxt customer storefront, currently configured for the fragrances storefront |
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+The two Laravel services currently use a shared PostgreSQL database. The Admin Service owns catalog schema and catalog writes; the Backend Service reads that catalog and owns customer-commerce workflows. Redis is used for queues, caching, throttling, and cache metrics where configured.
 
-## Learning Laravel
+## Core capabilities
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+- Product, variant, category, brand, vendor, collection, and media management
+- Multi-category products with a primary category
+- Storefront campaigns, homepage sections, and announcement configuration
+- Discount-code definition and catalog/storefront targeting
+- Content pages, FAQ categories, and FAQs with publication workflows
+- Shipping zones, methods, rates, shipments, and payment-method configuration
+- Order, payment transaction, customer, and newsletter administration
+- Manual order entry
+- Staff users, roles, permissions, and password recovery
+- Dashboard analytics and Redis cache monitoring
+- Protected internal storefront-merchandising API
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+See [Feature catalog](docs/features.md) for details.
 
-## Laravel Sponsors
+## Technology
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+- PHP 8.2+
+- Laravel 12
+- PostgreSQL
+- Laravel Sanctum and Spatie Laravel Permission
+- Redis or database-backed cache and queues
+- Laravel Octane with RoadRunner/Swoole support
+- Spatie Media Library with local or Google Cloud Storage
+- Resend-compatible mail delivery
+- Pest 4
 
-### Premium Partners
+## Local installation
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### Prerequisites
 
-## Contributing
+- PHP 8.2 or newer with the extensions required by Laravel and PostgreSQL
+- Composer 2
+- PostgreSQL
+- Redis, recommended for a production-like local environment
+- Node.js 20+ and npm, used for Vite assets
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Setup
 
-## Code of Conduct
+```bash
+composer install
+cp .env.example .env
+php artisan key:generate
+npm install
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+On PowerShell, replace the copy command with:
 
-## Security Vulnerabilities
+```powershell
+Copy-Item .env.example .env
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Configure the database, Redis, mail, filesystem, payment providers, and `STOREFRONT_INTERNAL_API_TOKEN` in `.env`, then initialize the schema:
 
-## License
+```bash
+php artisan migrate
+php artisan db:seed
+php artisan storage:link
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+When using the shared database, run Admin Service catalog migrations before Backend Service migrations. Do not add Admin-owned catalog migrations to the Backend Service.
+
+### Run locally
+
+```bash
+php artisan serve --port=8001
+php artisan queue:work
+php artisan schedule:work
+npm run dev
+```
+
+The processes should run in separate terminals. The Admin Nuxt app must point `API_BASE` to this service, for example `http://127.0.0.1:8001/api/v1`.
+
+## Useful commands
+
+```bash
+composer test
+./vendor/bin/pint
+php artisan route:list
+php artisan l5-swagger:generate
+php artisan optimize:clear
+```
+
+Scheduled production tasks include dashboard analytics aggregation and cache-metric aggregation. Run one scheduler for the deployed service and one or more queue workers appropriate to the configured queue backend.
+
+## Configuration groups
+
+| Group | Important variables |
+| --- | --- |
+| Application | `APP_ENV`, `APP_URL`, `APP_KEY`, `APP_DEBUG` |
+| Database | `DB_CONNECTION`, `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD` |
+| Cache and queue | `CACHE_STORE`, `QUEUE_CONNECTION`, `REDIS_*` |
+| Internal API | `STOREFRONT_INTERNAL_API_TOKEN`, `STOREFRONT_HOMEPAGE_CACHE_TTL` |
+| Mail | `MAIL_MAILER`, `MAIL_FROM_*`, `RESEND_API_KEY` |
+| Media | `FILESYSTEM_DISK` and provider-specific storage credentials |
+| Payments | `PAYSTACK_*`, `FLUTTERWAVE_*` |
+| Runtime | `OCTANE_*`, `ROADRUNNER_RPC_PORT` |
+
+Never commit `.env`, service-account credentials, payment secrets, internal API tokens, or production exports.
+
+## API and authentication
+
+Admin endpoints live under `/api/v1`. Staff requests use Sanctum bearer tokens and permission middleware. The published homepage endpoint under `/api/internal/v1` uses a separate internal-service bearer token and must not be exposed with an empty token.
+
+The Postman collection is available at `GlamRush_Admin_API.postman_collection.json`. Existing endpoint references are indexed in [Feature catalog](docs/features.md).
+
+## Documentation
+
+- [Architecture](docs/architecture.md)
+- [Feature catalog](docs/features.md)
+- [Cloudflare R2 storage](docs/cloudflare-r2-storage.md)
+- [Admin API routes](docs/admin-api-routes.md)
+- [Access control](docs/access-control-management.md)
+- [Homepage merchandising](docs/storefront-homepage-merchandising.md)
+- [Content and FAQ management](docs/content-page-and-faq-management.md)
+- [Discount management](docs/discount-code-management.md)
+- [Newsletter management](docs/newsletter-subscriber-management.md)
+- [Manual order entry](docs/manual-order-entry.md)
+
+## Contribution notes
+
+Keep controllers thin, place use cases and domain rules in the appropriate module, validate input with request objects, enforce permissions on administrative routes, and add Pest coverage for behavior changes. Catalog schema changes belong in this repository.

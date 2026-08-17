@@ -36,12 +36,18 @@ class GoogleCloudStorageServiceProvider extends ServiceProvider
                 'projectId' => $config['project_id'],
             ];
 
-            // Support both key_file and key_file_contents
-            if (isset($config['key_file'])) {
-                $clientConfig['keyFilePath'] = $config['key_file'];
-            } elseif (isset($config['key_file_contents'])) {
-                $clientConfig['keyFile'] = json_decode($config['key_file_contents'], true);
+            if($config['use_key_file']){
+                 $clientConfig['keyFilePath'] = $config['key_file'];
+            }else{
+                 $clientConfig['keyFile'] = json_decode($config['key_file_contents'], true);
             }
+
+            // Support both key_file and key_file_contents
+            // if (isset($config['key_file'])) {
+            //     $clientConfig['keyFilePath'] = $config['key_file'];
+            // } elseif (isset($config['key_file_contents'])) {
+            //     $clientConfig['keyFile'] = json_decode($config['key_file_contents'], true);
+            // }
 
             // Add HTTP client options to handle SSL (for development only)
             if (app()->environment('local')) {

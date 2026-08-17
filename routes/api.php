@@ -6,6 +6,8 @@
  * See the LICENSE file for details.
  */
 
+use App\Http\Controllers\AccessControl\RoleController;
+use App\Http\Controllers\AccessControl\UserController;
 use App\Http\Controllers\Auth\ConfirmPasswordResetController;
 use App\Http\Controllers\Auth\CreateAccountController;
 use App\Http\Controllers\Auth\LoginController;
@@ -18,6 +20,7 @@ use App\Http\Controllers\Brand\DeleteBrandController;
 use App\Http\Controllers\Brand\ListBrandsController;
 use App\Http\Controllers\Brand\ShowBrandController;
 use App\Http\Controllers\Brand\UpdateBrandController;
+use App\Http\Controllers\CacheMetrics\CacheMetricController;
 use App\Http\Controllers\Category\CreateCategoryController;
 use App\Http\Controllers\Category\DeleteCategoryController;
 use App\Http\Controllers\Category\ListCategoriesController;
@@ -30,12 +33,17 @@ use App\Http\Controllers\Collection\DetachProductController;
 use App\Http\Controllers\Collection\ListCollectionsController;
 use App\Http\Controllers\Collection\ShowCollectionController;
 use App\Http\Controllers\Collection\UpdateCollectionController;
+use App\Http\Controllers\Content\ContentPageController;
+use App\Http\Controllers\Content\FaqCategoryController;
+use App\Http\Controllers\Content\FaqController;
 use App\Http\Controllers\Customer\ListCustomersController;
+use App\Http\Controllers\Dashboard\ShowDashboardAnalyticsController;
 use App\Http\Controllers\Discount\DiscountCodeController;
 use App\Http\Controllers\Media\DeleteMediaController;
 use App\Http\Controllers\Newsletter\ExportNewsletterSubscribersController;
 use App\Http\Controllers\Newsletter\ListNewsletterSubscribersController;
 use App\Http\Controllers\Newsletter\ShowNewsletterSubscriberController;
+use App\Http\Controllers\Order\CreateManualOrderController;
 use App\Http\Controllers\Order\ListOrdersController;
 use App\Http\Controllers\Order\ShowOrderController;
 use App\Http\Controllers\Order\UpdateOrderStatusController;
@@ -45,6 +53,7 @@ use App\Http\Controllers\PaymentMethod\DeletePaymentMethodController;
 use App\Http\Controllers\PaymentMethod\ListPaymentMethodsController;
 use App\Http\Controllers\PaymentMethod\ShowPaymentMethodController;
 use App\Http\Controllers\PaymentMethod\UpdatePaymentMethodController;
+use App\Http\Controllers\PaymentTransaction\ListPaymentTransactionsController;
 use App\Http\Controllers\Product\CreateProductController;
 use App\Http\Controllers\Product\DeleteProductController;
 use App\Http\Controllers\Product\ListProductsController;
@@ -53,6 +62,8 @@ use App\Http\Controllers\Product\UpdateProductController;
 use App\Http\Controllers\ProductVariant\DeleteProductVariantController;
 use App\Http\Controllers\ProductVariant\ShowProductVariantController;
 use App\Http\Controllers\ProductVariant\UpdateProductVariantController;
+use App\Http\Controllers\Shipping\LocationOptions\ListCountriesController;
+use App\Http\Controllers\Shipping\LocationOptions\ListCountryStatesAndCitiesController;
 use App\Http\Controllers\Shipping\Shipment\CreateShipmentController;
 use App\Http\Controllers\Shipping\Shipment\DeleteShipmentController;
 use App\Http\Controllers\Shipping\Shipment\ListShipmentsController;
@@ -73,6 +84,9 @@ use App\Http\Controllers\Shipping\ShippingZone\DeleteShippingZoneController;
 use App\Http\Controllers\Shipping\ShippingZone\ListShippingZonesController;
 use App\Http\Controllers\Shipping\ShippingZone\ShowShippingZoneController;
 use App\Http\Controllers\Shipping\ShippingZone\UpdateShippingZoneController;
+use App\Http\Controllers\Setting\SettingCategoryController;
+use App\Http\Controllers\Setting\SendTestEmailController;
+use App\Http\Controllers\Setting\SettingController;
 use App\Http\Controllers\SkuAttributeCode\SkuAttributeCodeController;
 use App\Http\Controllers\Storefront\PublishedStorefrontHomepageController;
 use App\Http\Controllers\Storefront\StorefrontCampaignController;
@@ -100,6 +114,36 @@ Route::prefix('v1')->group(function () {
 });
 
 // ========================================================
+// ADMIN USERS, ROLES AND PERMISSIONS
+// ========================================================
+Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
+    Route::get('/permissions', [RoleController::class, 'permissions'])->middleware('permission:ViewAny_Role');
+
+    Route::get('/roles', [RoleController::class, 'index'])->middleware('permission:ViewAny_Role');
+    Route::post('/roles', [RoleController::class, 'store'])->middleware('permission:Create_Role');
+    Route::get('/roles/{role}', [RoleController::class, 'show'])->middleware('permission:View_Role');
+    Route::patch('/roles/{role}', [RoleController::class, 'update'])->middleware('permission:Update_Role');
+    Route::put('/roles/{role}/permissions', [RoleController::class, 'syncPermissions'])->middleware('permission:Update_Role');
+    Route::delete('/roles/{role}', [RoleController::class, 'destroy'])->middleware('permission:Delete_Role');
+
+    Route::get('/users', [UserController::class, 'index'])->middleware('permission:ViewAny_User');
+    Route::post('/users', [UserController::class, 'store'])->middleware('permission:Create_User');
+    Route::get('/users/{user}', [UserController::class, 'show'])->middleware('permission:View_User');
+    Route::patch('/users/{user}', [UserController::class, 'update'])->middleware('permission:Update_User');
+    Route::delete('/users/{user}', [UserController::class, 'destroy'])->middleware('permission:Delete_User');
+});
+
+// ========================================================
+// DASHBOARD ANALYTICS
+// ========================================================
+Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
+    Route::get('/dashboard/analytics', ShowDashboardAnalyticsController::class)->middleware('permission:View_Dashboard');
+    Route::get('/cache-metrics', [CacheMetricController::class, 'index'])->middleware('permission:View_Dashboard');
+    Route::get('/cache-metrics/status', [CacheMetricController::class, 'status'])->middleware('permission:View_Dashboard');
+    Route::post('/cache-metrics/refresh', [CacheMetricController::class, 'refresh'])->middleware('permission:View_Dashboard');
+    Route::post('/cache-metrics/flush', [CacheMetricController::class, 'flush'])->middleware('permission:Update_Dashboard');
+});
+// ========================================================
 //  CATEGORY API ROUTES
 // ========================================================
 
@@ -109,6 +153,37 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
     Route::post('/categories', CreateCategoryController::class)->middleware('permission:Create_Category');
     Route::put('/categories/{category}', UpdateCategoryController::class)->middleware('permission:Update_Category');
     Route::delete('/categories/{category}', DeleteCategoryController::class)->middleware('permission:Delete_Category');
+});
+
+// ========================================================
+// CONTENT PAGES AND FAQ MANAGEMENT
+// ========================================================
+Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
+    Route::get('/content-pages', [ContentPageController::class, 'index'])->middleware('permission:View_ContentPage');
+    Route::post('/content-pages', [ContentPageController::class, 'store'])->middleware('permission:Create_ContentPage');
+    Route::get('/content-pages/{contentPage}', [ContentPageController::class, 'show'])->middleware('permission:View_ContentPage');
+    Route::patch('/content-pages/{contentPage}', [ContentPageController::class, 'update'])->middleware('permission:Update_ContentPage');
+    Route::post('/content-pages/{contentPage}/publish', [ContentPageController::class, 'publish'])->middleware('permission:Publish_ContentPage');
+    Route::post('/content-pages/{contentPage}/unpublish', [ContentPageController::class, 'unpublish'])->middleware('permission:Unpublish_ContentPage');
+    Route::post('/content-pages/{contentPage}/duplicate', [ContentPageController::class, 'duplicate'])->middleware('permission:Duplicate_ContentPage');
+    Route::delete('/content-pages/{contentPage}', [ContentPageController::class, 'destroy'])->middleware('permission:Delete_ContentPage');
+
+    Route::get('/faq-categories', [FaqCategoryController::class, 'index'])->middleware('permission:View_FaqCategory');
+    Route::post('/faq-categories', [FaqCategoryController::class, 'store'])->middleware('permission:Create_FaqCategory');
+    Route::post('/faq-categories/reorder', [FaqCategoryController::class, 'reorder'])->name('faq-categories.reorder')->middleware('permission:Reorder_FaqCategory');
+    Route::get('/faq-categories/{faqCategory}', [FaqCategoryController::class, 'show'])->middleware('permission:View_FaqCategory');
+    Route::patch('/faq-categories/{faqCategory}', [FaqCategoryController::class, 'update'])->middleware('permission:Update_FaqCategory');
+    Route::delete('/faq-categories/{faqCategory}', [FaqCategoryController::class, 'destroy'])->middleware('permission:Delete_FaqCategory');
+
+    Route::get('/faqs', [FaqController::class, 'index'])->middleware('permission:View_Faq');
+    Route::post('/faqs', [FaqController::class, 'store'])->middleware('permission:Create_Faq');
+    Route::post('/faqs/reorder', [FaqController::class, 'reorder'])->name('faqs.reorder')->middleware('permission:Reorder_Faq');
+    Route::get('/faqs/{faq}', [FaqController::class, 'show'])->middleware('permission:View_Faq');
+    Route::patch('/faqs/{faq}', [FaqController::class, 'update'])->middleware('permission:Update_Faq');
+    Route::post('/faqs/{faq}/publish', [FaqController::class, 'publish'])->middleware('permission:Publish_Faq');
+    Route::post('/faqs/{faq}/unpublish', [FaqController::class, 'unpublish'])->middleware('permission:Unpublish_Faq');
+    Route::post('/faqs/{faq}/duplicate', [FaqController::class, 'duplicate'])->middleware('permission:Duplicate_Faq');
+    Route::delete('/faqs/{faq}', [FaqController::class, 'destroy'])->middleware('permission:Delete_Faq');
 });
 
 // ========================================================
@@ -148,6 +223,25 @@ Route::prefix('v1/storefronts/{storefront}')->middleware('auth:sanctum')->group(
 
 Route::get('/internal/v1/storefronts/{storefront}/homepage', PublishedStorefrontHomepageController::class)
     ->middleware('internal-service');
+
+
+// ========================================================
+// SITE SETTINGS API ROUTES
+// ========================================================
+Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
+    Route::get('/settings/categories', [SettingCategoryController::class, 'index'])->middleware('permission:View_Setting');
+    Route::post('/settings/categories', [SettingCategoryController::class, 'store'])->middleware('permission:Create_Setting');
+    Route::get('/settings/categories/{settingCategory}', [SettingCategoryController::class, 'show'])->middleware('permission:View_Setting');
+    Route::patch('/settings/categories/{settingCategory}', [SettingCategoryController::class, 'update'])->middleware('permission:Update_Setting');
+    Route::delete('/settings/categories/{settingCategory}', [SettingCategoryController::class, 'destroy'])->middleware('permission:Delete_Setting');
+
+    Route::get('/settings', [SettingController::class, 'index'])->middleware('permission:View_Setting');
+    Route::post('/settings', [SettingController::class, 'store'])->middleware('permission:Create_Setting');
+    Route::post('/settings/test-email', SendTestEmailController::class)->middleware('permission:Update_Setting');
+    Route::get('/settings/{setting}', [SettingController::class, 'show'])->middleware('permission:View_Setting');
+    Route::patch('/settings/{setting}', [SettingController::class, 'update'])->middleware('permission:Update_Setting');
+    Route::delete('/settings/{setting}', [SettingController::class, 'destroy'])->middleware('permission:Delete_Setting');
+});
 
 // ========================================================
 //  BRAND API ROUTES
@@ -243,6 +337,9 @@ Route::prefix('v1/newsletter/subscribers')->middleware('auth:sanctum')->group(fu
 // ========================================================
 
 Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
+    Route::get('/shipping/location-options/countries', ListCountriesController::class)->middleware('permission:View_Shipment');
+    Route::get('/shipping/location-options/countries/{country}', ListCountryStatesAndCitiesController::class)->middleware('permission:View_Shipment');
+
     Route::get('/shipping/zones', ListShippingZonesController::class)->middleware('permission:View_Shipment');
     Route::get('/shipping/zones/{shippingZone}', ShowShippingZoneController::class)->middleware('permission:View_Shipment');
     Route::post('/shipping/zones', CreateShippingZoneController::class)->middleware('permission:Create_Shipment');
@@ -278,6 +375,7 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
     Route::post('/payment-methods', CreatePaymentMethodController::class)->middleware('permission:Create_PaymentMethod');
     Route::put('/payment-methods/{paymentMethod}', UpdatePaymentMethodController::class)->middleware('permission:Update_PaymentMethod');
     Route::delete('/payment-methods/{paymentMethod}', DeletePaymentMethodController::class)->middleware('permission:Delete_PaymentMethod');
+    Route::get('/payment-transactions', ListPaymentTransactionsController::class)->middleware('permission:View_PaymentTransaction');
 });
 
 // ========================================================
@@ -286,6 +384,7 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
 
 Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
     Route::get('/orders', ListOrdersController::class)->middleware('permission:View_Order');
+    Route::post('/orders/manual', CreateManualOrderController::class)->middleware('permission:Create_Order');
     Route::get('/orders/{order}', ShowOrderController::class)->middleware('permission:View_Order');
     Route::patch('/orders/{order}/status', UpdateOrderStatusController::class)->middleware('permission:Update_Order');
     Route::patch('/orders/{order}/statuses', UpdateOrderStatusesController::class)->middleware('permission:Update_Order');
@@ -296,3 +395,12 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
 Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
     Route::delete('/catalog/media/{media}', DeleteMediaController::class)->middleware('permission:Update_Product');
 });
+
+// ========================================================
+// Liveliness Test Route
+// ========================================================
+Route::prefix('v1')->group(function () {
+    Route::get('/up', fn () => response()->json(['status' => 'ok']));
+});
+
+

@@ -13,6 +13,8 @@ class OrderResource extends JsonResource
             'id' => $this->id,
             'order_number' => $this->order_number,
             'status' => $this->status,
+            'source' => data_get($this->latestPayment?->metadata, 'source', 'checkout'),
+            'is_manual' => data_get($this->latestPayment?->metadata, 'source') === 'manual_admin',
             'customer_info' => $this->customerInfo(),
             'shipping_info' => $this->shippingInfo(),
             'payment_info' => $this->paymentInfo(),
@@ -23,6 +25,7 @@ class OrderResource extends JsonResource
                 'currency' => $this->currency,
                 'placed_at' => optional($this->placed_at)->toISOString(),
                 'paid_at' => optional($this->paid_at)->toISOString(),
+                'inventory_committed_at' => optional($this->inventory_committed_at)->toISOString(),
                 'expires_at' => optional($this->expires_at)->toISOString(),
                 'cancelled_at' => optional($this->cancelled_at)->toISOString(),
                 'created_at' => optional($this->created_at)->toISOString(),
@@ -114,4 +117,3 @@ class OrderResource extends JsonResource
         ];
     }
 }
-

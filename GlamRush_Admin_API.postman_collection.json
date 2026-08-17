@@ -35,6 +35,21 @@
       "key": "discount_code_id",
       "value": "",
       "type": "string"
+    },
+    {
+      "key": "content_page_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "faq_category_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "faq_id",
+      "value": "",
+      "type": "string"
     }
   ],
   "auth": {
@@ -7490,6 +7505,126 @@
         {
           "name": "Duplicate Discount Code",
           "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"code\": \"WELCOME10_COPY\"\n}" }, "url": { "raw": "{{base_url}}/api/v1/discount-codes/{{discount_code_id}}/duplicate", "host": ["{{base_url}}"], "path": ["api", "v1", "discount-codes", "{{discount_code_id}}", "duplicate"] } },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Content Pages and FAQs",
+      "item": [
+        {
+          "name": "List Content Pages",
+          "request": { "method": "GET", "header": [], "url": { "raw": "{{base_url}}/api/v1/content-pages?page=1&per_page=20&search=&page_type=&state=&storefront_id=&sort=display_order&direction=asc", "host": ["{{base_url}}"], "path": ["api", "v1", "content-pages"] }, "description": "Safe paginated authoring list. Requires View_ContentPage." },
+          "response": []
+        },
+        {
+          "name": "Create Content Page",
+          "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"slug\": \"about-us\",\n  \"title\": \"About Glamrush\",\n  \"navigation_title\": \"About\",\n  \"content\": \"<h2>Beauty, thoughtfully curated</h2><p>...</p>\",\n  \"page_type\": \"about\",\n  \"is_published\": false,\n  \"published_at\": null,\n  \"expires_at\": null,\n  \"applies_to_all_storefronts\": true,\n  \"storefront_ids\": [],\n  \"display_order\": 10\n}" }, "url": { "raw": "{{base_url}}/api/v1/content-pages", "host": ["{{base_url}}"], "path": ["api", "v1", "content-pages"] }, "description": "Creates sanitized page configuration. Public delivery remains backend-owned." },
+          "response": []
+        },
+        {
+          "name": "Show Content Page",
+          "request": { "method": "GET", "header": [], "url": { "raw": "{{base_url}}/api/v1/content-pages/{{content_page_id}}", "host": ["{{base_url}}"], "path": ["api", "v1", "content-pages", "{{content_page_id}}"] } },
+          "response": []
+        },
+        {
+          "name": "Update Content Page",
+          "request": { "method": "PATCH", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"title\": \"About Glamrush, updated\"\n}" }, "url": { "raw": "{{base_url}}/api/v1/content-pages/{{content_page_id}}", "host": ["{{base_url}}"], "path": ["api", "v1", "content-pages", "{{content_page_id}}"] } },
+          "response": []
+        },
+        {
+          "name": "Publish Content Page",
+          "request": { "method": "POST", "header": [], "url": { "raw": "{{base_url}}/api/v1/content-pages/{{content_page_id}}/publish", "host": ["{{base_url}}"], "path": ["api", "v1", "content-pages", "{{content_page_id}}", "publish"] } },
+          "response": []
+        },
+        {
+          "name": "Unpublish Content Page",
+          "request": { "method": "POST", "header": [], "url": { "raw": "{{base_url}}/api/v1/content-pages/{{content_page_id}}/unpublish", "host": ["{{base_url}}"], "path": ["api", "v1", "content-pages", "{{content_page_id}}", "unpublish"] } },
+          "response": []
+        },
+        {
+          "name": "Duplicate Content Page",
+          "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"slug\": \"about-us-copy\"\n}" }, "url": { "raw": "{{base_url}}/api/v1/content-pages/{{content_page_id}}/duplicate", "host": ["{{base_url}}"], "path": ["api", "v1", "content-pages", "{{content_page_id}}", "duplicate"] } },
+          "response": []
+        },
+        {
+          "name": "Delete Content Page",
+          "request": { "method": "DELETE", "header": [], "url": { "raw": "{{base_url}}/api/v1/content-pages/{{content_page_id}}", "host": ["{{base_url}}"], "path": ["api", "v1", "content-pages", "{{content_page_id}}"] } },
+          "response": []
+        },
+        {
+          "name": "List FAQ Categories",
+          "request": { "method": "GET", "header": [], "url": { "raw": "{{base_url}}/api/v1/faq-categories", "host": ["{{base_url}}"], "path": ["api", "v1", "faq-categories"] } },
+          "response": []
+        },
+        {
+          "name": "Create FAQ Category",
+          "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"name\": \"Shipping\",\n  \"display_order\": 1,\n  \"is_active\": true\n}" }, "url": { "raw": "{{base_url}}/api/v1/faq-categories", "host": ["{{base_url}}"], "path": ["api", "v1", "faq-categories"] } },
+          "response": []
+        },
+        {
+          "name": "Show FAQ Category",
+          "request": { "method": "GET", "header": [], "url": { "raw": "{{base_url}}/api/v1/faq-categories/{{faq_category_id}}", "host": ["{{base_url}}"], "path": ["api", "v1", "faq-categories", "{{faq_category_id}}"] } },
+          "response": []
+        },
+        {
+          "name": "Update FAQ Category",
+          "request": { "method": "PATCH", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"description\": \"Delivery questions\"\n}" }, "url": { "raw": "{{base_url}}/api/v1/faq-categories/{{faq_category_id}}", "host": ["{{base_url}}"], "path": ["api", "v1", "faq-categories", "{{faq_category_id}}"] } },
+          "response": []
+        },
+        {
+          "name": "Reorder FAQ Categories",
+          "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"ids\": [\"{{faq_category_id}}\"]\n}" }, "url": { "raw": "{{base_url}}/api/v1/faq-categories/reorder", "host": ["{{base_url}}"], "path": ["api", "v1", "faq-categories", "reorder"] } },
+          "response": []
+        },
+        {
+          "name": "Delete FAQ Category",
+          "request": { "method": "DELETE", "header": [], "url": { "raw": "{{base_url}}/api/v1/faq-categories/{{faq_category_id}}", "host": ["{{base_url}}"], "path": ["api", "v1", "faq-categories", "{{faq_category_id}}"] } },
+          "response": []
+        },
+        {
+          "name": "List FAQs",
+          "request": { "method": "GET", "header": [], "url": { "raw": "{{base_url}}/api/v1/faqs?page=1&per_page=20&search=&faq_category_id=&state=&storefront_id=", "host": ["{{base_url}}"], "path": ["api", "v1", "faqs"] } },
+          "response": []
+        },
+        {
+          "name": "Create FAQ",
+          "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"faq_category_id\": \"{{faq_category_id}}\",\n  \"question\": \"How long does delivery take?\",\n  \"answer\": \"<p>Delivery depends on your location.</p>\",\n  \"display_order\": 10,\n  \"is_published\": false,\n  \"applies_to_all_storefronts\": true,\n  \"storefront_ids\": []\n}" }, "url": { "raw": "{{base_url}}/api/v1/faqs", "host": ["{{base_url}}"], "path": ["api", "v1", "faqs"] } },
+          "response": []
+        },
+        {
+          "name": "Show FAQ",
+          "request": { "method": "GET", "header": [], "url": { "raw": "{{base_url}}/api/v1/faqs/{{faq_id}}", "host": ["{{base_url}}"], "path": ["api", "v1", "faqs", "{{faq_id}}"] } },
+          "response": []
+        },
+        {
+          "name": "Update FAQ",
+          "request": { "method": "PATCH", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"answer\": \"<p>Updated answer.</p>\"\n}" }, "url": { "raw": "{{base_url}}/api/v1/faqs/{{faq_id}}", "host": ["{{base_url}}"], "path": ["api", "v1", "faqs", "{{faq_id}}"] } },
+          "response": []
+        },
+        {
+          "name": "Publish FAQ",
+          "request": { "method": "POST", "header": [], "url": { "raw": "{{base_url}}/api/v1/faqs/{{faq_id}}/publish", "host": ["{{base_url}}"], "path": ["api", "v1", "faqs", "{{faq_id}}", "publish"] } },
+          "response": []
+        },
+        {
+          "name": "Unpublish FAQ",
+          "request": { "method": "POST", "header": [], "url": { "raw": "{{base_url}}/api/v1/faqs/{{faq_id}}/unpublish", "host": ["{{base_url}}"], "path": ["api", "v1", "faqs", "{{faq_id}}", "unpublish"] } },
+          "response": []
+        },
+        {
+          "name": "Duplicate FAQ",
+          "request": { "method": "POST", "header": [], "url": { "raw": "{{base_url}}/api/v1/faqs/{{faq_id}}/duplicate", "host": ["{{base_url}}"], "path": ["api", "v1", "faqs", "{{faq_id}}", "duplicate"] } },
+          "response": []
+        },
+        {
+          "name": "Reorder FAQs",
+          "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"ids\": [\"{{faq_id}}\"]\n}" }, "url": { "raw": "{{base_url}}/api/v1/faqs/reorder", "host": ["{{base_url}}"], "path": ["api", "v1", "faqs", "reorder"] } },
+          "response": []
+        },
+        {
+          "name": "Delete FAQ",
+          "request": { "method": "DELETE", "header": [], "url": { "raw": "{{base_url}}/api/v1/faqs/{{faq_id}}", "host": ["{{base_url}}"], "path": ["api", "v1", "faqs", "{{faq_id}}"] } },
           "response": []
         }
       ]

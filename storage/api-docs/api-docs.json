@@ -15,6 +15,401 @@
         }
     ],
     "paths": {
+        "/permissions": {
+            "get": {
+                "tags": [
+                    "Access Control"
+                ],
+                "operationId": "0164170598e259043a14e6f65463e11e",
+                "responses": {
+                    "200": {
+                        "description": "Permission catalog"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/roles": {
+            "get": {
+                "tags": [
+                    "Access Control"
+                ],
+                "operationId": "ef73af867f74c4e1e5392e5a779ed7f8",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 100
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Paginated roles"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Access Control"
+                ],
+                "operationId": "5fb0487de188f674721651290baad3c1",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RoleInput"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Role created"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/roles/{role}": {
+            "get": {
+                "tags": [
+                    "Access Control"
+                ],
+                "operationId": "d290832cc0adcfbed6e13e9612b650a5",
+                "parameters": [
+                    {
+                        "name": "role",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Role details"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Access Control"
+                ],
+                "operationId": "cf49f8e6292e02373c4cd05093d7129b",
+                "parameters": [
+                    {
+                        "name": "role",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Role deleted"
+                    },
+                    "409": {
+                        "description": "System or assigned role"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "patch": {
+                "tags": [
+                    "Access Control"
+                ],
+                "operationId": "82e9b56c5007a42a026bfb3d4d24d736",
+                "parameters": [
+                    {
+                        "name": "role",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RoleInput"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Role updated"
+                    },
+                    "409": {
+                        "description": "Protected system role"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/roles/{role}/permissions": {
+            "put": {
+                "tags": [
+                    "Access Control"
+                ],
+                "operationId": "d4da1298043eb8f49003b2250f579be7",
+                "parameters": [
+                    {
+                        "name": "role",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "permissions"
+                                ],
+                                "properties": {
+                                    "permissions": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Permissions replaced"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/users": {
+            "get": {
+                "tags": [
+                    "Access Control"
+                ],
+                "operationId": "628f7d3ad1f019ac7b508ac7ecb96145",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "role_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 100
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Paginated admin users"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Access Control"
+                ],
+                "operationId": "0a3b5628cc67a02ecca92e70e1744fab",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AdminUserInput"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "User created"
+                    },
+                    "403": {
+                        "description": "Cannot assign super_admin"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/users/{user}": {
+            "get": {
+                "tags": [
+                    "Access Control"
+                ],
+                "operationId": "22278b4de031f9c36d4783f5ec4d32c6",
+                "parameters": [
+                    {
+                        "name": "user",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User details"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Access Control"
+                ],
+                "operationId": "18a8d520ed79bc23344c221be27cdacf",
+                "parameters": [
+                    {
+                        "name": "user",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "User deleted"
+                    },
+                    "409": {
+                        "description": "Self or last-super-admin conflict"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "patch": {
+                "tags": [
+                    "Access Control"
+                ],
+                "operationId": "7d5b4c1f8cbb5e3a069cf59f099c13ed",
+                "parameters": [
+                    {
+                        "name": "user",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AdminUserInput"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "User updated"
+                    },
+                    "409": {
+                        "description": "Self or last-super-admin conflict"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
         "/api/password/reset/confirm": {
             "post": {
                 "tags": [
@@ -930,6 +1325,744 @@
                 ]
             }
         },
+        "/content-pages": {
+            "get": {
+                "tags": [
+                    "Content Pages"
+                ],
+                "operationId": "dabdc20387bef2193c7c70d481f7019a",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "page_type",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "state",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "storefront_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 100
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Paginated pages"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Content Pages"
+                ],
+                "operationId": "6f14baf1792161e4c0b4dfd01296b962",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ContentPageInput"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/content-pages/{contentPage}": {
+            "get": {
+                "tags": [
+                    "Content Pages"
+                ],
+                "operationId": "47089c3be288d472fc656f9621fec002",
+                "parameters": [
+                    {
+                        "name": "contentPage",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Details"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Content Pages"
+                ],
+                "operationId": "58a6a76d635856a2c6eff5f98e0d3058",
+                "parameters": [
+                    {
+                        "name": "contentPage",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Soft deleted"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "patch": {
+                "tags": [
+                    "Content Pages"
+                ],
+                "operationId": "d5d0a0621b76c04ecc4cc90817aadfd2",
+                "parameters": [
+                    {
+                        "name": "contentPage",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ContentPageInput"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Updated"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/content-pages/{contentPage}/publish": {
+            "post": {
+                "tags": [
+                    "Content Pages"
+                ],
+                "operationId": "59963af2557fe8c992d239a1d61c3aef",
+                "parameters": [
+                    {
+                        "name": "contentPage",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Published"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/content-pages/{contentPage}/unpublish": {
+            "post": {
+                "tags": [
+                    "Content Pages"
+                ],
+                "operationId": "7585c81a32cd0a08aa4c1e9ee75f2b3f",
+                "parameters": [
+                    {
+                        "name": "contentPage",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Unpublished"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/content-pages/{contentPage}/duplicate": {
+            "post": {
+                "tags": [
+                    "Content Pages"
+                ],
+                "operationId": "352fa1a77e755938054a524096d06c3e",
+                "parameters": [
+                    {
+                        "name": "contentPage",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "slug"
+                                ],
+                                "properties": {
+                                    "slug": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Duplicated"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/faq-categories": {
+            "get": {
+                "tags": [
+                    "FAQ Categories"
+                ],
+                "operationId": "3180591fa6fe9034a5da807e00d42750",
+                "responses": {
+                    "200": {
+                        "description": "Paginated categories"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "FAQ Categories"
+                ],
+                "operationId": "0ff65af24134e5f273f814c5c6aeac57",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/FaqCategoryInput"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/faq-categories/{faqCategory}": {
+            "get": {
+                "tags": [
+                    "FAQ Categories"
+                ],
+                "operationId": "2797e6622398b45d6d54c9c1ef266a03",
+                "parameters": [
+                    {
+                        "name": "faqCategory",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Details"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "FAQ Categories"
+                ],
+                "operationId": "bea4638a1b8208355b436040418d4a11",
+                "parameters": [
+                    {
+                        "name": "faqCategory",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Soft deleted"
+                    },
+                    "409": {
+                        "description": "Category still has FAQs"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "patch": {
+                "tags": [
+                    "FAQ Categories"
+                ],
+                "operationId": "b8115faefc12ab5356ee715d8773ff74",
+                "parameters": [
+                    {
+                        "name": "faqCategory",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/FaqCategoryInput"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Updated"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/faq-categories/reorder": {
+            "post": {
+                "tags": [
+                    "FAQ Categories"
+                ],
+                "operationId": "04280d5e4ac25e01d7bdbb291e445bb4",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "ids"
+                                ],
+                                "properties": {
+                                    "ids": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Reordered"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/faqs": {
+            "get": {
+                "tags": [
+                    "FAQs"
+                ],
+                "operationId": "bb46667452cbf4de04e1a8cefa530b1e",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "faq_category_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "state",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "storefront_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Paginated FAQs"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "FAQs"
+                ],
+                "operationId": "1e6ccce5dd07e54489e9008e3e89522f",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/FaqInput"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/faqs/{faq}": {
+            "get": {
+                "tags": [
+                    "FAQs"
+                ],
+                "operationId": "6f9bdac2099b2ee5ba4a07c40f63f9d2",
+                "parameters": [
+                    {
+                        "name": "faq",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Details"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "FAQs"
+                ],
+                "operationId": "4d4fe27c691382ff578c189368711113",
+                "parameters": [
+                    {
+                        "name": "faq",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Soft deleted"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "patch": {
+                "tags": [
+                    "FAQs"
+                ],
+                "operationId": "18e9e16fb3d84945b87fb1cbf7117b10",
+                "parameters": [
+                    {
+                        "name": "faq",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/FaqInput"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Updated"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/faqs/{faq}/publish": {
+            "post": {
+                "tags": [
+                    "FAQs"
+                ],
+                "operationId": "7b5809efa6a50a33c5b7e2016f90006a",
+                "parameters": [
+                    {
+                        "name": "faq",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Published"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/faqs/{faq}/unpublish": {
+            "post": {
+                "tags": [
+                    "FAQs"
+                ],
+                "operationId": "0b0d36f61712ce62b556c4fea8b6477e",
+                "parameters": [
+                    {
+                        "name": "faq",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Unpublished"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/faqs/{faq}/duplicate": {
+            "post": {
+                "tags": [
+                    "FAQs"
+                ],
+                "operationId": "524efc7bb58a07f45a1681c81d5c36cc",
+                "parameters": [
+                    {
+                        "name": "faq",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Duplicated"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/faqs/reorder": {
+            "post": {
+                "tags": [
+                    "FAQs"
+                ],
+                "operationId": "d5e1862d7d10fbed216905948e8598ad",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "ids"
+                                ],
+                                "properties": {
+                                    "ids": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Reordered"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
         "/discount-codes": {
             "get": {
                 "tags": [
@@ -1190,6 +2323,61 @@
                 "responses": {
                     "201": {
                         "description": "Duplicated"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/orders/manual": {
+            "post": {
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Record a paid offline sale",
+                "operationId": "0f2fdd26e0f88fbfe3e72f66f4f276b5",
+                "parameters": [
+                    {
+                        "name": "Idempotency-Key",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "maxLength": 100
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ManualOrderInput"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Manual order created"
+                    },
+                    "200": {
+                        "description": "Idempotent replay"
+                    },
+                    "409": {
+                        "description": "Stock, transaction reference, or idempotency conflict"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden"
                     }
                 },
                 "security": [
@@ -1704,6 +2892,61 @@
     },
     "components": {
         "schemas": {
+            "RoleInput": {
+                "required": [
+                    "name"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "sales_manager"
+                    },
+                    "permissions": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "example": [
+                            "ViewAny_Order",
+                            "View_Order",
+                            "Update_Order"
+                        ]
+                    }
+                },
+                "type": "object"
+            },
+            "AdminUserInput": {
+                "required": [
+                    "name",
+                    "email",
+                    "password",
+                    "password_confirmation",
+                    "role_id"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "Ada Manager"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "ada@example.com"
+                    },
+                    "password": {
+                        "type": "string",
+                        "format": "password"
+                    },
+                    "password_confirmation": {
+                        "type": "string",
+                        "format": "password"
+                    },
+                    "role_id": {
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            },
             "UserResponse": {
                 "properties": {
                     "id": {
@@ -1854,6 +3097,152 @@
                 },
                 "type": "object"
             },
+            "ContentPageInput": {
+                "required": [
+                    "title",
+                    "content",
+                    "page_type"
+                ],
+                "properties": {
+                    "slug": {
+                        "type": "string",
+                        "example": "about-us"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "navigation_title": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "excerpt": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "content": {
+                        "type": "string"
+                    },
+                    "page_type": {
+                        "type": "string",
+                        "enum": [
+                            "about",
+                            "contact",
+                            "privacy_policy",
+                            "terms",
+                            "shipping_policy",
+                            "returns_policy",
+                            "custom"
+                        ]
+                    },
+                    "settings": {
+                        "type": "object",
+                        "nullable": true
+                    },
+                    "meta_title": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "meta_description": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "is_published": {
+                        "type": "boolean"
+                    },
+                    "published_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "expires_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "applies_to_all_storefronts": {
+                        "type": "boolean"
+                    },
+                    "storefront_ids": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "display_order": {
+                        "type": "integer",
+                        "minimum": 0
+                    }
+                },
+                "type": "object"
+            },
+            "FaqCategoryInput": {
+                "required": [
+                    "name"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "slug": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "display_order": {
+                        "type": "integer"
+                    },
+                    "is_active": {
+                        "type": "boolean"
+                    }
+                },
+                "type": "object"
+            },
+            "FaqInput": {
+                "required": [
+                    "faq_category_id",
+                    "question",
+                    "answer"
+                ],
+                "properties": {
+                    "faq_category_id": {
+                        "type": "string"
+                    },
+                    "question": {
+                        "type": "string"
+                    },
+                    "answer": {
+                        "type": "string"
+                    },
+                    "display_order": {
+                        "type": "integer"
+                    },
+                    "is_published": {
+                        "type": "boolean"
+                    },
+                    "published_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "expires_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "applies_to_all_storefronts": {
+                        "type": "boolean"
+                    },
+                    "storefront_ids": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "type": "object"
+            },
             "DiscountTargetInput": {
                 "required": [
                     "target_type",
@@ -1973,6 +3362,163 @@
                         "items": {
                             "$ref": "#/components/schemas/DiscountTargetInput"
                         }
+                    }
+                },
+                "type": "object"
+            },
+            "ManualOrderItemInput": {
+                "required": [
+                    "product_variant_id",
+                    "quantity",
+                    "unit_price"
+                ],
+                "properties": {
+                    "product_variant_id": {
+                        "type": "string"
+                    },
+                    "quantity": {
+                        "type": "integer",
+                        "minimum": 1
+                    },
+                    "unit_price": {
+                        "type": "string",
+                        "example": "12500.00"
+                    }
+                },
+                "type": "object"
+            },
+            "ManualOrderAddressInput": {
+                "required": [
+                    "name",
+                    "phone",
+                    "address_line_1",
+                    "city",
+                    "state",
+                    "country"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "nullable": true
+                    },
+                    "phone": {
+                        "type": "string"
+                    },
+                    "address_line_1": {
+                        "type": "string"
+                    },
+                    "address_line_2": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "city": {
+                        "type": "string"
+                    },
+                    "state": {
+                        "type": "string"
+                    },
+                    "country": {
+                        "type": "string",
+                        "example": "NG"
+                    },
+                    "postal_code": {
+                        "type": "string",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "ManualOrderInput": {
+                "required": [
+                    "items",
+                    "payment_method_id",
+                    "shipping_method_id",
+                    "shipping_zone_id",
+                    "shipping_address"
+                ],
+                "properties": {
+                    "customer_id": {
+                        "type": "integer",
+                        "nullable": true
+                    },
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ManualOrderItemInput"
+                        }
+                    },
+                    "currency": {
+                        "type": "string",
+                        "default": "NGN"
+                    },
+                    "payment_method_id": {
+                        "type": "string"
+                    },
+                    "transaction_reference": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "shipping_method_id": {
+                        "type": "string"
+                    },
+                    "shipping_zone_id": {
+                        "type": "string"
+                    },
+                    "shipping_rate_id": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "shipping_amount": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "shipping_address": {
+                        "$ref": "#/components/schemas/ManualOrderAddressInput"
+                    },
+                    "billing_address": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/components/schemas/ManualOrderAddressInput"
+                            }
+                        ],
+                        "nullable": true
+                    },
+                    "order_status": {
+                        "type": "string",
+                        "default": "completed",
+                        "enum": [
+                            "paid",
+                            "processing",
+                            "shipped",
+                            "completed"
+                        ]
+                    },
+                    "shipment_status": {
+                        "type": "string",
+                        "default": "delivered",
+                        "enum": [
+                            "pending",
+                            "ready",
+                            "shipped",
+                            "delivered"
+                        ]
+                    },
+                    "carrier": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "tracking_number": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "placed_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
                     }
                 },
                 "type": "object"
@@ -2166,6 +3712,10 @@
             "description": "Authentication Endpoints"
         },
         {
+            "name": "Access Control",
+            "description": "Access Control"
+        },
+        {
             "name": "Brands",
             "description": "Brands"
         },
@@ -2174,8 +3724,24 @@
             "description": "Categories"
         },
         {
+            "name": "Content Pages",
+            "description": "Content Pages"
+        },
+        {
+            "name": "FAQ Categories",
+            "description": "FAQ Categories"
+        },
+        {
+            "name": "FAQs",
+            "description": "FAQs"
+        },
+        {
             "name": "Discount Codes",
             "description": "Discount Codes"
+        },
+        {
+            "name": "Orders",
+            "description": "Orders"
         },
         {
             "name": "Products",

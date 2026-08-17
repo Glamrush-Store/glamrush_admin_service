@@ -37,7 +37,8 @@ it('creates a product successfully', function () {
         'name' => 'Basic T-Shirt',
         'type' => 'simple',
         'status' => 'published',
-        'category_id' => Category::factory()->create()->id,
+        'category_ids' => [$categoryId = Category::factory()->create()->id],
+        'primary_category_id' => $categoryId,
         'brand_id' => Brand::factory()->create()->id,
         'price' => 5000,
         'sale_price' => 4500,
@@ -67,3 +68,4 @@ it('creates a product successfully', function () {
         ->assertStatus(201)
         ->assertJsonPath('data.name', 'Basic T-Shirt');
 });
+

@@ -38,7 +38,6 @@ class ProductFactory extends Factory
             'name' => $this->getProductName(),
             'vendor_id' => $this->faker->randomElement(static::$vendorIds),
             'slug' => Str::slug($this->getProductName(), '-'),
-            'category_id' => $this->faker->randomElement(static::$categoryIds),
             'brand_id' => $this->faker->randomElement(static::$brandIds),
             'short_description' => $this->faker->text(),
             'description' => $this->faker->paragraphs(4, true),
@@ -113,3 +112,6 @@ class ProductFactory extends Factory
         });
     }
 }
+
+
+

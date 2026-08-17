@@ -6,6 +6,7 @@ use App\Domain\Storefront\Enums\HomepageSectionType;
 use App\Infrastructure\Cache\StorefrontHomepageCache;
 use App\Models\StorefrontCampaign;
 use App\Models\StorefrontHomepageSection;
+use App\Support\Media\SafeMediaUrl;
 use Illuminate\Support\Facades\Cache;
 
 class PublishedStorefrontHomepage
@@ -32,10 +33,13 @@ class PublishedStorefrontHomepage
             ->where('storefront_slug', $storefront)
             ->current()
             ->with('products:id')
-            ->orderByRaw("CASE WHEN type = ? THEN 0 ELSE 1 END", [HomepageSectionType::RandomCategories->value])
+            ->orderByRaw('CASE WHEN type = ? THEN 0 ELSE 1 END', [HomepageSectionType::RandomCategories->value])
             ->orderBy('display_order')
             ->orderBy('id')
             ->get();
+
+        $desktopImage = $campaign?->getFirstMedia('desktop-image');
+        $mobileImage = $campaign?->getFirstMedia('mobile-image');
 
         return [
             'campaign' => $campaign ? [
@@ -44,8 +48,8 @@ class PublishedStorefrontHomepage
                 'eyebrow' => $campaign->eyebrow,
                 'title' => $campaign->title,
                 'description' => $campaign->description,
-                'desktop_image' => $campaign->getFirstMediaUrl('desktop-image') ?: null,
-                'mobile_image' => $campaign->getFirstMediaUrl('mobile-image') ?: null,
+                'desktop_image' => $desktopImage ? SafeMediaUrl::get($desktopImage) : '',
+                'mobile_image' => $mobileImage ? SafeMediaUrl::get($mobileImage) : '',
                 'cta_label' => $campaign->cta_label,
                 'cta_url' => $campaign->cta_url,
                 'starts_at' => $campaign->starts_at?->toISOString(),

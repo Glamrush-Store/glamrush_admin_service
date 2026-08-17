@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Product;
 
+use App\Support\Media\SafeMediaUrl;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -13,7 +14,6 @@ class ProductResource extends JsonResource
 
         return [
             'id' => $this->id,
-            'images_debug' => $this->media,
             'name' => $this->name,
             'sku' => $this->sku,
             'sequence' => $this->sequence,
@@ -28,13 +28,9 @@ class ProductResource extends JsonResource
                 'keywords' => $this->meta_keywords,
                 'description' => $this->meta_description,
             ],
-            'images' => $this->getMedia('catalog-photos')->map(fn ($media) => [
-                'id' => $media->id,
-                'name' => $media->name,
-                'url' => $media->getUrl(),
-                'thumb' => $media->getUrl('thumb'),
-                'medium' => $media->getUrl('medium'),
-            ]),
+            'images' => $this->getMedia('catalog-photos')->map(
+                fn ($media) => SafeMediaUrl::image($media)
+            ),
             'pricing' => [
                 'price' => $this->price,
                 'sale_price' => $this->sale_price,
@@ -78,13 +74,9 @@ class ProductResource extends JsonResource
                 'id' => $variant->id,
                 'sku' => $variant->sku,
                 'is_default' => $variant->is_default,
-                'images' => $variant->getMedia('catalog-photos')->map(fn ($media) => [
-                    'id' => $media->id,
-                    'name' => $media->name,
-                    'url' => $media->getUrl(),
-                    'thumb' => $media->getUrl('thumb'),
-                    'medium' => $media->getUrl('medium'),
-                ]),
+                'images' => $variant->getMedia('catalog-photos')->map(
+                    fn ($media) => SafeMediaUrl::image($media)
+                ),
                 'pricing' => [
                     'price' => $variant->price,
                     'sale_price' => $variant->sale_price,
@@ -115,6 +107,7 @@ class ProductResource extends JsonResource
 
         if ($this->relationLoaded('categories')) {
             $category = $this->categories->first(fn ($category) => (bool) ($category->pivot?->is_primary));
+
             return $category ? $this->categoryData($category) : null;
         }
 

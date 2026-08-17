@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Storefront;
 
+use App\Support\Media\SafeMediaUrl;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -9,6 +10,9 @@ class StorefrontCampaignResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
+        $desktopImage = $this->getFirstMedia('desktop-image');
+        $mobileImage = $this->getFirstMedia('mobile-image');
+
         return [
             'id' => $this->id,
             'storefront_slug' => $this->storefront_slug,
@@ -16,8 +20,8 @@ class StorefrontCampaignResource extends JsonResource
             'eyebrow' => $this->eyebrow,
             'title' => $this->title,
             'description' => $this->description,
-            'desktop_image' => $this->getFirstMediaUrl('desktop-image') ?: null,
-            'mobile_image' => $this->getFirstMediaUrl('mobile-image') ?: null,
+            'desktop_image' => $desktopImage ? SafeMediaUrl::get($desktopImage) : '',
+            'mobile_image' => $mobileImage ? SafeMediaUrl::get($mobileImage) : '',
             'cta_label' => $this->cta_label,
             'cta_url' => $this->cta_url,
             'priority' => $this->priority,

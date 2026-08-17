@@ -126,6 +126,7 @@ The Postman collection is available at `GlamRush_Admin_API.postman_collection.js
 
 - [Architecture](docs/architecture.md)
 - [Feature catalog](docs/features.md)
+- [Cloudflare R2 storage](docs/cloudflare-r2-storage.md)
 - [Admin API routes](docs/admin-api-routes.md)
 - [Access control](docs/access-control-management.md)
 - [Homepage merchandising](docs/storefront-homepage-merchandising.md)

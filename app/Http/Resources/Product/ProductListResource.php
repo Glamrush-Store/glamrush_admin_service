@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Product;
 
+use App\Support\Media\SafeMediaUrl;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -31,13 +32,9 @@ class ProductListResource extends JsonResource
                 'id' => $this->vendor->id,
                 'business_name' => $this->vendor->business_name,
             ]),
-            'images' => $this->getMedia('catalog-photos')->map(fn ($media) => [
-                'id' => $media->id,
-                'name' => $media->name,
-                'url' => $media->getUrl(),
-                'thumb' => $media->getUrl('thumb'),
-                'medium' => $media->getUrl('medium'),
-            ]),
+            'images' => $this->getMedia('catalog-photos')->map(
+                fn ($media) => SafeMediaUrl::image($media)
+            ),
             'created_at' => optional($this->created_at)->toISOString(),
             'updated_at' => optional($this->updated_at)->toISOString(),
         ];
@@ -51,6 +48,7 @@ class ProductListResource extends JsonResource
 
         if ($this->relationLoaded('categories')) {
             $category = $this->categories->first(fn ($category) => (bool) ($category->pivot?->is_primary));
+
             return $category ? $this->categoryData($category) : null;
         }
 

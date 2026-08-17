@@ -41,8 +41,7 @@ class Brand extends Model implements HasMedia
 
     public function registerMediaCollections(): void
     {
-        $this->addMediaCollection('brand_images')
-            ->useDisk('gcs')
+        $this->addMediaCollection('image')
             ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml'])
             ->singleFile();
     }

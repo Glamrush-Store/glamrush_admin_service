@@ -16,7 +16,6 @@ class CategoryListResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'images_debug' => $this->media,
             'name' => $this->name,
             'slug' => $this->slug,
             'parent_name' => $this->parent?->name,

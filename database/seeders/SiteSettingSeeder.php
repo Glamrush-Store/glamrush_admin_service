@@ -22,19 +22,21 @@ class SiteSettingSeeder extends Seeder
             );
 
             foreach ($categoryDefinition['settings'] as $key => $definition) {
-                Setting::updateOrCreate(
-                    [
-                        'setting_category_id' => $category->id,
-                        'key' => $key,
-                    ],
-                    [
-                        'value' => ['value' => $definition['value']],
-                        'value_type' => $definition['type'],
-                        'description' => $definition['description'],
-                        'is_public' => false,
-                        'is_active' => true,
-                    ]
-                );
+                $setting = Setting::firstOrNew([
+                    'setting_category_id' => $category->id,
+                    'key' => $key,
+                ]);
+
+                if (! $setting->exists) {
+                    $setting->value = ['value' => $definition['value']];
+                }
+
+                $setting->fill([
+                    'value_type' => $definition['type'],
+                    'description' => $definition['description'],
+                    'is_public' => false,
+                    'is_active' => true,
+                ])->save();
             }
         }
     }
@@ -96,9 +98,16 @@ class SiteSettingSeeder extends Seeder
             [
                 'name' => 'MEDIA STORAGE',
                 'slug' => 'media-storage',
-                'description' => 'Google Cloud Storage and public media visibility configuration.',
+                'description' => 'Cloudflare R2, legacy Google Cloud Storage, and public media configuration.',
                 'sort_order' => 25,
                 'settings' => [
+                    'R2_ACCESS_KEY_ID' => $this->string('', 'Cloudflare R2 S3 API access key ID.'),
+                    'R2_SECRET_ACCESS_KEY' => $this->string('', 'Cloudflare R2 S3 API secret access key.'),
+                    'R2_BUCKET' => $this->string('commerce-media-production', 'Cloudflare R2 bucket name.'),
+                    'R2_ENDPOINT' => $this->string('https://<ACCOUNT_ID>.r2.cloudflarestorage.com', 'Cloudflare R2 authenticated S3 API endpoint.'),
+                    'R2_URL' => $this->string('https://media.yourdomain.com', 'Public custom domain used to serve R2 media.'),
+                    'R2_REGION' => $this->string('auto', 'Cloudflare R2 S3 compatibility region.'),
+                    'R2_USE_PATH_STYLE_ENDPOINT' => $this->boolean(false, 'Whether the R2 S3 client should use path-style endpoints.'),
                     'GCP_PROJECT_ID' => $this->string('glamrush', 'Google Cloud project ID.'),
                     'GCP_BUCKET' => $this->string('glamrush-images-dev', 'Google Cloud Storage bucket name.'),
                     'GOOGLE_APPLICATION_CREDENTIALS' => $this->string('C:\\Users\\USER\\PhpstormProjects\\shared\\storage-sa.json', 'Path to the Google service account credentials file.'),

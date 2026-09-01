@@ -21,16 +21,16 @@ class DatabaseSeeder extends Seeder
             'email' => 'test@example.com',
         ]);
 
-        User::factory()->create([
-            'name' => 'Demi User',
-            'email' => 'demi@example.com',
-        ]);
+        // User::factory()->create([
+        //     'name' => 'Demi User',
+        //     'email' => 'demi@example.com',
+        // ]);
 
-        User::factory(5)->create();
+        //User::factory(5)->create();
 
         // Permissions and cohesive application demo data
         $this->call(PermissionsSeeder::class);
-        $this->call(AppDataSeeder::class);
+        //$this->call(AppDataSeeder::class);
         $this->call(ContentManagementSeeder::class);
         $this->call(SiteSettingSeeder::class);
 

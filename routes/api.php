@@ -215,6 +215,7 @@ Route::prefix('v1/storefronts/{storefront}')->middleware('auth:sanctum')->group(
     Route::get('/homepage-sections', [StorefrontHomepageSectionController::class, 'index'])->middleware('permission:ViewAny_StorefrontHomepageSection');
     Route::post('/homepage-sections', [StorefrontHomepageSectionController::class, 'store'])->middleware('permission:Create_StorefrontHomepageSection');
     Route::put('/homepage-sections/reorder', [StorefrontHomepageSectionController::class, 'reorder'])->middleware('permission:Update_StorefrontHomepageSection');
+    Route::get('/homepage-sections/types', [StorefrontHomepageSectionController::class, 'types'])->middleware('permission:ViewAny_StorefrontHomepageSection');
     Route::get('/homepage-sections/{section}', [StorefrontHomepageSectionController::class, 'show'])->middleware('permission:View_StorefrontHomepageSection');
     Route::put('/homepage-sections/{section}', [StorefrontHomepageSectionController::class, 'update'])->middleware('permission:Update_StorefrontHomepageSection');
     Route::delete('/homepage-sections/{section}', [StorefrontHomepageSectionController::class, 'destroy'])->middleware('permission:Delete_StorefrontHomepageSection');
@@ -232,6 +233,7 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
     Route::get('/homepage-sections', [DefaultStorefrontHomepageSectionController::class, 'index'])->middleware('permission:ViewAny_StorefrontHomepageSection');
     Route::post('/homepage-sections', [DefaultStorefrontHomepageSectionController::class, 'store'])->middleware('permission:Create_StorefrontHomepageSection');
     Route::put('/homepage-sections/reorder', [DefaultStorefrontHomepageSectionController::class, 'reorder'])->middleware('permission:Update_StorefrontHomepageSection');
+    Route::get('/homepage-sections/types', [DefaultStorefrontHomepageSectionController::class, 'types'])->middleware('permission:ViewAny_StorefrontHomepageSection');
     Route::get('/homepage-sections/{section}', [DefaultStorefrontHomepageSectionController::class, 'show'])->middleware('permission:View_StorefrontHomepageSection');
     Route::put('/homepage-sections/{section}', [DefaultStorefrontHomepageSectionController::class, 'update'])->middleware('permission:Update_StorefrontHomepageSection');
     Route::delete('/homepage-sections/{section}', [DefaultStorefrontHomepageSectionController::class, 'destroy'])->middleware('permission:Delete_StorefrontHomepageSection');

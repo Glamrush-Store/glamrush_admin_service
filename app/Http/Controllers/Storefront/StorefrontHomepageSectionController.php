@@ -17,6 +17,15 @@ use Illuminate\Support\Facades\DB;
 
 class StorefrontHomepageSectionController
 {
+    public function types(): JsonResponse
+    {
+        return ApiResponse::success(collect(HomepageSectionType::cases())->map(fn (HomepageSectionType $type) => [
+            'label' => str($type->value)->replace('_', ' ')->title()->toString(),
+            'value' => $type->value,
+            'config_keys' => $type->allowedConfigKeys(),
+        ])->values());
+    }
+
     public function index(string $storefront): JsonResponse
     {
         $this->ensureStorefront($storefront);

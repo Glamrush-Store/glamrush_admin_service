@@ -12,6 +12,11 @@ class DefaultStorefrontHomepageSectionController
 {
     public function __construct(private readonly StorefrontHomepageSectionController $sections) {}
 
+    public function types(): JsonResponse
+    {
+        return $this->sections->types();
+    }
+
     public function index(): JsonResponse
     {
         return $this->sections->index($this->storefront());

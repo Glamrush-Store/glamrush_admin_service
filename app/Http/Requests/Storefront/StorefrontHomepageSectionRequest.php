@@ -8,6 +8,25 @@ use Illuminate\Validation\Rule;
 
 class StorefrontHomepageSectionRequest extends ApiRequest
 {
+    protected function prepareForValidation(): void
+    {
+        $type = $this->input('type');
+
+        if (! is_string($type)) {
+            return;
+        }
+
+        $aliases = [
+            'product_grid' => HomepageSectionType::ManualProducts->value,
+            'category_grid' => HomepageSectionType::RandomCategories->value,
+            'collection' => HomepageSectionType::CollectionProducts->value,
+        ];
+
+        if (array_key_exists($type, $aliases)) {
+            $this->merge(['type' => $aliases[$type]]);
+        }
+    }
+
     public function rules(): array
     {
         $creating = $this->isMethod('post');

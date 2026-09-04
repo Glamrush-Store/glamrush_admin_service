@@ -29,6 +29,7 @@ class DatabaseSeeder extends Seeder
         //User::factory(5)->create();
 
         // Permissions and cohesive application demo data
+        $this->call(AppRootCategorySeeder::class);
         $this->call(PermissionsSeeder::class);
         //$this->call(AppDataSeeder::class);
         $this->call(ContentManagementSeeder::class);

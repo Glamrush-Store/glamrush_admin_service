@@ -88,6 +88,7 @@ use App\Http\Controllers\Setting\SettingCategoryController;
 use App\Http\Controllers\Setting\SendTestEmailController;
 use App\Http\Controllers\Setting\SettingController;
 use App\Http\Controllers\SkuAttributeCode\SkuAttributeCodeController;
+use App\Http\Controllers\Storefront\DefaultStorefrontHomepageSectionController;
 use App\Http\Controllers\Storefront\PublishedStorefrontHomepageController;
 use App\Http\Controllers\Storefront\StorefrontCampaignController;
 use App\Http\Controllers\Storefront\StorefrontHomepageSectionController;
@@ -223,6 +224,20 @@ Route::prefix('v1/storefronts/{storefront}')->middleware('auth:sanctum')->group(
 
 Route::get('/internal/v1/storefronts/{storefront}/homepage', PublishedStorefrontHomepageController::class)
     ->middleware('internal-service');
+
+// ========================================================
+// DEFAULT STOREFRONT HOMEPAGE SECTIONS
+// ========================================================
+Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
+    Route::get('/homepage-sections', [DefaultStorefrontHomepageSectionController::class, 'index'])->middleware('permission:ViewAny_StorefrontHomepageSection');
+    Route::post('/homepage-sections', [DefaultStorefrontHomepageSectionController::class, 'store'])->middleware('permission:Create_StorefrontHomepageSection');
+    Route::put('/homepage-sections/reorder', [DefaultStorefrontHomepageSectionController::class, 'reorder'])->middleware('permission:Update_StorefrontHomepageSection');
+    Route::get('/homepage-sections/{section}', [DefaultStorefrontHomepageSectionController::class, 'show'])->middleware('permission:View_StorefrontHomepageSection');
+    Route::put('/homepage-sections/{section}', [DefaultStorefrontHomepageSectionController::class, 'update'])->middleware('permission:Update_StorefrontHomepageSection');
+    Route::delete('/homepage-sections/{section}', [DefaultStorefrontHomepageSectionController::class, 'destroy'])->middleware('permission:Delete_StorefrontHomepageSection');
+    Route::patch('/homepage-sections/{section}/enable', [DefaultStorefrontHomepageSectionController::class, 'enable'])->middleware('permission:Update_StorefrontHomepageSection');
+    Route::patch('/homepage-sections/{section}/disable', [DefaultStorefrontHomepageSectionController::class, 'disable'])->middleware('permission:Update_StorefrontHomepageSection');
+});
 
 
 // ========================================================

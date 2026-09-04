@@ -40,4 +40,8 @@ return [
         'cache_ttl' => (int) env('STOREFRONT_HOMEPAGE_CACHE_TTL', 300),
     ],
 
+    'storefront' => [
+        'default_slug' => env('APP_DEFAULT_STOREFRONT_SLUG', 'fragrances'),
+    ],
+
 ];

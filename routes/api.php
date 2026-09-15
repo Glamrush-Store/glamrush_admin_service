@@ -8,6 +8,7 @@
 
 use App\Http\Controllers\AccessControl\RoleController;
 use App\Http\Controllers\AccessControl\UserController;
+use App\Http\Controllers\AttributeType\AttributeTypeController;
 use App\Http\Controllers\Auth\ConfirmPasswordResetController;
 use App\Http\Controllers\Auth\CreateAccountController;
 use App\Http\Controllers\Auth\LoginController;
@@ -62,6 +63,9 @@ use App\Http\Controllers\Product\UpdateProductController;
 use App\Http\Controllers\ProductVariant\DeleteProductVariantController;
 use App\Http\Controllers\ProductVariant\ShowProductVariantController;
 use App\Http\Controllers\ProductVariant\UpdateProductVariantController;
+use App\Http\Controllers\Setting\SendTestEmailController;
+use App\Http\Controllers\Setting\SettingCategoryController;
+use App\Http\Controllers\Setting\SettingController;
 use App\Http\Controllers\Shipping\LocationOptions\ListCountriesController;
 use App\Http\Controllers\Shipping\LocationOptions\ListCountryStatesAndCitiesController;
 use App\Http\Controllers\Shipping\Shipment\CreateShipmentController;
@@ -84,9 +88,6 @@ use App\Http\Controllers\Shipping\ShippingZone\DeleteShippingZoneController;
 use App\Http\Controllers\Shipping\ShippingZone\ListShippingZonesController;
 use App\Http\Controllers\Shipping\ShippingZone\ShowShippingZoneController;
 use App\Http\Controllers\Shipping\ShippingZone\UpdateShippingZoneController;
-use App\Http\Controllers\Setting\SettingCategoryController;
-use App\Http\Controllers\Setting\SendTestEmailController;
-use App\Http\Controllers\Setting\SettingController;
 use App\Http\Controllers\SkuAttributeCode\SkuAttributeCodeController;
 use App\Http\Controllers\Storefront\DefaultStorefrontHomepageSectionController;
 use App\Http\Controllers\Storefront\PublishedStorefrontHomepageController;
@@ -241,7 +242,6 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
     Route::patch('/homepage-sections/{section}/disable', [DefaultStorefrontHomepageSectionController::class, 'disable'])->middleware('permission:Update_StorefrontHomepageSection');
 });
 
-
 // ========================================================
 // SITE SETTINGS API ROUTES
 // ========================================================
@@ -307,6 +307,14 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
 // ========================================================
 // SKU ATTRIBUTE CODES API ROUTES
 // ========================================================
+Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
+    Route::get('/attribute-types', [AttributeTypeController::class, 'index'])->middleware('permission:ViewAny_AttributeType');
+    Route::post('/attribute-types', [AttributeTypeController::class, 'store'])->middleware('permission:Create_AttributeType');
+    Route::get('/attribute-types/{attributeType}', [AttributeTypeController::class, 'show'])->middleware('permission:View_AttributeType');
+    Route::match(['put', 'patch'], '/attribute-types/{attributeType}', [AttributeTypeController::class, 'update'])->middleware('permission:Update_AttributeType');
+    Route::delete('/attribute-types/{attributeType}', [AttributeTypeController::class, 'destroy'])->middleware('permission:Delete_AttributeType');
+});
+
 Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
     Route::get('/sku-attribute-code', [SkuAttributeCodeController::class, 'index'])->middleware('permission:View_Vendor');
     Route::get('/sku-attribute-code/list/types', [SkuAttributeCodeController::class, 'types'])->middleware('permission:View_Vendor');
@@ -419,5 +427,3 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
 Route::prefix('v1')->group(function () {
     Route::get('/up', fn () => response()->json(['status' => 'ok']));
 });
-
-

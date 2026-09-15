@@ -25,6 +25,7 @@ class PermissionsSeeder extends Seeder
             'Brand',
             'Vendor',
             'SkuAttributeCode',
+            'AttributeType',
             'Customer',
             'Shipment',
             'ShippingMethod',

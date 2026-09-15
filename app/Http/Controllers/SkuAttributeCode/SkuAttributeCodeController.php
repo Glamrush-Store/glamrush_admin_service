@@ -66,7 +66,7 @@ class SkuAttributeCodeController extends Controller
             'is_active' => true,
         ];
 
-        Log::info('Creating SKU Attribute Code with data: ', $data);
+        //Log::info('Creating SKU Attribute Code with data: ', $data);
 
         $item = SkuAttributeCode::create($data);
 

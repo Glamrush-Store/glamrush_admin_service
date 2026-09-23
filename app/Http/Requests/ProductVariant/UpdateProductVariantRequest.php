@@ -29,7 +29,7 @@ class UpdateProductVariantRequest extends FormRequest
             'in_stock' => ['boolean'],
             'attributes' => ['nullable', 'array'],
             'sort_order' => ['integer'],
-            'status' => ['sometimes', Rule::in(['active', 'inactive'])],
+            'status' => ['sometimes', Rule::in(['active', 'disabled'])],
             'is_default' => ['boolean'],
             'photos' => ['sometimes', 'array', 'max:2'],
             'photos.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],

@@ -34,6 +34,9 @@ use App\Http\Controllers\Collection\DetachProductController;
 use App\Http\Controllers\Collection\ListCollectionsController;
 use App\Http\Controllers\Collection\ShowCollectionController;
 use App\Http\Controllers\Collection\UpdateCollectionController;
+use App\Http\Controllers\ContactSubmission\ListContactSubmissionsController;
+use App\Http\Controllers\ContactSubmission\ShowContactSubmissionController;
+use App\Http\Controllers\ContactSubmission\UpdateContactSubmissionStatusController;
 use App\Http\Controllers\Content\ContentPageController;
 use App\Http\Controllers\Content\FaqCategoryController;
 use App\Http\Controllers\Content\FaqController;
@@ -357,6 +360,16 @@ Route::prefix('v1/newsletter/subscribers')->middleware('auth:sanctum')->group(fu
     Route::get('/export', ExportNewsletterSubscribersController::class)
         ->middleware(['permission:Export_NewsletterSubscriber', 'throttle:5,1']);
     Route::get('/{subscriber}', ShowNewsletterSubscriberController::class)->middleware('permission:View_NewsletterSubscriber');
+});
+
+// ========================================================
+// CONTACT SUBMISSIONS API ROUTES
+// ========================================================
+
+Route::prefix('v1/contact-submissions')->middleware('auth:sanctum')->group(function () {
+    Route::get('/', ListContactSubmissionsController::class)->middleware('permission:ViewAny_ContactSubmission');
+    Route::get('/{submission}', ShowContactSubmissionController::class)->middleware('permission:View_ContactSubmission');
+    Route::patch('/{submission}/status', UpdateContactSubmissionStatusController::class)->middleware('permission:Update_ContactSubmission');
 });
 
 // ========================================================

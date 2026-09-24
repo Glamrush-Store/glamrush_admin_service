@@ -18,7 +18,7 @@ class UpdatePaymentMethodRequest extends FormRequest
 
         return [
             'name' => ['sometimes', 'required', 'string', 'max:255'],
-            'code' => ['sometimes', 'required', 'string', Rule::in(['paystack', 'flutterwave', 'pay_on_delivery']), Rule::unique('payment_methods', 'code')->ignore($id)],
+            'code' => ['sometimes', 'required', 'string', Rule::in(['paystack', 'flutterwave', 'pay_on_delivery','cash','bank_transfer','pos']), Rule::unique('payment_methods', 'code')->ignore($id)],
             'description' => ['nullable', 'string'],
             'is_active' => ['sometimes', 'boolean'],
             'sort_order' => ['sometimes', 'integer', 'min:0'],

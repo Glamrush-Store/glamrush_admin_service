@@ -38,6 +38,7 @@ class PermissionsSeeder extends Seeder
             'StorefrontCampaign',
             'StorefrontHomepageSection',
             'NewsletterSubscriber',
+            'ContactSubmission',
             'Dashboard',
 
             // Add more models here...

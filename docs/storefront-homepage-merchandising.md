@@ -33,8 +33,36 @@ All limits are optional integers from 1 through 50. Unknown keys are rejected. S
 | `newest_products` | `limit` |
 | `random_categories` | optional `limit`, `require_products` boolean |
 | `manual_products` | required `product_ids` array and optional `limit` |
+| `split_image_banner` | exactly two `items`: one `left` and one `right`, each with `description`, unique integer `sort_order`, and optional paired `cta_label` and `cta_url` |
 
 Allowed sort fields are `created_at`, `price`, `sort_order`, and `name`; direction is `asc` or `desc`. Category, collection, and product identifiers are validated against this service's catalog. Manual product IDs are normalized into a pivot table and returned in the administrator's selected order.
+
+Split image banners are submitted as multipart requests with required JPEG, PNG, or WebP files named `left_image`, `right_image`, and `mobile_image` (maximum 10 MB each). Images are optional during updates when that slot already has an image; sending a replacement overwrites the current file. Desktop items are returned by ascending `sort_order`; the public storefront returns those items with their image URLs plus a single `mobile_image` URL. CTA fields must either both be present or both be null.
+
+```json
+{
+  "type": "split_image_banner",
+  "title": "Fragrance families",
+  "config": {
+    "items": [
+      {
+        "slot": "left",
+        "description": "Fresh scents for every day.",
+        "cta_label": "Shop fresh",
+        "cta_url": "/collections/fresh",
+        "sort_order": 1
+      },
+      {
+        "slot": "right",
+        "description": "Warm scents for evenings.",
+        "cta_label": null,
+        "cta_url": null,
+        "sort_order": 2
+      }
+    ]
+  }
+}
+```
 
 ## Internal API
 

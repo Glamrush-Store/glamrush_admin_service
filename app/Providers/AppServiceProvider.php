@@ -2,12 +2,12 @@
 
 namespace App\Providers;
 
+use App\Infrastructure\CacheMetrics\RegisterCacheMetricsListeners;
 use App\Models\Category;
 use App\Models\ContentPage;
 use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Models\User;
-use App\Infrastructure\CacheMetrics\RegisterCacheMetricsListeners;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\ServiceProvider;
 use RuntimeException;
@@ -63,10 +63,8 @@ class AppServiceProvider extends ServiceProvider
             'sku_attribute_code' => \App\Models\SkuAttributeCode::class,
             'collection' => \App\Models\Collection::class,
             'storefront_campaign' => \App\Models\StorefrontCampaign::class,
+            'storefront_homepage_section' => \App\Models\StorefrontHomepageSection::class,
             'content_page' => ContentPage::class,
         ]);
     }
 }
-
-
-

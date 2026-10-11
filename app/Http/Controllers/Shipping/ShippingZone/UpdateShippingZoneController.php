@@ -15,7 +15,11 @@ class UpdateShippingZoneController extends Controller
 
     public function __invoke(ShippingZone $shippingZone, UpdateShippingZoneRequest $request)
     {
-        $zone = $this->useCase->run($shippingZone, $request->validated());
+        $zone = $this->useCase->run(
+            $shippingZone,
+            $request->validated(),
+            $request->shouldSyncLocations(),
+        );
 
         return ApiResponse::success(new ShippingZoneResource($zone));
     }

@@ -8,6 +8,6 @@ class ShowShippingZoneUseCase
 {
     public function run(ShippingZone $zone): ShippingZone
     {
-        return $zone->load('rates.method');
+        return $zone->load(['locations', 'rates.method']);
     }
 }

@@ -97,6 +97,27 @@ it('creates variable product with multiple variants', function () {
         ->and($result->variants)->toHaveCount(2);
 });
 
+it('generates unique product slugs for products with the same name', function () {
+    $brand = Brand::factory()->create();
+    $category = Category::factory()->create();
+    $productData = Product::factory()->make([
+        'name' => 'Signature Scent',
+        'brand_id' => $brand->id,
+        'category_ids' => [$category->id],
+        'primary_category_id' => $category->id,
+        'type' => 'simple',
+        'status' => 'published',
+    ])->toArray();
+
+    $createProduct = app(CreateProductUseCase::class);
+    $first = $createProduct->execute($productData);
+    $second = $createProduct->execute($productData);
+
+    expect($first->slug)->toBe('signature-scent')
+        ->and($second->slug)->toBe('signature-scent-2')
+        ->and(Product::whereIn('slug', ['signature-scent', 'signature-scent-2'])->count())->toBe(2);
+});
+
 it('keeps the simple product default variant synchronized when the product changes', function () {
     $product = Product::factory()->simple()->create([
         'type' => 'simple',

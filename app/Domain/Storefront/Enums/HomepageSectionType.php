@@ -11,6 +11,7 @@ enum HomepageSectionType: string
     case NewestProducts = 'newest_products';
     case RandomCategories = 'random_categories';
     case ManualProducts = 'manual_products';
+    case SplitImageBanner = 'split_image_banner';
 
     /** @return list<string> */
     public function allowedConfigKeys(): array
@@ -22,6 +23,7 @@ enum HomepageSectionType: string
             self::CollectionProducts => ['collection_slug', 'limit'],
             self::RandomCategories => ['limit', 'require_products'],
             self::ManualProducts => ['product_ids', 'limit'],
+            self::SplitImageBanner => ['items'],
         };
     }
 }

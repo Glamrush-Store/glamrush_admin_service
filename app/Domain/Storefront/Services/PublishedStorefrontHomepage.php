@@ -32,8 +32,7 @@ class PublishedStorefrontHomepage
         $sections = StorefrontHomepageSection::query()
             ->where('storefront_slug', $storefront)
             ->current()
-            ->with('products:id')
-            ->orderByRaw('CASE WHEN type = ? THEN 0 ELSE 1 END', [HomepageSectionType::RandomCategories->value])
+            ->with(['products:id', 'media'])
             ->orderBy('display_order')
             ->orderBy('id')
             ->get();
@@ -60,6 +59,9 @@ class PublishedStorefrontHomepage
                 if ($section->type === HomepageSectionType::ManualProducts) {
                     $config['product_ids'] = $section->products->pluck('id')->values()->all();
                 }
+                if ($section->type === HomepageSectionType::SplitImageBanner) {
+                    $config['items'] = collect($config['items'] ?? [])->sortBy('sort_order')->values()->all();
+                }
 
                 return [
                     'id' => $section->id,
@@ -68,8 +70,20 @@ class PublishedStorefrontHomepage
                     'subtitle' => $section->subtitle,
                     'display_order' => $section->display_order,
                     'config' => $config,
+                    'images' => $section->type === HomepageSectionType::SplitImageBanner ? [
+                        'left' => $this->mediaUrl($section, 'left-image'),
+                        'right' => $this->mediaUrl($section, 'right-image'),
+                        'mobile' => $this->mediaUrl($section, 'mobile-image'),
+                    ] : null,
                 ];
             })->all(),
         ];
+    }
+
+    private function mediaUrl(StorefrontHomepageSection $section, string $collection): string
+    {
+        $media = $section->getFirstMedia($collection);
+
+        return $media ? SafeMediaUrl::get($media) : '';
     }
 }

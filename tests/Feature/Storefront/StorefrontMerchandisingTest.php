@@ -8,7 +8,9 @@ use App\Models\StorefrontCampaign;
 use App\Models\StorefrontHomepageSection;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Storage;
 use Laravel\Sanctum\Sanctum;
 use Spatie\Permission\Models\Permission;
 
@@ -167,6 +169,94 @@ it('preserves manual product ordering and reorders sections', function () {
     $this->assertDatabaseMissing('storefront_homepage_sections', ['id' => $newestId]);
 });
 
+it('creates a split image banner with sorted sides and optional ctas', function () {
+    Storage::fake(config('media-library.disk_name'));
+    fragrancesStorefront();
+    storefrontAdmin(['Create_StorefrontHomepageSection', 'View_StorefrontHomepageSection', 'Update_StorefrontHomepageSection']);
+
+    $created = $this->post('/api/v1/storefronts/fragrances/homepage-sections', [
+        'type' => 'split_image_banner',
+        'title' => 'Fragrance families',
+        'config' => [
+            'items' => [
+                [
+                    'slot' => 'right',
+                    'description' => 'Warm scents for evenings.',
+                    'cta_label' => null,
+                    'cta_url' => null,
+                    'sort_order' => 20,
+                ],
+                [
+                    'slot' => 'left',
+                    'description' => 'Fresh scents for every day.',
+                    'cta_label' => 'Shop fresh',
+                    'cta_url' => '/collections/fresh',
+                    'sort_order' => 10,
+                ],
+            ],
+        ],
+        'left_image' => UploadedFile::fake()->image('left.jpg', 1200, 800),
+        'right_image' => UploadedFile::fake()->image('right.jpg', 1200, 800),
+        'mobile_image' => UploadedFile::fake()->image('mobile.jpg', 800, 1000),
+        'display_order' => 4,
+        'is_active' => true,
+    ], ['Accept' => 'application/json'])
+        ->assertCreated()
+        ->assertJsonPath('data.type', 'split_image_banner')
+        ->assertJsonPath('data.config.items.0.slot', 'left')
+        ->assertJsonPath('data.config.items.1.slot', 'right');
+
+    foreach (['left', 'right', 'mobile'] as $key) {
+        expect($created->json("data.images.{$key}"))->not->toBeEmpty();
+    }
+
+    $id = $created->json('data.id');
+    $this->post("/api/v1/storefronts/fragrances/homepage-sections/{$id}", [
+        '_method' => 'PUT',
+        'config' => [
+            'items' => [
+                ['slot' => 'right', 'description' => 'Updated right.', 'sort_order' => 2],
+                ['slot' => 'left', 'description' => 'Updated left.', 'sort_order' => 1],
+            ],
+        ],
+    ], ['Accept' => 'application/json'])
+        ->assertOk()
+        ->assertJsonPath('data.config.items.0.slot', 'left')
+        ->assertJsonPath('data.config.items.0.description', 'Updated left.')
+        ->assertJsonPath('data.images.mobile', $created->json('data.images.mobile'));
+
+    config(['services.storefront_internal.token' => 'test-internal-secret']);
+    $this->withToken('test-internal-secret')
+        ->getJson('/api/internal/v1/storefronts/fragrances/homepage')
+        ->assertOk()
+        ->assertJsonPath('data.sections.0.id', $id)
+        ->assertJsonPath('data.sections.0.config.items.0.slot', 'left')
+        ->assertJsonPath('data.sections.0.images.mobile', $created->json('data.images.mobile'));
+});
+
+it('validates split image banner images sides and optional cta pairs', function () {
+    fragrancesStorefront();
+    storefrontAdmin(['Create_StorefrontHomepageSection']);
+
+    $this->postJson('/api/v1/storefronts/fragrances/homepage-sections', [
+        'type' => 'split_image_banner',
+        'title' => 'Invalid split',
+        'config' => [
+            'items' => [
+                ['slot' => 'left', 'description' => 'Left', 'cta_label' => 'Browse', 'sort_order' => 2],
+                ['slot' => 'left', 'description' => 'Duplicate', 'sort_order' => 1],
+            ],
+        ],
+    ])->assertUnprocessable()
+        ->assertJsonValidationErrors([
+            'left_image',
+            'right_image',
+            'mobile_image',
+            'config.items',
+            'config.items.0.cta_url',
+        ]);
+});
+
 it('protects the internal endpoint and publishes only current ordered content', function () {
     fragrancesStorefront();
     config(['services.storefront_internal.token' => 'test-internal-secret']);
@@ -189,9 +279,9 @@ it('protects the internal endpoint and publishes only current ordered content', 
     $this->withToken('test-internal-secret')->getJson('/api/internal/v1/storefronts/fragrances/homepage')
         ->assertOk()
         ->assertJsonPath('data.campaign.id', $winning->id)
-        ->assertJsonPath('data.sections.0.id', $categories->id)
-        ->assertJsonPath('data.sections.1.id', $first->id)
-        ->assertJsonPath('data.sections.2.id', $second->id)
+        ->assertJsonPath('data.sections.0.id', $first->id)
+        ->assertJsonPath('data.sections.1.id', $second->id)
+        ->assertJsonPath('data.sections.2.id', $categories->id)
         ->assertJsonCount(3, 'data.sections')
         ->assertJsonMissingPath('data.campaign.priority');
 });

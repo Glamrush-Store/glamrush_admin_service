@@ -11,6 +11,7 @@ namespace App\Domain\Product\UseCases;
 use App\Domain\Brand\Actions\GetBrandByIdAction;
 use App\Domain\Product\Actions\CreateProductAction;
 use App\Domain\Product\Actions\GenerateProductSkuAction;
+use App\Domain\Product\Actions\GenerateUniqueProductSlugAction;
 use App\Domain\Product\Actions\SyncProductCategoriesAction;
 use App\Domain\Product\Actions\SyncSimpleProductVariantAction;
 use App\Domain\Product\Actions\UploadProductPhotosAction;
@@ -19,7 +20,6 @@ use App\Domain\Product\ProductVariant\Actions\CreateProductVariantsAction;
 use App\Domain\Product\ProductVariant\Actions\GenerateVariantSkuAction;
 use App\Domain\Product\ProductVariant\Actions\UploadVariantPhotosAction;
 use App\Domain\Shared\Actions\CreateAppLogAction;
-use App\Domain\Shared\Actions\GenerateUniqueSlugAction;
 use App\Models\Product;
 use Illuminate\Support\Facades\DB;
 
@@ -33,7 +33,7 @@ class CreateProductUseCase
         private CreateAppLogAction $log,
         private GetBrandByIdAction $getBrand,
         private GenerateVariantSkuAction $generateVariantSku,
-        private GenerateUniqueSlugAction $generateSlug,
+        private GenerateUniqueProductSlugAction $generateSlug,
         private UploadProductPhotosAction $uploadProductPhotos,
         private SyncProductCategoriesAction $syncCategories,
         private SyncSimpleProductVariantAction $syncSimpleVariant,

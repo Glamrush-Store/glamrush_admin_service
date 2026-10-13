@@ -23,13 +23,20 @@ class StorefrontHomepageSectionController
             'label' => str($type->value)->replace('_', ' ')->title()->toString(),
             'value' => $type->value,
             'config_keys' => $type->allowedConfigKeys(),
+            'media_fields' => $type === HomepageSectionType::SplitImageBanner
+                ? ['left_image', 'right_image', 'mobile_image']
+                : [],
         ])->values());
     }
 
     public function index(string $storefront): JsonResponse
     {
         $this->ensureStorefront($storefront);
-        $sections = StorefrontHomepageSection::where('storefront_slug', $storefront)->with('products:id')->orderBy('display_order')->paginate(50);
+        $sections = StorefrontHomepageSection::where('storefront_slug', $storefront)
+            ->with(['products:id', 'media'])
+            ->orderBy('display_order')
+            ->orderBy('id')
+            ->paginate(50);
 
         return ApiResponse::success(StorefrontHomepageSectionResource::collection($sections));
     }
@@ -38,39 +45,49 @@ class StorefrontHomepageSectionController
     {
         $this->ensureStorefront($storefront);
         $section = DB::transaction(function () use ($request, $storefront) {
-            $data = $request->validated();
+            $data = $this->normalizedData($request->validated());
             $productIds = Arr::pull($data, 'config.product_ids', []);
-            $section = StorefrontHomepageSection::create([...$data, 'storefront_slug' => $storefront, 'created_by' => $request->user()->id, 'updated_by' => $request->user()->id]);
+            $section = StorefrontHomepageSection::create([
+                ...Arr::except($data, ['left_image', 'right_image', 'mobile_image']),
+                'storefront_slug' => $storefront,
+                'created_by' => $request->user()->id,
+                'updated_by' => $request->user()->id,
+            ]);
             $this->syncProducts($section, $productIds);
+            $this->attachImages($section, $request);
 
             return $section;
         });
 
-        return ApiResponse::success(new StorefrontHomepageSectionResource($section->refresh()->load('products:id')), 'Section created', 201);
+        return ApiResponse::success(new StorefrontHomepageSectionResource($section->refresh()->load(['products:id', 'media'])), 'Section created', 201);
     }
 
     public function show(string $storefront, StorefrontHomepageSection $section): JsonResponse
     {
         $this->ensureOwned($storefront, $section);
 
-        return ApiResponse::success(new StorefrontHomepageSectionResource($section->load('products:id')));
+        return ApiResponse::success(new StorefrontHomepageSectionResource($section->load(['products:id', 'media'])));
     }
 
     public function update(StorefrontHomepageSectionRequest $request, string $storefront, StorefrontHomepageSection $section): JsonResponse
     {
         $this->ensureOwned($storefront, $section);
         DB::transaction(function () use ($request, $section) {
-            $data = $request->validated();
+            $data = $this->normalizedData($request->validated(), $section);
             $hasProducts = Arr::has($data, 'config.product_ids');
             $productIds = Arr::pull($data, 'config.product_ids', []);
-            $section->update([...$data, 'updated_by' => $request->user()->id]);
+            $section->update([
+                ...Arr::except($data, ['left_image', 'right_image', 'mobile_image']),
+                'updated_by' => $request->user()->id,
+            ]);
+            $this->attachImages($section, $request);
             if ($hasProducts || $section->type !== HomepageSectionType::ManualProducts) {
                 $this->syncProducts($section, $productIds);
                 $section->touch();
             }
         });
 
-        return ApiResponse::success(new StorefrontHomepageSectionResource($section->refresh()->load('products:id')), 'Section updated');
+        return ApiResponse::success(new StorefrontHomepageSectionResource($section->refresh()->load(['products:id', 'media'])), 'Section updated');
     }
 
     public function destroy(string $storefront, StorefrontHomepageSection $section): JsonResponse
@@ -104,7 +121,7 @@ class StorefrontHomepageSectionController
             StorefrontHomepageCache::forget($storefront);
         });
 
-        $sections = StorefrontHomepageSection::whereIn('id', $ids)->with('products:id')->orderBy('display_order')->get();
+        $sections = StorefrontHomepageSection::whereIn('id', $ids)->with(['products:id', 'media'])->orderBy('display_order')->orderBy('id')->get();
 
         return ApiResponse::success(StorefrontHomepageSectionResource::collection($sections), 'Sections reordered');
     }
@@ -114,12 +131,46 @@ class StorefrontHomepageSectionController
         $this->ensureOwned($storefront, $section);
         $section->update(['is_active' => $active, 'updated_by' => $request->user()->id]);
 
-        return ApiResponse::success(new StorefrontHomepageSectionResource($section->load('products:id')), $active ? 'Section enabled' : 'Section disabled');
+        return ApiResponse::success(new StorefrontHomepageSectionResource($section->load(['products:id', 'media'])), $active ? 'Section enabled' : 'Section disabled');
     }
 
     private function syncProducts(StorefrontHomepageSection $section, array $productIds): void
     {
         $section->products()->sync(collect($productIds)->mapWithKeys(fn (string $id, int $order) => [$id => ['display_order' => $order + 1]])->all());
+    }
+
+    private function attachImages(StorefrontHomepageSection $section, StorefrontHomepageSectionRequest $request): void
+    {
+        $attached = false;
+        foreach ([
+            'left_image' => 'left-image',
+            'right_image' => 'right-image',
+            'mobile_image' => 'mobile-image',
+        ] as $field => $collection) {
+            if ($request->hasFile($field)) {
+                $section->addMediaFromRequest($field)->toMediaCollection($collection);
+                $attached = true;
+            }
+        }
+
+        if ($attached) {
+            StorefrontHomepageCache::forget($section->storefront_slug);
+        }
+    }
+
+    private function normalizedData(array $data, ?StorefrontHomepageSection $section = null): array
+    {
+        $type = $data['type'] ?? $section?->type;
+        $typeValue = $type instanceof HomepageSectionType ? $type->value : $type;
+
+        if ($typeValue === HomepageSectionType::SplitImageBanner->value && isset($data['config']['items'])) {
+            $data['config']['items'] = collect($data['config']['items'])
+                ->sortBy('sort_order')
+                ->values()
+                ->all();
+        }
+
+        return $data;
     }
 
     private function ensureStorefront(string $storefront): void

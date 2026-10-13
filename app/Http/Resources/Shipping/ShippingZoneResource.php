@@ -13,8 +13,25 @@ class ShippingZoneResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'country' => $this->country,
-            'state' => $this->state,
-            'city' => $this->city,
+            'state' => $this->state === '__grouped__' ? null : $this->state,
+            'city' => $this->city === '__grouped__' ? null : $this->city,
+            'states' => $this->whenLoaded('locations', fn () => $this->locations
+                ->where('scope', 'state')
+                ->pluck('state')
+                ->values()),
+            'cities' => $this->whenLoaded('locations', fn () => $this->locations
+                ->where('scope', 'city')
+                ->map(fn ($location) => [
+                    'state' => $location->state,
+                    'city' => $location->city,
+                ])->values()),
+            'locations' => $this->whenLoaded('locations', fn () => $this->locations->map(fn ($location) => [
+                'id' => $location->id,
+                'scope' => $location->scope,
+                'country' => $location->country,
+                'state' => $location->state,
+                'city' => $location->city,
+            ])->values()),
             'postal_code_pattern' => $this->postal_code_pattern,
             'is_active' => $this->is_active,
             'rates' => $this->whenLoaded('rates', fn () => $this->rates->map(fn ($rate) => [

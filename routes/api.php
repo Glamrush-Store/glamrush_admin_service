@@ -63,6 +63,7 @@ use App\Http\Controllers\Product\DeleteProductController;
 use App\Http\Controllers\Product\ListProductsController;
 use App\Http\Controllers\Product\ShowProductController;
 use App\Http\Controllers\Product\UpdateProductController;
+use App\Http\Controllers\ProductImport\ProductImportController;
 use App\Http\Controllers\ProductVariant\CreateProductVariantController;
 use App\Http\Controllers\ProductVariant\DeleteProductVariantController;
 use App\Http\Controllers\ProductVariant\ShowProductVariantController;
@@ -292,6 +293,11 @@ Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
 // ========================================================
 
 Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
+    Route::get('/product-imports/template', [ProductImportController::class, 'template'])->middleware('permission:View_Product');
+    Route::get('/product-imports', [ProductImportController::class, 'index'])->middleware('permission:View_Product');
+    Route::post('/product-imports', [ProductImportController::class, 'store'])->middleware('permission:Create_Product');
+    Route::get('/product-imports/{productImport}', [ProductImportController::class, 'show'])->middleware('permission:View_Product');
+
     Route::get('/products', ListProductsController::class)->middleware('permission:View_Product');
     Route::post('/products', CreateProductController::class)->middleware('permission:Create_Product');
     Route::post('/products/{product}/variants', CreateProductVariantController::class)->middleware('permission:Update_Product');

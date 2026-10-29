@@ -21,6 +21,7 @@ use App\Domain\Product\ProductVariant\Actions\GenerateVariantSkuAction;
 use App\Domain\Product\ProductVariant\Actions\UploadVariantPhotosAction;
 use App\Domain\Shared\Actions\CreateAppLogAction;
 use App\Models\Product;
+use DomainException;
 use Illuminate\Support\Facades\DB;
 
 class CreateProductUseCase
@@ -39,10 +40,10 @@ class CreateProductUseCase
         private SyncSimpleProductVariantAction $syncSimpleVariant,
     ) {}
 
-    public function execute(array $data): Product
+    public function execute(array $data, bool $allowAttributeLessVariants = false): Product
     {
         try {
-            return DB::transaction(function () use ($data) {
+            return DB::transaction(function () use ($data, $allowAttributeLessVariants) {
                 $sequence = (Product::max('sequence') ?? 0) + 1;
                 $slug = $this->generateSlug->run($data['name']);
 
@@ -73,11 +74,17 @@ class CreateProductUseCase
                 if ($data['type'] === 'simple') {
                     $this->syncSimpleVariant->run($product);
                 } elseif ($data['type'] === 'variable') {
-                    foreach ($data['variants'] as $variantData) {
-                        $variantData['sku'] = $this->generateVariantSku->run(
-                            $product->sku,
-                            $variantData['attributes'],
-                        );
+                    foreach ($data['variants'] as $index => $variantData) {
+                        $attributes = $variantData['attributes'] ?? [];
+
+                        if ($attributes === [] && ! $allowAttributeLessVariants) {
+                            throw new DomainException('Attributes are required for variable product variants.');
+                        }
+
+                        $variantData['attributes'] = $attributes;
+                        $variantData['sku'] = $attributes === []
+                            ? sprintf('%s-VAR-%03d', $product->sku, $index + 1)
+                            : $this->generateVariantSku->run($product->sku, $attributes);
 
                         $variant = $this->createVariants->run($product, $variantData);
 

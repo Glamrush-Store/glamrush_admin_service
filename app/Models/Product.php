@@ -49,6 +49,8 @@ class Product extends Model implements HasMedia
 
     protected $casts = [
         'published_at' => 'datetime',
+        'sale_starts_at' => 'datetime',
+        'sale_ends_at' => 'datetime',
         'is_featured' => 'boolean',
     ];
 

@@ -21,7 +21,7 @@ class UpdateProductController
         UpdateProductRequest $request,
         Product $product,
     ) {
-        $result = $this->useCase->execute($product, $request->all());
+        $result = $this->useCase->execute($product, $request->validated());
 
         return ApiResponse::success($result);
     }

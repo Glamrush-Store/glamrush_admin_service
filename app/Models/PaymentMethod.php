@@ -9,7 +9,18 @@ class PaymentMethod extends Model
 {
     use HasUlids;
 
+    public const SUPPORTED_CODES = [
+        'bachs',
+        'paystack',
+        'flutterwave',
+        'pay_on_delivery',
+        'cash',
+        'pos',
+        'bank_transfer',
+    ];
+
     public $incrementing = false;
+
     protected $keyType = 'string';
 
     protected $fillable = [

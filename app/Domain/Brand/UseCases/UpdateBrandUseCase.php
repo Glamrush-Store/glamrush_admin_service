@@ -11,6 +11,7 @@ namespace App\Domain\Brand\UseCases;
 use App\Domain\Brand\Actions\AttachBrandImageAction;
 use App\Domain\Brand\Actions\UpdateBrandAction;
 use App\Domain\Shared\Actions\CreateAppLogAction;
+use App\Domain\Shared\Actions\GenerateUniqueSlugAction;
 use App\Models\Brand;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
@@ -20,13 +21,17 @@ class UpdateBrandUseCase
     public function __construct(
         private UpdateBrandAction $updateBrand,
         private AttachBrandImageAction $attachImage,
-        private CreateAppLogAction $log
+        private CreateAppLogAction $log,
+        private GenerateUniqueSlugAction $generateSlug,
     ) {}
 
     public function run(Brand $brand, array $data, ?UploadedFile $photo): Brand
     {
         try {
             return DB::transaction(function () use ($brand, $data, $photo) {
+                if (array_key_exists('name', $data)) {
+                    $data['slug'] = $this->generateSlug->run($data['name'], Brand::class, $brand->id);
+                }
 
                 $this->updateBrand->run($brand, $data);
 

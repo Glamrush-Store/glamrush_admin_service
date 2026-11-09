@@ -2,11 +2,21 @@
 
 namespace App\Http\Requests\PaymentMethod;
 
+use App\Models\PaymentMethod;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 class CreatePaymentMethodRequest extends FormRequest
 {
+    protected function prepareForValidation(): void
+    {
+        if ($this->has('code')) {
+            $this->merge([
+                'code' => strtolower(trim((string) $this->input('code'))),
+            ]);
+        }
+    }
+
     public function authorize(): bool
     {
         return true;
@@ -16,7 +26,7 @@ class CreatePaymentMethodRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'code' => ['required', 'string', Rule::in(['paystack', 'flutterwave', 'pay_on_delivery']), 'unique:payment_methods,code'],
+            'code' => ['required', 'string', Rule::in(PaymentMethod::SUPPORTED_CODES), 'unique:payment_methods,code'],
             'description' => ['nullable', 'string'],
             'is_active' => ['sometimes', 'boolean'],
             'sort_order' => ['sometimes', 'integer', 'min:0'],

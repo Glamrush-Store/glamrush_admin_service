@@ -29,7 +29,7 @@ class CreateBrandUseCase
     {
         try {
             return DB::transaction(function () use ($data, $photo) {
-                $data['slug'] = $this->generateSlug->run($data['name']);
+                $data['slug'] = $this->generateSlug->run($data['name'], Brand::class);
 
                 $brand = $this->createBrand->run($data);
 

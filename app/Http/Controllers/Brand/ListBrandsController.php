@@ -9,21 +9,22 @@
 namespace App\Http\Controllers\Brand;
 
 use App\Domain\Brand\UseCases\ListBrandsUseCase;
+use App\Http\Requests\Brand\ListBrandsRequest;
 use App\Http\Resources\Brand\BrandResource;
 use App\Http\Responses\ApiResponse;
-use Illuminate\Http\Request;
 
 class ListBrandsController
 {
     public function __construct(private ListBrandsUseCase $useCase) {}
 
     public function __invoke(
-        Request $request,
+        ListBrandsRequest $request,
     ) {
+        $filters = $request->validated();
 
         $result = $this->useCase->run(
-            filters: $request->all(),
-            perPage: $request->integer('per_page', 5)
+            filters: $filters,
+            perPage: (int) ($filters['per_page'] ?? 15)
         );
 
         return ApiResponse::success(BrandResource::collection($result));
